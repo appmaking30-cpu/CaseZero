@@ -10,6 +10,7 @@ CaseZero is a mobile-first, memory-driven detective story. This rebuild branch i
 - Bureau specialist desk, fictional daily city bulletin, and separate Truth / Proof / Outcome case reviews
 - Local save migration from the earlier CaseZero prototype
 - Save export/import, text-size controls, reduced-motion setting, keyboard focus states, and responsive mobile layout
+- Automated logic tests and a Chromium mobile browser smoke test covering the tutorial flow, unlocks, persistence, and memory carry-over
 - PWA manifest and versioned offline shell cache
 
 ## Run and install
@@ -19,7 +20,7 @@ Serve this folder over HTTPS (GitHub Pages is supported once repository Pages se
 Progress is stored locally in this browser. Export a save file before changing browsers or clearing site data. Import it on the other device to continue. This build does not claim cloud sync.
 
 ## Testing
-The repository workflow runs a JavaScript syntax check before deployment. Pure game rules are exposed as CaseZeroEngine for automated tests. Browser/device QA still requires a live Pages deployment.
+The repository test workflow runs a JavaScript syntax check, ten Node logic tests, and a Chromium mobile browser smoke test. A real Android-device test still requires a live Pages deployment.
 
 ## Scope
 This is a four-case narrative prototype, not a commercial release. It does not include live accounts, server-side sync, payment processing, or a native Android package.
