@@ -1,13 +1,13 @@
 (() => {
 'use strict';
 const KEY='casezero-memory-v1', $=id=>document.getElementById(id);
-const blank=()=>({step:0,found:[],choices:[],timeline:[],closed:false,ending:null,missed:[]});
+const blank=()=>({step:0,found:[],choices:[],timeline:[],reply:null,replyStep:-1,closed:false,ending:null,missed:[]});
 const fresh=()=>({casesClosed:0,case001Attempts:0,completedCases:[],flags:{},current:blank()});
 function load(){
  try{
   const x=JSON.parse(localStorage.getItem(KEY)||'null'); if(!x||typeof x!=='object')return fresh();
-  if(!x.current)return {casesClosed:Number(x.casesClosed)||0,case001Attempts:0,completedCases:(Number(x.casesClosed)||0)>0?['case001']:[],flags:x.flags||{},current:{step:Math.min(3,Math.max(0,Number(x.step)||0)),found:Array.isArray(x.found)?x.found:[],choices:Array.isArray(x.choices)?x.choices:[],closed:!!x.closed,ending:x.ending||null,missed:[],timeline:[]}};
-  const c=x.current;return {casesClosed:Math.max(0,Number(x.casesClosed)||0),case001Attempts:Math.max(0,Number(x.case001Attempts)||0),completedCases:Array.isArray(x.completedCases)?x.completedCases:((Number(x.casesClosed)||0)>0?['case001']:[]),flags:x.flags&&typeof x.flags==='object'?x.flags:{},current:{step:Math.min(3,Math.max(0,Number(c.step)||0)),found:Array.isArray(c.found)?c.found:[],choices:Array.isArray(c.choices)?c.choices:[],closed:!!c.closed,ending:c.ending||null,missed:Array.isArray(c.missed)?c.missed:[],timeline:Array.isArray(c.timeline)?c.timeline:[]}};
+  if(!x.current)return {casesClosed:Number(x.casesClosed)||0,case001Attempts:0,completedCases:(Number(x.casesClosed)||0)>0?['case001']:[],flags:x.flags||{},current:{step:Math.min(3,Math.max(0,Number(x.step)||0)),found:Array.isArray(x.found)?x.found:[],choices:Array.isArray(x.choices)?x.choices:[],closed:!!x.closed,ending:x.ending||null,missed:[],timeline:[],reply:null,replyStep:-1}};
+  const c=x.current;return {casesClosed:Math.max(0,Number(x.casesClosed)||0),case001Attempts:Math.max(0,Number(x.case001Attempts)||0),completedCases:Array.isArray(x.completedCases)?x.completedCases:((Number(x.casesClosed)||0)>0?['case001']:[]),flags:x.flags&&typeof x.flags==='object'?x.flags:{},current:{step:Math.min(3,Math.max(0,Number(c.step)||0)),found:Array.isArray(c.found)?c.found:[],choices:Array.isArray(c.choices)?c.choices:[],closed:!!c.closed,ending:c.ending||null,missed:Array.isArray(c.missed)?c.missed:[],timeline:Array.isArray(c.timeline)?c.timeline:[],reply:typeof c.reply==='string'?c.reply:null,replyStep:Number.isInteger(c.replyStep)?c.replyStep:-1}};
  }catch(e){return fresh()}
 }
 let save=load(), run=save.current;
@@ -44,9 +44,11 @@ function renderStep(){
  h+='</div>';
  if(ordered)h+='<p class="story-text">Who most likely altered the clock and staged the false timeline?</p><div class="choice-list"><button class="choice" data-ending="elias"><small>THEORY A</small>Elias Vale — the key register and staff roster connect him to the clock.</button><button class="choice" data-ending="mara"><small>THEORY B</small>Mara Quinn — she was assigned to platform 4 and could have placed the ticket.</button><button class="choice" data-ending="jonah"><small>THEORY C</small>Jonah Reed — he wrote the maintenance log.</button></div>';
  }
+ else if(run.replyStep===run.step&&run.reply)h+='<div class="ending"><div class="case-kicker">YOUR MOVE / RESPONSE</div><p class="story-text">'+esc(run.reply)+'</p></div><button class="primary" id="continueReply">CONTINUE <span>→</span></button>';
  else h+='<div class="choice-list">'+s.choices.map(c=>'<button class="choice" data-choice="'+c[1]+'"><small>CHOOSE YOUR NEXT MOVE</small>'+esc(c[0])+'</button>').join('')+'</div>';
  $('caseContent').innerHTML=h+'</div>';
- document.querySelectorAll('[data-choice]').forEach(b=>b.onclick=()=>{const c=s.choices.find(x=>x[1]===b.dataset.choice);if(!c||run.choices.includes(c[1]))return;run.choices.push(c[1]);remember(c[1],c[0],c[2]);run.step++;persist();renderStep()});
+ document.querySelectorAll('[data-choice]').forEach(b=>b.onclick=()=>{const c=s.choices.find(x=>x[1]===b.dataset.choice);if(!c||run.choices.includes(c[1]))return;run.choices.push(c[1]);run.reply=c[2];run.replyStep=run.step;remember(c[1],c[0],c[2]);persist();renderStep()});
+ const reply=$('continueReply');if(reply)reply.onclick=()=>{run.step++;run.reply=null;run.replyStep=-1;persist();renderStep()};
  document.querySelectorAll('[data-clue]').forEach(b=>b.onclick=()=>{const c=clues.find(x=>x.id===b.dataset.clue);if(!c||run.found.includes(c.id))return;run.found.push(c.id);remember(c.flag,c.title,c.desc);renderStep()});
  const cont=$('continueStep');if(cont)cont.onclick=()=>{if(run.found.length<2){alert('Inspect at least two pieces of evidence before continuing. A good theory needs support.');return}run.step++;persist();renderStep()};
  document.querySelectorAll('[data-time]').forEach(b=>b.onclick=()=>{if(run.timeline.length<4&&!run.timeline.includes(b.dataset.time)){run.timeline.push(b.dataset.time);persist();renderStep()}});
