@@ -1,0 +1,18 @@
+name: Test CaseZero
+on:
+  push:
+    branches: [casezero-rebuild]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: node --check game.js
+      - name: Run CaseZero logic tests
+        run: node --test tests/casezero.test.cjs
