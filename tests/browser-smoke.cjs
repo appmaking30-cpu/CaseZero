@@ -26,7 +26,7 @@ const types = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.j
     const page = await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
     await page.goto('http://127.0.0.1:4173');
     await page.locator('#caseGrid').waitFor();
-    assert.equal(await page.locator('[data-open]').count(),1,'only the tutorial file should be unlocked initially');
+    assert.equal(await page.locator('[data-open]:not([disabled])').count(),1,'only the tutorial file should be unlocked initially');
     assert.match(await page.locator('#bulletinText').innerText(),/./,'daily bulletin should render');
     assert.equal(await page.locator('.specialist').count(),3,'HQ specialist desk should show three specialists');
     await page.locator('[data-open="case001"]').click();
@@ -34,7 +34,7 @@ const types = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.j
     await page.getByText('YOUR MOVE / RESPONSE').waitFor();
     await page.locator('#continueReply').click();
     assert.equal(await page.locator('[data-clue]').count(),5,'tutorial evidence room should show five clues');
-    for (let i=0;i<5;i++) await page.locator('[data-clue]').nth(0).click();
+    for (const clue of E.CASES[0].clues) await page.locator('[data-clue="'+clue[0]+'"]').click();
     await page.locator('#continueEvidence').click();
     await page.locator('[data-witness="asked_key"]').click();
     await page.locator('#continueReply').click();
@@ -43,9 +43,9 @@ const types = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.j
     await page.locator('[data-ending="elias"]').click();
     await page.getByText('TRUTH',{exact:true}).waitFor();
     await page.locator('#finishHome').click();
-    assert.equal(await page.locator('[data-open]').count(),2,'closing case 001 should unlock case 002');
+    assert.equal(await page.locator('[data-open]:not([disabled])').count(),2,'closing case 001 should unlock case 002');
     await page.reload();
-    assert.equal(await page.locator('[data-open]').count(),2,'case unlock should persist after reload');
+    assert.equal(await page.locator('[data-open]:not([disabled])').count(),2,'case unlock should persist after reload');
     await page.locator('[data-open="case002"]').click();
     assert.match(await page.locator('#caseContent').innerText(),/Central Records Annex/);
     assert.match(await page.locator('#caseContent').innerText(),/THE MEMORY/,'later case should reflect earlier choices');
