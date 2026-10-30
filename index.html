@@ -1,29 +1,6 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#10151d"><meta name="description" content="CaseZero — a memory-driven detective mystery.">
-<link rel="manifest" href="./manifest.json"><link rel="stylesheet" href="./styles.css">
-<title>CaseZero — Detective Bureau</title>
-</head>
-<body>
-<div class="grain"></div>
-<header class="topbar"><a class="brand" href="./"><span class="brand-mark">CZ</span><span>CASE<span class="gold">ZERO</span><small>DETECTIVE BUREAU</small></span></a><div class="top-meta"><span class="status-dot"></span><span>FIELD OFFICE // 01</span></div></header>
-<main id="app" class="shell">
-<section id="home" class="screen active">
-<div class="eyebrow">CITY ARCHIVE / NIGHT SHIFT</div><h1>Every detail<br><em>remembers.</em></h1>
-<p class="lede">Cases close. Memories don't.</p>
-<div class="case-feature"><div class="case-image"><div class="case-stamp">CASE FILE<br><b>001</b></div><div class="rain-lines"></div></div><div class="case-copy"><div class="case-kicker">AVAILABLE CASE <span>• TUTORIAL</span></div><h2>The Last<br>Train Home</h2><p>A station clock stopped at 9:17. A witness changed their story. Someone is counting on you to overlook the small things.</p><div class="case-meta"><span>◷ 10–15 MIN</span><span>◇ 5 EVIDENCE ITEMS</span></div><button class="primary" id="startCase">OPEN CASE <span>↗</span></button></div></div>
-<div class="section-head"><span>YOUR RECORD</span><span class="muted">PERSISTENT MEMORY</span></div><div class="stats"><div><b id="casesStat">00</b><span>CASES CLOSED</span></div><div><b id="cluesStat">00</b><span>CLUES FOUND</span></div><div><b id="memoryStat">00</b><span>MEMORY FLAGS</span></div></div>
-<div class="continue-row"><div><span class="eyebrow">THE MEMORY</span><p>Your choices follow you. Even the questions you leave unasked.</p></div><button class="quiet" id="memoryOpen">VIEW MEMORY →</button></div>
-</section>
-<section id="case" class="screen">
-<button class="back" id="backHome">← BUREAU</button><div class="eyebrow">CASE 001 / THE LAST TRAIN HOME</div><div class="progress"><span id="progressBar"></span></div><div id="caseContent"></div>
-</section>
-<section id="memory" class="screen">
-<button class="back" id="memoryBack">← BUREAU</button><div class="eyebrow">PERSONAL CASE HISTORY</div><h1>The <em>Memory.</em></h1><p class="lede">The bureau keeps a record of what you notice — and what you let pass.</p><div id="memoryList" class="memory-list"></div><button class="quiet danger" id="resetSave">RESET LOCAL SAVE</button>
-</section>
-</main>
-<footer>CASEZERO <span>•</span> AN INTERACTIVE DETECTIVE STORY <span>•</span> BUILD 0.2</footer>
-<script src="./game.js"></script>
-</body></html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#10151d"><meta name="description" content="CaseZero — a memory-driven detective mystery."><meta name="color-scheme" content="dark"><link rel="manifest" href="./manifest.json"><link rel="stylesheet" href="./styles.css"><title>CaseZero — Detective Bureau</title></head>
+<body><div class="grain" aria-hidden="true"></div><header class="topbar"><a class="brand" href="./" aria-label="CaseZero Detective Bureau"><span class="brand-mark">CZ</span><span>CASE<span class="gold">ZERO</span><small>DETECTIVE BUREAU</small></span></a><div class="top-meta"><span class="status-dot"></span><span>FIELD OFFICE // 01</span></div></header>
+<main id="app" class="shell"><section id="home" class="screen active" aria-labelledby="homeTitle"><div class="eyebrow">CITY ARCHIVE / NIGHT SHIFT</div><h1 id="homeTitle">Every detail<br><em>remembers.</em></h1><p class="lede">Cases close. Memories don't.</p><div class="section-head"><span>ACTIVE DOSSIERS</span><span class="muted">THE BUREAU // 04 FILES</span></div><div id="caseGrid" class="case-grid" aria-live="polite"></div><div class="section-head"><span>YOUR RECORD</span><span class="muted">PERSISTENT MEMORY</span></div><div class="stats"><div><b id="casesStat">00</b><span>CASES CLOSED</span></div><div><b id="cluesStat">00</b><span>CLUES FOUND</span></div><div><b id="memoryStat">00</b><span>MEMORY FLAGS</span></div></div><div class="continue-row"><div><span class="eyebrow">THE MEMORY</span><p>Your choices follow you. Even the questions you leave unasked.</p></div><button class="quiet" id="memoryOpen">VIEW MEMORY →</button></div></section>
+<section id="case" class="screen" aria-labelledby="caseEyebrow"><button class="back" id="backHome">← BUREAU</button><div class="eyebrow" id="caseEyebrow">CASE FILE</div><div class="progress" role="progressbar" aria-label="Case progress" aria-valuemin="0" aria-valuemax="100"><span id="progressBar"></span></div><div id="caseContent" aria-live="polite"></div></section>
+<section id="memory" class="screen" aria-labelledby="memoryTitle"><button class="back" id="memoryBack">← BUREAU</button><div class="eyebrow">PERSONAL CASE HISTORY</div><h1 id="memoryTitle">The <em>Memory.</em></h1><p class="lede">The bureau keeps a record of what you notice — and what you let pass.</p><div id="memoryList" class="memory-list"></div><div class="settings-panel"><div class="case-kicker">ACCESSIBILITY & SAVE</div><label for="textScale">Text size</label><select id="textScale"><option value="normal">Standard</option><option value="large">Large</option><option value="larger">Extra large</option></select><label class="check-label"><input type="checkbox" id="reduceMotion"> Reduce screen motion</label><div class="save-actions"><button class="quiet" id="exportSave">EXPORT SAVE</button><button class="quiet" id="importSave">IMPORT SAVE</button><input id="importFile" type="file" accept="application/json" hidden></div><button class="quiet danger" id="resetSave">RESET LOCAL SAVE</button></div></section></main><footer>CASEZERO <span>•</span> AN INTERACTIVE DETECTIVE STORY <span>•</span> BUILD 1.0</footer><script src="./game.js"></script></body></html>
