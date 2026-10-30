@@ -16,3 +16,9 @@ jobs:
         run: node --check game.js
       - name: Run CaseZero logic tests
         run: node --test tests/casezero.test.cjs
+      - name: Install browser test dependencies
+        run: npm install --no-save playwright
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run mobile browser smoke test
+        run: node tests/browser-smoke.cjs
