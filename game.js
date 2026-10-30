@@ -1,13 +1,13 @@
 (() => {
 'use strict';
 const KEY='casezero-memory-v1', $=id=>document.getElementById(id);
-const blank=()=>({step:0,found:[],choices:[],closed:false,ending:null,missed:[]});
+const blank=()=>({step:0,found:[],choices:[],timeline:[],closed:false,ending:null,missed:[]});
 const fresh=()=>({casesClosed:0,flags:{},current:blank()});
 function load(){
  try{
   const x=JSON.parse(localStorage.getItem(KEY)||'null'); if(!x||typeof x!=='object')return fresh();
-  if(!x.current)return {casesClosed:Number(x.casesClosed)||0,flags:x.flags||{},current:{step:Math.min(3,Math.max(0,Number(x.step)||0)),found:Array.isArray(x.found)?x.found:[],choices:Array.isArray(x.choices)?x.choices:[],closed:!!x.closed,ending:x.ending||null,missed:[]}};
-  const c=x.current;return {casesClosed:Math.max(0,Number(x.casesClosed)||0),flags:x.flags&&typeof x.flags==='object'?x.flags:{},current:{step:Math.min(3,Math.max(0,Number(c.step)||0)),found:Array.isArray(c.found)?c.found:[],choices:Array.isArray(c.choices)?c.choices:[],closed:!!c.closed,ending:c.ending||null,missed:Array.isArray(c.missed)?c.missed:[]}};
+  if(!x.current)return {casesClosed:Number(x.casesClosed)||0,flags:x.flags||{},current:{step:Math.min(3,Math.max(0,Number(x.step)||0)),found:Array.isArray(x.found)?x.found:[],choices:Array.isArray(x.choices)?x.choices:[],closed:!!x.closed,ending:x.ending||null,missed:[],timeline:[]}};
+  const c=x.current;return {casesClosed:Math.max(0,Number(x.casesClosed)||0),flags:x.flags&&typeof x.flags==='object'?x.flags:{},current:{step:Math.min(3,Math.max(0,Number(c.step)||0)),found:Array.isArray(c.found)?c.found:[],choices:Array.isArray(c.choices)?c.choices:[],closed:!!c.closed,ending:c.ending||null,missed:Array.isArray(c.missed)?c.missed:[],timeline:Array.isArray(c.timeline)?c.timeline:[]}};
  }catch(e){return fresh()}
 }
 let save=load(), run=save.current;
@@ -35,18 +35,28 @@ function renderStep(){
  let h='<div class="story-card"><div class="eyebrow">FIELD NOTES / ENTRY '+String(run.step+1).padStart(2,'0')+'</div><h1>'+esc(s.title)+'</h1><p class="story-text">'+esc(s.body)+'</p>';
  if(s.note)h+='<div class="story-note">'+esc(s.note)+'</div>';
  if(s.evidence){h+='<div class="evidence-grid">'+clues.map(c=>'<article class="evidence '+(run.found.includes(c.id)?'found':'')+'"><h3>'+esc(c.title)+'</h3><p>'+esc(c.desc)+'</p><button data-clue="'+c.id+'">'+(run.found.includes(c.id)?'✓ RECORDED':'＋ ADD TO EVIDENCE')+'</button></article>').join('')+'</div><p class="muted">RECORDED: '+run.found.length+' / '+clues.length+'</p><button class="primary" id="continueStep">CONTINUE <span>→</span></button>'}
- else if(s.deduction)h+='<p class="story-text">Who most likely altered the clock and staged the false timeline?</p><div class="choice-list"><button class="choice" data-ending="elias"><small>THEORY A</small>Elias Vale — the key register and staff roster connect him to the clock.</button><button class="choice" data-ending="mara"><small>THEORY B</small>Mara Quinn — she was assigned to platform 4 and could have placed the ticket.</button><button class="choice" data-ending="jonah"><small>THEORY C</small>Jonah Reed — he wrote the maintenance log.</button></div>';
+ else if(s.deduction){
+ const events=[['claim','9:10 PM — Elias says the staff corridor was locked.'],['keyout','9:12 PM — The clock key is signed out.'],['logtime','9:15 PM — A maintenance time is added to the log.'],['clockstop','9:17 PM — The station clock is found stopped.']];
+ const ordered=run.timeline.length===4&&run.timeline.every((v,i)=>v===['claim','keyout','logtime','clockstop'][i]);
+ h+='<p class="story-text">Before naming a suspect, reconstruct the four-minute window. Add each event to your timeline in the order you believe it happened.</p><div class="timeline-board"><div class="case-kicker">YOUR TIMELINE</div><ol class="timeline-list">'+run.timeline.map((id,i)=>'<li><span>'+String(i+1).padStart(2,'0')+'</span>'+esc(events.find(e=>e[0]===id)?.[1]||id)+'</li>').join('')+'</ol>';
+ if(run.timeline.length<4)h+='<div class="timeline-options">'+events.filter(e=>!run.timeline.includes(e[0])).map(e=>'<button class="choice" data-time="'+e[0]+'">'+esc(e[1])+' <small>ADD EVENT +</small></button>').join('')+'</div>';
+ else h+='<p class="story-note">'+(ordered?'TIMELINE CONSISTENT • The key leaves before the altered log and the stopped clock.':'TIMELINE CONFLICT • One or more events are out of order. Review the records and try again.')+'</p><button class="quiet" id="retryTimeline">REBUILD TIMELINE ↻</button>';
+ h+='</div>';
+ if(ordered)h+='<p class="story-text">Who most likely altered the clock and staged the false timeline?</p><div class="choice-list"><button class="choice" data-ending="elias"><small>THEORY A</small>Elias Vale — the key register and staff roster connect him to the clock.</button><button class="choice" data-ending="mara"><small>THEORY B</small>Mara Quinn — she was assigned to platform 4 and could have placed the ticket.</button><button class="choice" data-ending="jonah"><small>THEORY C</small>Jonah Reed — he wrote the maintenance log.</button></div>';
+ }
  else h+='<div class="choice-list">'+s.choices.map(c=>'<button class="choice" data-choice="'+c[1]+'"><small>CHOOSE YOUR NEXT MOVE</small>'+esc(c[0])+'</button>').join('')+'</div>';
  $('caseContent').innerHTML=h+'</div>';
  document.querySelectorAll('[data-choice]').forEach(b=>b.onclick=()=>{const c=s.choices.find(x=>x[1]===b.dataset.choice);if(!c||run.choices.includes(c[1]))return;run.choices.push(c[1]);remember(c[1],c[0],c[2]);run.step++;persist();renderStep()});
  document.querySelectorAll('[data-clue]').forEach(b=>b.onclick=()=>{const c=clues.find(x=>x.id===b.dataset.clue);if(!c||run.found.includes(c.id))return;run.found.push(c.id);remember(c.flag,c.title,c.desc);renderStep()});
  const cont=$('continueStep');if(cont)cont.onclick=()=>{if(run.found.length<2){alert('Inspect at least two pieces of evidence before continuing. A good theory needs support.');return}run.step++;persist();renderStep()};
+ document.querySelectorAll('[data-time]').forEach(b=>b.onclick=()=>{if(run.timeline.length<4&&!run.timeline.includes(b.dataset.time)){run.timeline.push(b.dataset.time);persist();renderStep()}});
+ const retry=$('retryTimeline');if(retry)retry.onclick=()=>{run.timeline=[];persist();renderStep()};
  document.querySelectorAll('[data-ending]').forEach(b=>b.onclick=()=>finish(b.dataset.ending));
 }
 function finish(which){
  if(run.closed)return;
- const right=which==='elias', strong=['key','roster','log','scratch'].every(x=>run.found.includes(x)), identityProved=run.found.includes('key')&&run.found.includes('roster');
- run.closed=true;run.ending=which;save.casesClosed=(Number(save.casesClosed)||0)+1;
+ const right=which==='elias', timelineCorrect=run.timeline.join('|')==='claim|keyout|logtime|clockstop', strong=['key','roster','log','scratch'].every(x=>run.found.includes(x)), identityProved=run.found.includes('key')&&run.found.includes('roster');
+ run.closed=true;run.ending=which;save.flags['timeline_case001_'+(save.casesClosed+1)]={label:'Timeline reconstruction',detail:timelineCorrect?'Correct sequence: 9:10 → 9:12 → 9:15 → 9:17.':'The timeline needed revision; the final review records the evidence sequence.',at:new Date().toISOString()};save.casesClosed=(Number(save.casesClosed)||0)+1;
  const missed=[['asked_key','You did not ask Elias directly about the clock key.'],['asked_ticket','You did not press Mara on why the ticket was dry.'],['asked_log','You did not ask Jonah who added the maintenance time.']].filter(x=>!run.choices.includes(x[0])).map(x=>x[1]);
  run.missed=missed;
  remember('theory_case001_'+save.casesClosed,'Final theory: '+which.toUpperCase(),right?'You identified Elias Vale using the key register and staff roster.':'You selected '+which+'. The records point more strongly to Elias Vale.');
