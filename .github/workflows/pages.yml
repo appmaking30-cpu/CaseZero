@@ -1,7 +1,5 @@
 name: Deploy CaseZero to GitHub Pages
 on:
-  push:
-    branches: [casezero-rebuild]
   workflow_dispatch:
 permissions:
   contents: read
