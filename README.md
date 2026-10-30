@@ -7,6 +7,7 @@ A mobile-first detective-story prototype. This branch is the clean rebuild; the 
 - Tutorial mystery: **The Last Train Home**
 - Five inspectable evidence records and witness questioning
 - A deduction outcome with a clue-supported explanation
+- Interactive four-event timeline reconstruction before suspect selection
 - **THE MEMORY** ledger for choices, evidence, and unanswered questions
 - Local save migration, resume, guarded case completion, and reset
 - PWA manifest, app icon, and versioned offline shell cache
