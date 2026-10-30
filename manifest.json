@@ -1,1 +1,18 @@
-{"name":"CaseZero Detective Bureau","short_name":"CaseZero","start_url":"./","display":"standalone","background_color":"#10151d","theme_color":"#10151d","description":"A memory-driven detective mystery.","icons":[]}
+{
+  "name": "CaseZero Detective Bureau",
+  "short_name": "CaseZero",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#10151d",
+  "theme_color": "#10151d",
+  "description": "A memory-driven detective mystery.",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

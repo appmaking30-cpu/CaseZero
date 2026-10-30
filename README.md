@@ -1,16 +1,18 @@
 # CaseZero
 
-A mobile-first, installable detective-story prototype. This is the clean rebuild branch; the original project and backup are untouched.
+A mobile-first detective-story prototype. This branch is the clean rebuild; the original project and backup branch are untouched.
 
-## Current playable milestone
-- Detective Bureau home screen
-- Original tutorial mystery: **The Last Train Home**
-- Evidence inspection and a deduction choice
-- Persistent local **THE MEMORY** ledger using browser storage
-- Responsive phone layout and offline shell caching
+## Current milestone
+- Responsive Detective Bureau home screen
+- Tutorial mystery: **The Last Train Home**
+- Five inspectable evidence records and witness questioning
+- A deduction outcome with a clue-supported explanation
+- **THE MEMORY** ledger for choices, evidence, and unanswered questions
+- Local save migration, resume, guarded case completion, and reset
+- PWA manifest, app icon, and versioned offline shell cache
 
 ## Run
-Open `index.html` from a static web host. GitHub Pages can host this branch. The app is dependency-free.
+Serve this folder from a static HTTPS host. GitHub Pages can host the branch once Pages deployment is enabled for the repository.
 
-## Important
-This is the first playable foundation, not the finished multi-case game. Case continuity, richer branching, accessibility testing, Android packaging, and additional story arcs remain future milestones. No payment flow or fake live services are included.
+## Honest scope
+This is an early playable foundation, not the finished multi-case game. It currently stores progress on this device only; cloud sync, additional cases, deeper branching, accessibility/device testing, and native Android packaging remain future work. No payment flow or fake live services are included.
