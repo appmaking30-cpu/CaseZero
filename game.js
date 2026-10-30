@@ -2,18 +2,18 @@
 'use strict';
 const KEY='casezero-memory-v1', $=id=>document.getElementById(id);
 const blank=()=>({step:0,found:[],choices:[],timeline:[],closed:false,ending:null,missed:[]});
-const fresh=()=>({casesClosed:0,flags:{},current:blank()});
+const fresh=()=>({casesClosed:0,case001Attempts:0,completedCases:[],flags:{},current:blank()});
 function load(){
  try{
   const x=JSON.parse(localStorage.getItem(KEY)||'null'); if(!x||typeof x!=='object')return fresh();
-  if(!x.current)return {casesClosed:Number(x.casesClosed)||0,flags:x.flags||{},current:{step:Math.min(3,Math.max(0,Number(x.step)||0)),found:Array.isArray(x.found)?x.found:[],choices:Array.isArray(x.choices)?x.choices:[],closed:!!x.closed,ending:x.ending||null,missed:[],timeline:[]}};
-  const c=x.current;return {casesClosed:Math.max(0,Number(x.casesClosed)||0),flags:x.flags&&typeof x.flags==='object'?x.flags:{},current:{step:Math.min(3,Math.max(0,Number(c.step)||0)),found:Array.isArray(c.found)?c.found:[],choices:Array.isArray(c.choices)?c.choices:[],closed:!!c.closed,ending:c.ending||null,missed:Array.isArray(c.missed)?c.missed:[],timeline:Array.isArray(c.timeline)?c.timeline:[]}};
+  if(!x.current)return {casesClosed:Number(x.casesClosed)||0,case001Attempts:0,completedCases:(Number(x.casesClosed)||0)>0?['case001']:[],flags:x.flags||{},current:{step:Math.min(3,Math.max(0,Number(x.step)||0)),found:Array.isArray(x.found)?x.found:[],choices:Array.isArray(x.choices)?x.choices:[],closed:!!x.closed,ending:x.ending||null,missed:[],timeline:[]}};
+  const c=x.current;return {casesClosed:Math.max(0,Number(x.casesClosed)||0),case001Attempts:Math.max(0,Number(x.case001Attempts)||0),completedCases:Array.isArray(x.completedCases)?x.completedCases:((Number(x.casesClosed)||0)>0?['case001']:[]),flags:x.flags&&typeof x.flags==='object'?x.flags:{},current:{step:Math.min(3,Math.max(0,Number(c.step)||0)),found:Array.isArray(c.found)?c.found:[],choices:Array.isArray(c.choices)?c.choices:[],closed:!!c.closed,ending:c.ending||null,missed:Array.isArray(c.missed)?c.missed:[],timeline:Array.isArray(c.timeline)?c.timeline:[]}};
  }catch(e){return fresh()}
 }
 let save=load(), run=save.current;
 function persist(){save.current=run;try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){console.warn('Local save unavailable',e)}stats()}
 function remember(id,label,detail){if(!save.flags[id])save.flags[id]={label,detail,at:new Date().toISOString()};persist()}
-function stats(){if($('casesStat'))$('casesStat').textContent=String(save.casesClosed||0).padStart(2,'0');if($('cluesStat'))$('cluesStat').textContent=String(Object.keys(save.flags).filter(k=>k.startsWith('clue_')).length).padStart(2,'0');if($('memoryStat'))$('memoryStat').textContent=String(Object.keys(save.flags).length).padStart(2,'0')}
+function stats(){if($('casesStat'))$('casesStat').textContent=String(save.casesClosed||0).padStart(2,'0');if($('startCase'))$('startCase').innerHTML=run.closed?'REPLAY CASE <span>↻</span>':run.step>0?'RESUME CASE <span>↗</span>':'OPEN CASE <span>↗</span>';if($('cluesStat'))$('cluesStat').textContent=String(Object.keys(save.flags).filter(k=>k.startsWith('clue_')).length).padStart(2,'0');if($('memoryStat'))$('memoryStat').textContent=String(Object.keys(save.flags).length).padStart(2,'0')}
 const screens=['home','case','memory'];
 function show(id){screens.forEach(s=>$(s).classList.toggle('active',s===id));if(id==='memory')renderMemory();window.scrollTo(0,0)}
 const steps=[
@@ -56,11 +56,11 @@ function renderStep(){
 function finish(which){
  if(run.closed)return;
  const right=which==='elias', timelineCorrect=run.timeline.join('|')==='claim|keyout|logtime|clockstop', strong=['key','roster','log','scratch'].every(x=>run.found.includes(x)), identityProved=run.found.includes('key')&&run.found.includes('roster');
- run.closed=true;run.ending=which;save.flags['timeline_case001_'+(save.casesClosed+1)]={label:'Timeline reconstruction',detail:timelineCorrect?'Correct sequence: 9:10 → 9:12 → 9:15 → 9:17.':'The timeline needed revision; the final review records the evidence sequence.',at:new Date().toISOString()};save.casesClosed=(Number(save.casesClosed)||0)+1;
+ run.closed=true;run.ending=which;save.case001Attempts=(Number(save.case001Attempts)||0)+1;if(!Array.isArray(save.completedCases))save.completedCases=[];if(!save.completedCases.includes('case001')){save.completedCases.push('case001');save.casesClosed=(Number(save.casesClosed)||0)+1;}save.flags['timeline_case001_'+save.case001Attempts]={label:'Timeline reconstruction',detail:timelineCorrect?'Correct sequence: 9:10 → 9:12 → 9:15 → 9:17.':'The timeline needed revision; the final review records the evidence sequence.',at:new Date().toISOString()};save.casesClosed=(Number(save.casesClosed)||0)+1;
  const missed=[['asked_key','You did not ask Elias directly about the clock key.'],['asked_ticket','You did not press Mara on why the ticket was dry.'],['asked_log','You did not ask Jonah who added the maintenance time.']].filter(x=>!run.choices.includes(x[0])).map(x=>x[1]);
  run.missed=missed;
- remember('theory_case001_'+save.casesClosed,'Final theory: '+which.toUpperCase(),right?'You identified Elias Vale using the key register and staff roster.':'You selected '+which+'. The records point more strongly to Elias Vale.');
- missed.forEach((d,i)=>remember('unasked_'+save.casesClosed+'_'+i,'Question left unasked',d));
+ remember('theory_case001_'+save.case001Attempts,'Final theory: '+which.toUpperCase(),right?'You identified Elias Vale using the key register and staff roster.':'You selected '+which+'. The records point more strongly to Elias Vale.');
+ missed.forEach((d,i)=>remember('unasked_'+save.case001Attempts+'_'+i,'Question left unasked',d));
  persist();$('progressBar').style.width='100%';
  const review=right?(identityProved?'Elias Vale is the supported conclusion. The key register records the clock key leaving at 9:12, and the roster maps E to Elias. The disturbed clock and altered 9:15 entry show how he tried to manufacture a false timeline.':'You chose Elias, the correct suspect, but you did not collect both records that identify him. Your conclusion is right; your proof is incomplete.'):'Your theory does not fit the full record. The key register and staff roster connect the clock key to Elias Vale. The altered maintenance time creates a false 9:15 explanation.';
  $('caseContent').innerHTML='<div class="story-card"><div class="eyebrow">CASE 001 / OUTCOME RECORDED</div><h1>'+(right?'A minute <em>recovered.</em>':'A theory, not the truth.')+'</h1><div class="ending"><div class="case-kicker">'+(right?'SUPPORTED CONCLUSION':'CASE REVIEW')+'</div><p class="story-text">'+review+'</p><p class="story-note">'+(strong?'CASE QUALITY: COMPLETE. You gathered the key register, roster, altered log, and clock evidence — a strong chain linking access to the staged timeline.':identityProved?'CASE QUALITY: SUPPORTED. You proved who had access, but some context is still missing.':'CASE QUALITY: INCOMPLETE. Important records were left uncollected. The bureau remembers the gaps as well as the clues.')+'</p></div><p class="story-text">As you close the file, a second envelope waits beneath it. No return address. Inside is a photograph of an empty desk — and a name written on the back: <strong>DETECTIVE ROWAN.</strong></p><p class="story-note">THE MEMORY HAS BEEN UPDATED. Future cases will remember which clues you trusted and which questions you left unasked.</p><button class="primary" id="finishHome">RETURN TO BUREAU <span>↗</span></button></div>';
