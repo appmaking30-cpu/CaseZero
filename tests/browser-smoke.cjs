@@ -51,7 +51,27 @@ const types = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.j
     assert.match(await page.locator('#caseContent').innerText(),/THE MEMORY/,'later case should reflect earlier choices');
     const columns = await page.locator('.case-grid').evaluate(el => getComputedStyle(el).gridTemplateColumns);
     assert.ok(columns.split(' ').length <= 1,'mobile case cards should use a single column');
-    console.log('PASS: mobile HQ, bulletin, specialists, case 001 flow, evidence, witness, timeline, outcome, save persistence, unlock progression, and memory carry-over');
+    for (const c of E.CASES.slice(1)) {
+      await page.locator('[data-open="'+c.id+'"]').click();
+      await page.locator('[data-choice="'+c.choices[0][1]+'"]').click();
+      await page.locator('#continueReply').click();
+      assert.equal(await page.locator('[data-clue]').count(),5,c.id+' should render five evidence records');
+      for (const clue of c.clues) await page.locator('[data-clue="'+clue[0]+'"]').click();
+      await page.locator('#continueEvidence').click();
+      await page.locator('[data-witness="'+c.witnesses[0][0]+'"]').click();
+      await page.locator('#continueReply').click();
+      for (const id of c.sequence) await page.locator('[data-time="'+id+'"]').click();
+      await page.locator('[data-ending="'+c.answer+'"]').waitFor();
+      await page.locator('[data-ending="'+c.answer+'"]').click();
+      await page.getByText('SUPPORTED',{exact:true}).first().waitFor();
+      assert.match(await page.locator('#caseContent').innerText(),/COMPLETE/,c.id+' should recognize full evidence');
+      await page.locator('#finishHome').click();
+      assert.equal(await page.locator('[data-open]:not([disabled])').count(),E.CASES.indexOf(c)+2,c.id+' should unlock the next file');
+      await page.reload();
+      assert.equal(await page.locator('[data-open]:not([disabled])').count(),E.CASES.indexOf(c)+2,c.id+' unlock should persist');
+    }
+    assert.equal(await page.locator('[data-open]:not([disabled])').count(),4,'all four authored cases should be completed and unlocked');
+    console.log('PASS: mobile HQ, all four complete case flows, all evidence, witness responses, timelines, supported deductions, full proof, save persistence, sequential unlocks, and memory carry-over');
   } finally {
     await browser.close();
     await new Promise(resolve => server.close(resolve));
