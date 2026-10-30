@@ -6,7 +6,8 @@ CaseZero is a mobile-first, memory-driven detective story. This rebuild branch i
 - Four connected authored cases: The Last Train Home, The Missing Detective, The Black Ledger, and The Silent Hour
 - Sequential case unlocks, replayable files, and per-case progress
 - Five inspectable records per case, witness questioning, timeline reconstruction, and evidence-based suspect review
-- Persistent THE MEMORY journal; choices from earlier files can affect later case narration
+- Persistent THE MEMORY journal; clues, choices, final theories, and questions left unasked are retained across replays
+- Bureau specialist desk, fictional daily city bulletin, and separate Truth / Proof / Outcome case reviews
 - Local save migration from the earlier CaseZero prototype
 - Save export/import, text-size controls, reduced-motion setting, keyboard focus states, and responsive mobile layout
 - PWA manifest and versioned offline shell cache
