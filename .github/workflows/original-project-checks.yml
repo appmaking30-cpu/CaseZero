@@ -5,7 +5,8 @@ on:
     branches: [casezero-original-work]
     paths:
       - "original-projects/BothHauntingProjects/artifacts/casezero/**"
-      - "original-projects/BothHauntingProjects/lib/**"\n      - "original-projects/BothHauntingProjects/scripts/**"
+      - "original-projects/BothHauntingProjects/lib/**"
+      - "original-projects/BothHauntingProjects/scripts/**"
       - "original-projects/BothHauntingProjects/pnpm-lock.yaml"
       - "original-projects/BothHauntingProjects/pnpm-workspace.yaml"
       - ".github/workflows/original-project-checks.yml"
@@ -31,5 +32,9 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Typecheck the CaseZero Expo app
         run: pnpm --filter @workspace/casezero run typecheck
+      - name: Test Case 001 deduction rules
+        run: pnpm --filter @workspace/scripts test
       - name: Export Android-friendly web preview
         run: pnpm --filter @workspace/casezero exec expo export --platform web
+        env:
+          EXPO_NO_TELEMETRY: 1
