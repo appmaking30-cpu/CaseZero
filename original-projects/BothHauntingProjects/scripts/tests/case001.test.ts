@@ -43,7 +43,7 @@ test('the protective motive is supported by a dated, signed record', () => {
   assert.ok(leakClue);
   assert.match(leakClue.detail, /21:05/);
   assert.match(leakClue.detail, /21:11/);
-  assert.match(leakClue.detail, /M\\.R\\./);
+  assert.ok(leakClue.detail.includes('M.R.'));
   assert.match(leakClue.detail, /keep it dry/i);
   assert.match(CASE_001.proof, /maintenance ticket/i);
 });

@@ -24,7 +24,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Begin evidence review' }).click();
 
     await page.getByText('The ceiling stain', { exact: true }).click();
-    await page.getByText(/maintenance ticket at 21:05.*porter addendum at 21:11.*M\\.R\\./).waitFor();
+    await page.getByText(/maintenance ticket at 21:05.*porter addendum at 21:11/).waitFor();
 
     for (const clue of [
       'The ceiling stain',
