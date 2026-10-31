@@ -1,30 +1,696 @@
-import { StyleSheet, Text, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  Pressable,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useColors } from '@/hooks/useColors';
+import {
+  CASE_001,
+  isDeductionCorrect,
+  isTimelineCorrect,
+  type CasePhase,
+} from '@/game/case001';
 
-export default function TabOneScreen() {
+const SAVE_KEY = 'casezero.case001.memory.v1';
+
+type SavedState = {
+  phase: CasePhase;
+  cluesFound: string[];
+  askedQuestions: string[];
+  timelineOrder: string[];
+  timelineSolved: boolean;
+  timelineAttempts: number;
+  selectedSuspect: string | null;
+  selectedMotive: string | null;
+  caseCompleted: boolean;
+};
+
+type Palette = ReturnType<typeof useColors>;
+
+function ActionButton({
+  title,
+  onPress,
+  colors,
+  disabled = false,
+  variant = 'primary',
+}: {
+  title: string;
+  onPress: () => void;
+  colors: Palette;
+  disabled?: boolean;
+  variant?: 'primary' | 'secondary' | 'ghost';
+}) {
+  const backgroundColor =
+    variant === 'primary'
+      ? colors.primary
+      : variant === 'secondary'
+        ? colors.secondary
+        : 'transparent';
+  const textColor =
+    variant === 'primary' ? colors.primaryForeground : colors.foreground;
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Replit Agent is building...</Text>
-      <Text style={styles.text}>
-        Your app will appear here once it's ready.
-      </Text>
-    </View>
+    <Pressable
+      accessibilityRole="button"
+      disabled={disabled}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.actionButton,
+        {
+          backgroundColor,
+          borderColor: variant === 'ghost' ? colors.border : backgroundColor,
+          opacity: disabled ? 0.42 : pressed ? 0.78 : 1,
+        },
+      ]}
+    >
+      <Text style={[styles.actionButtonText, { color: textColor }]}>{title}</Text>
+    </Pressable>
+  );
+}
+
+function SectionLabel({
+  children,
+  colors,
+}: {
+  children: string;
+  colors: Palette;
+}) {
+  return (
+    <Text style={[styles.sectionLabel, { color: colors.primary }]}>
+      {children}
+    </Text>
+  );
+}
+
+export default function HomeScreen() {
+  const colors = useColors();
+  const [loaded, setLoaded] = useState(false);
+  const [phase, setPhase] = useState<CasePhase>('hq');
+  const [cluesFound, setCluesFound] = useState<string[]>([]);
+  const [askedQuestions, setAskedQuestions] = useState<string[]>([]);
+  const [timelineOrder, setTimelineOrder] = useState<string[]>([]);
+  const [timelineSolved, setTimelineSolved] = useState(false);
+  const [timelineAttempts, setTimelineAttempts] = useState(0);
+  const [selectedSuspect, setSelectedSuspect] = useState<string | null>(null);
+  const [selectedMotive, setSelectedMotive] = useState<string | null>(null);
+  const [caseCompleted, setCaseCompleted] = useState(false);
+  const [activeClue, setActiveClue] = useState<string | null>(null);
+  const [activeReply, setActiveReply] = useState<string | null>(null);
+  const [timelineMessage, setTimelineMessage] = useState('');
+  const [deductionMessage, setDeductionMessage] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    AsyncStorage.getItem(SAVE_KEY)
+      .then((raw) => {
+        if (!active) return;
+        if (raw) {
+          const saved = JSON.parse(raw) as Partial<SavedState>;
+          if (Array.isArray(saved.cluesFound)) setCluesFound(saved.cluesFound);
+          if (Array.isArray(saved.askedQuestions)) setAskedQuestions(saved.askedQuestions);
+          if (Array.isArray(saved.timelineOrder)) setTimelineOrder(saved.timelineOrder);
+          if (typeof saved.timelineSolved === 'boolean') setTimelineSolved(saved.timelineSolved);
+          if (typeof saved.timelineAttempts === 'number') setTimelineAttempts(saved.timelineAttempts);
+          if (typeof saved.selectedSuspect === 'string' || saved.selectedSuspect === null) {
+            setSelectedSuspect(saved.selectedSuspect ?? null);
+          }
+          if (typeof saved.selectedMotive === 'string' || saved.selectedMotive === null) {
+            setSelectedMotive(saved.selectedMotive ?? null);
+          }
+          if (typeof saved.caseCompleted === 'boolean') setCaseCompleted(saved.caseCompleted);
+          if (saved.phase) setPhase(saved.phase);
+        }
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        if (active) setLoaded(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
+    const saved: SavedState = {
+      phase,
+      cluesFound,
+      askedQuestions,
+      timelineOrder,
+      timelineSolved,
+      timelineAttempts,
+      selectedSuspect,
+      selectedMotive,
+      caseCompleted,
+    };
+    AsyncStorage.setItem(SAVE_KEY, JSON.stringify(saved)).catch(() => undefined);
+  }, [
+    loaded,
+    phase,
+    cluesFound,
+    askedQuestions,
+    timelineOrder,
+    timelineSolved,
+    timelineAttempts,
+    selectedSuspect,
+    selectedMotive,
+    caseCompleted,
+  ]);
+
+  const allCluesFound = cluesFound.length === CASE_001.clues.length;
+  const witnessCount = useMemo(
+    () =>
+      CASE_001.witnesses.filter((witness) =>
+        witness.questions.some((question) =>
+          askedQuestions.includes(`${witness.id}:${question.id}`),
+        ),
+      ).length,
+    [askedQuestions],
+  );
+  const allWitnessesHeard = witnessCount === CASE_001.witnesses.length;
+  const unansweredQuestions = useMemo(
+    () =>
+      CASE_001.witnesses.reduce(
+        (total, witness) =>
+          total +
+          witness.questions.filter(
+            (question) =>
+              !askedQuestions.includes(`${witness.id}:${question.id}`),
+          ).length,
+        0,
+      ),
+    [askedQuestions],
+  );
+
+  const resetCase = () => {
+    setPhase('hq');
+    setCluesFound([]);
+    setAskedQuestions([]);
+    setTimelineOrder([]);
+    setTimelineSolved(false);
+    setTimelineAttempts(0);
+    setSelectedSuspect(null);
+    setSelectedMotive(null);
+    setCaseCompleted(false);
+    setActiveClue(null);
+    setActiveReply(null);
+    setTimelineMessage('');
+    setDeductionMessage('');
+    AsyncStorage.removeItem(SAVE_KEY).catch(() => undefined);
+  };
+
+  const openCase = () => setPhase(caseCompleted ? 'review' : 'briefing');
+
+  const inspectClue = (clueId: string) => {
+    setCluesFound((current) =>
+      current.includes(clueId) ? current : [...current, clueId],
+    );
+    setActiveClue((current) => (current === clueId ? null : clueId));
+  };
+
+  const askQuestion = (witnessId: string, questionId: string) => {
+    const questionKey = `${witnessId}:${questionId}`;
+    setAskedQuestions((current) =>
+      current.includes(questionKey) ? current : [...current, questionKey],
+    );
+    setActiveReply(questionKey);
+  };
+
+  const selectTimelineEvent = (eventId: string) => {
+    if (timelineSolved || timelineOrder.includes(eventId) || timelineOrder.length >= 4) {
+      return;
+    }
+    const nextOrder = [...timelineOrder, eventId];
+    setTimelineOrder(nextOrder);
+    if (nextOrder.length === CASE_001.correctTimelineOrder.length) {
+      if (isTimelineCorrect(nextOrder)) {
+        setTimelineSolved(true);
+        setTimelineMessage('Timeline confirmed. The records now agree.');
+      } else {
+        setTimelineAttempts((current) => current + 1);
+        setTimelineMessage('Not quite. Recheck the timestamps, then try again.');
+      }
+    }
+  };
+
+  const resetTimeline = () => {
+    setTimelineOrder([]);
+    setTimelineMessage('');
+  };
+
+  const submitDeduction = () => {
+    if (isDeductionCorrect(selectedSuspect, selectedMotive)) {
+      setCaseCompleted(true);
+      setDeductionMessage('');
+      setPhase('review');
+    } else {
+      setDeductionMessage(
+        'That theory does not fit every record. Recheck the service-key register, cart mark and luggage-office slip.',
+      );
+    }
+  };
+
+  const cardStyle = {
+    backgroundColor: colors.card,
+    borderColor: colors.border,
+  };
+  const textStyle = { color: colors.foreground };
+  const mutedStyle = { color: colors.mutedForeground };
+
+  if (!loaded) {
+    return (
+      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+        <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+        <View style={styles.loading}>
+          <Text style={[styles.brand, { color: colors.primary }]}>CASEZERO</Text>
+          <Text style={[styles.body, mutedStyle]}>Restoring THE MEMORY…</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.topline}>
+          <View>
+            <Text style={[styles.brand, { color: colors.primary }]}>CASEZERO</Text>
+            <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
+          </View>
+          <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>FILE 001</Text>
+          </View>
+        </View>
+
+        {phase === 'hq' && (
+          <>
+            <Text style={[styles.heroTitle, textStyle]}>Detective Bureau</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>
+              Truth is what happened. Proof is what you can show.
+            </Text>
+
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Active case file</SectionLabel>
+              <Text style={[styles.caseTitle, textStyle]}>{CASE_001.title}</Text>
+              <Text style={[styles.body, mutedStyle]}>{CASE_001.subtitle}</Text>
+              <View style={styles.statusRow}>
+                <Text style={[styles.statusText, { color: caseCompleted ? colors.primary : colors.mutedForeground }]}>
+                  {caseCompleted ? 'CASE CLOSED' : cluesFound.length > 0 ? 'IN PROGRESS' : 'NEW FILE'}
+                </Text>
+                <Text style={[styles.statusText, mutedStyle]}>
+                  {cluesFound.length}/5 records
+                </Text>
+              </View>
+              <ActionButton
+                title={caseCompleted ? 'Review closed file' : cluesFound.length > 0 ? 'Resume investigation' : 'Open case file'}
+                onPress={openCase}
+                colors={colors}
+              />
+              {caseCompleted && (
+                <ActionButton
+                  title="Replay from the beginning"
+                  onPress={resetCase}
+                  colors={colors}
+                  variant="ghost"
+                />
+              )}
+            </View>
+
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>THE MEMORY</SectionLabel>
+              <Text style={[styles.cardTitle, textStyle]}>
+                {caseCompleted ? 'This file stays with you.' : 'Every detail leaves a trace.'}
+              </Text>
+              <View style={styles.memoryGrid}>
+                <View style={styles.memoryCell}>
+                  <Text style={[styles.memoryNumber, textStyle]}>{cluesFound.length}/5</Text>
+                  <Text style={[styles.memoryLabel, mutedStyle]}>Clues noticed</Text>
+                </View>
+                <View style={styles.memoryCell}>
+                  <Text style={[styles.memoryNumber, textStyle]}>{witnessCount}/3</Text>
+                  <Text style={[styles.memoryLabel, mutedStyle]}>Witnesses heard</Text>
+                </View>
+                <View style={styles.memoryCell}>
+                  <Text style={[styles.memoryNumber, textStyle]}>{unansweredQuestions}</Text>
+                  <Text style={[styles.memoryLabel, mutedStyle]}>Questions unasked</Text>
+                </View>
+              </View>
+              {caseCompleted && (
+                <Text style={[styles.memoryNote, mutedStyle]}>
+                  Your recorded conclusion: Miles Renn moved the envelope to protect it from the leak.
+                </Text>
+              )}
+            </View>
+            <Text style={[styles.footerNote, mutedStyle]}>
+              A quiet city. A long night. Nothing is forgotten.
+            </Text>
+          </>
+        )}
+
+        {phase === 'briefing' && (
+          <>
+            <SectionLabel colors={colors}>Case 001 · Briefing</SectionLabel>
+            <Text style={[styles.heroTitle, textStyle]}>{CASE_001.title}</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>{CASE_001.briefing}</Text>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Persons of interest</SectionLabel>
+              {CASE_001.suspects.map((suspect) => (
+                <View key={suspect.id} style={styles.personRow}>
+                  <View style={styles.personInitial}>
+                    <Text style={[styles.personInitialText, { color: colors.primary }]}>
+                      {suspect.name.split(' ').map((part) => part[0]).join('')}
+                    </Text>
+                  </View>
+                  <View style={styles.personCopy}>
+                    <Text style={[styles.cardTitle, textStyle]}>{suspect.name}</Text>
+                    <Text style={[styles.small, { color: colors.primary }]}>{suspect.role}</Text>
+                    <Text style={[styles.small, mutedStyle]}>{suspect.note}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+            <ActionButton title="Begin evidence review" onPress={() => setPhase('evidence')} colors={colors} />
+            <ActionButton title="Back to Bureau" onPress={() => setPhase('hq')} colors={colors} variant="ghost" />
+          </>
+        )}
+
+        {phase === 'evidence' && (
+          <>
+            <SectionLabel colors={colors}>Investigation · Evidence</SectionLabel>
+            <Text style={[styles.heroTitle, textStyle]}>Inspect the records.</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>
+              Tap each record to inspect it. You need all five before the witness interviews.
+            </Text>
+            <View style={[styles.progressTrack, { backgroundColor: colors.secondary }]}>
+              <View style={[styles.progressFill, { backgroundColor: colors.primary, width: `${(cluesFound.length / CASE_001.clues.length) * 100}%` }]} />
+            </View>
+            <Text style={[styles.progressText, mutedStyle]}>{cluesFound.length} of 5 records logged</Text>
+            {CASE_001.clues.map((clue, index) => {
+              const found = cluesFound.includes(clue.id);
+              const expanded = activeClue === clue.id;
+              return (
+                <Pressable
+                  key={clue.id}
+                  accessibilityRole="button"
+                  onPress={() => inspectClue(clue.id)}
+                  style={({ pressed }) => [
+                    styles.card,
+                    cardStyle,
+                    styles.inspectCard,
+                    { opacity: pressed ? 0.82 : 1, borderColor: found ? colors.primary : colors.border },
+                  ]}
+                >
+                  <View style={styles.row}>
+                    <Text style={[styles.index, { color: colors.primary }]}>0{index + 1}</Text>
+                    <View style={styles.flexCopy}>
+                      <Text style={[styles.cardTitle, textStyle]}>{clue.title}</Text>
+                      <Text style={[styles.small, mutedStyle]}>{clue.label}</Text>
+                    </View>
+                    <Text style={[styles.statusText, { color: found ? colors.primary : colors.mutedForeground }]}>
+                      {found ? 'LOGGED' : 'INSPECT'}
+                    </Text>
+                  </View>
+                  {expanded && <Text style={[styles.body, mutedStyle, styles.detail]}>{clue.detail}</Text>}
+                </Pressable>
+              );
+            })}
+            <ActionButton
+              title="Question the witnesses"
+              onPress={() => setPhase('interviews')}
+              colors={colors}
+              disabled={!allCluesFound}
+            />
+            <ActionButton title="Back to briefing" onPress={() => setPhase('briefing')} colors={colors} variant="ghost" />
+          </>
+        )}
+
+        {phase === 'interviews' && (
+          <>
+            <SectionLabel colors={colors}>Investigation · Interviews</SectionLabel>
+            <Text style={[styles.heroTitle, textStyle]}>Ask the right questions.</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>
+              Ask at least one question to each witness. Follow-ups are optional, but THE MEMORY keeps track of what you leave unasked.
+            </Text>
+            {CASE_001.witnesses.map((witness, index) => (
+              <View key={witness.id} style={[styles.card, cardStyle]}>
+                <View style={styles.row}>
+                  <View style={styles.flexCopy}>
+                    <Text style={[styles.cardTitle, textStyle]}>{witness.name}</Text>
+                    <Text style={[styles.small, mutedStyle]}>{witness.role}</Text>
+                  </View>
+                  <Text style={[styles.statusText, { color: witness.questions.some((q) => askedQuestions.includes(`${witness.id}:${q.id}`)) ? colors.primary : colors.mutedForeground }]}>
+                    {witness.questions.some((q) => askedQuestions.includes(`${witness.id}:${q.id}`)) ? 'HEARD' : `WITNESS 0${index + 1}`}
+                  </Text>
+                </View>
+                {witness.questions.map((question) => {
+                  const key = `${witness.id}:${question.id}`;
+                  const asked = askedQuestions.includes(key);
+                  const active = activeReply === key;
+                  return (
+                    <View key={key} style={styles.questionBlock}>
+                      <Pressable
+                        accessibilityRole="button"
+                        onPress={() => askQuestion(witness.id, question.id)}
+                        style={({ pressed }) => [
+                          styles.questionButton,
+                          { borderColor: asked ? colors.primary : colors.border, opacity: pressed ? 0.78 : 1 },
+                        ]}
+                      >
+                        <Text style={[styles.questionText, textStyle]}>{question.prompt}</Text>
+                        <Text style={[styles.small, { color: colors.primary }]}>{asked ? 'ASKED' : 'ASK QUESTION'}</Text>
+                      </Pressable>
+                      {active && <Text style={[styles.reply, mutedStyle]}>{question.reply}</Text>}
+                    </View>
+                  );
+                })}
+              </View>
+            ))}
+            <Text style={[styles.progressText, mutedStyle]}>
+              {witnessCount}/3 witnesses heard · {unansweredQuestions} optional questions left unasked
+            </Text>
+            <ActionButton
+              title="Reconstruct the timeline"
+              onPress={() => setPhase('timeline')}
+              colors={colors}
+              disabled={!allWitnessesHeard}
+            />
+            <ActionButton title="Back to evidence" onPress={() => setPhase('evidence')} colors={colors} variant="ghost" />
+          </>
+        )}
+
+        {phase === 'timeline' && (
+          <>
+            <SectionLabel colors={colors}>Investigation · Timeline</SectionLabel>
+            <Text style={[styles.heroTitle, textStyle]}>Put the night in order.</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>
+              Select the four records from earliest to latest. The timestamps are evidence too.
+            </Text>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Your sequence</SectionLabel>
+              {timelineOrder.length === 0 ? (
+                <Text style={[styles.body, mutedStyle]}>No events selected yet.</Text>
+              ) : (
+                timelineOrder.map((id, index) => {
+                  const event = CASE_001.timelineEvents.find((item) => item.id === id);
+                  return (
+                    <Text key={id} style={[styles.sequenceItem, textStyle]}>
+                      {index + 1}. {event?.time} — {event?.title}
+                    </Text>
+                  );
+                })
+              )}
+            </View>
+            {CASE_001.timelineEvents.map((event) => {
+              const selected = timelineOrder.includes(event.id);
+              return (
+                <Pressable
+                  key={event.id}
+                  accessibilityRole="button"
+                  disabled={selected || timelineSolved}
+                  onPress={() => selectTimelineEvent(event.id)}
+                  style={({ pressed }) => [
+                    styles.optionCard,
+                    { backgroundColor: colors.card, borderColor: selected ? colors.primary : colors.border, opacity: selected ? 0.48 : pressed ? 0.8 : 1 },
+                  ]}
+                >
+                  <Text style={[styles.small, { color: colors.primary }]}>{event.time}</Text>
+                  <Text style={[styles.cardTitle, textStyle]}>{event.title}</Text>
+                  <Text style={[styles.small, mutedStyle]}>{event.detail}</Text>
+                </Pressable>
+              );
+            })}
+            {!!timelineMessage && (
+              <Text style={[styles.notice, { color: timelineSolved ? colors.primary : colors.destructive }]}>
+                {timelineMessage}
+              </Text>
+            )}
+            {timelineSolved ? (
+              <ActionButton title="Make your deduction" onPress={() => setPhase('deduction')} colors={colors} />
+            ) : timelineOrder.length === 4 ? (
+              <ActionButton title="Reset sequence and retry" onPress={resetTimeline} colors={colors} variant="secondary" />
+            ) : (
+              <Text style={[styles.progressText, mutedStyle]}>{timelineOrder.length}/4 events selected</Text>
+            )}
+            <ActionButton title="Back to interviews" onPress={() => setPhase('interviews')} colors={colors} variant="ghost" />
+          </>
+        )}
+
+        {phase === 'deduction' && (
+          <>
+            <SectionLabel colors={colors}>Final review · Deduction</SectionLabel>
+            <Text style={[styles.heroTitle, textStyle]}>What does the evidence prove?</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>
+              Choose who moved the envelope and why. A correct guess is not enough; your theory must fit the records.
+            </Text>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Who moved it?</SectionLabel>
+              {CASE_001.suspects.map((suspect) => {
+                const selected = selectedSuspect === suspect.id;
+                return (
+                  <Pressable
+                    key={suspect.id}
+                    accessibilityRole="button"
+                    onPress={() => setSelectedSuspect(suspect.id)}
+                    style={[styles.choice, { borderColor: selected ? colors.primary : colors.border, backgroundColor: selected ? colors.secondary : 'transparent' }]}
+                  >
+                    <Text style={[styles.cardTitle, textStyle]}>{suspect.name}</Text>
+                    <Text style={[styles.small, mutedStyle]}>{suspect.role}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Why did they move it?</SectionLabel>
+              {CASE_001.motives.map((motive) => {
+                const selected = selectedMotive === motive.id;
+                return (
+                  <Pressable
+                    key={motive.id}
+                    accessibilityRole="button"
+                    onPress={() => setSelectedMotive(motive.id)}
+                    style={[styles.choice, { borderColor: selected ? colors.primary : colors.border, backgroundColor: selected ? colors.secondary : 'transparent' }]}
+                  >
+                    <Text style={[styles.cardTitle, textStyle]}>{motive.label}</Text>
+                    <Text style={[styles.small, mutedStyle]}>{motive.note}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+            {!!deductionMessage && <Text style={[styles.notice, { color: colors.destructive }]}>{deductionMessage}</Text>}
+            <ActionButton
+              title="Submit evidence-based conclusion"
+              onPress={submitDeduction}
+              colors={colors}
+              disabled={!selectedSuspect || !selectedMotive || !allCluesFound || !allWitnessesHeard || !timelineSolved}
+            />
+            <ActionButton title="Back to timeline" onPress={() => setPhase('timeline')} colors={colors} variant="ghost" />
+          </>
+        )}
+
+        {phase === 'review' && (
+          <>
+            <View style={styles.closedStamp}>
+              <Text style={[styles.closedStampText, { color: colors.primary }]}>CASE CLOSED · 001</Text>
+            </View>
+            <Text style={[styles.heroTitle, textStyle]}>The truth is in the details.</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>
+              You identified the action and the reason behind it. Here is what the file can prove.
+            </Text>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Truth</SectionLabel>
+              <Text style={[styles.body, textStyle]}>{CASE_001.truth}</Text>
+            </View>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Proof</SectionLabel>
+              <Text style={[styles.body, textStyle]}>{CASE_001.proof}</Text>
+            </View>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Outcome</SectionLabel>
+              <Text style={[styles.body, textStyle]}>{CASE_001.outcome}</Text>
+            </View>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>THE MEMORY · Your investigation</SectionLabel>
+              <Text style={[styles.memoryLine, textStyle]}>Clues inspected: {cluesFound.length}/5</Text>
+              <Text style={[styles.memoryLine, textStyle]}>Witness questions asked: {askedQuestions.length}/6</Text>
+              <Text style={[styles.memoryLine, textStyle]}>Questions left unasked: {unansweredQuestions}</Text>
+              <Text style={[styles.memoryLine, textStyle]}>Timeline attempts: {timelineAttempts + 1}</Text>
+              <Text style={[styles.memoryNote, mutedStyle]}>
+                The next file can remember what you noticed, what you missed and which theory you trusted.
+              </Text>
+            </View>
+            <ActionButton title="Return to Detective Bureau" onPress={() => setPhase('hq')} colors={colors} />
+          </>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  text: {
-    fontSize: 16,
-    textAlign: 'center',
+  safe: { flex: 1 },
+  content: {
+    width: '100%',
+    maxWidth: 720,
+    alignSelf: 'center',
     paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 48,
   },
+  loading: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
+  topline: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 30 },
+  brand: { fontSize: 13, fontWeight: '900', letterSpacing: 4 },
+  kicker: { fontSize: 9, fontWeight: '700', letterSpacing: 2, marginTop: 4 },
+  caseStamp: { borderWidth: 1, borderRadius: 7, paddingHorizontal: 10, paddingVertical: 7 },
+  caseStampText: { fontSize: 10, fontWeight: '900', letterSpacing: 1.4 },
+  heroTitle: { fontSize: 30, lineHeight: 36, fontWeight: '800', letterSpacing: 0.2 },
+  subtitle: { fontSize: 14, lineHeight: 22, marginTop: 9, marginBottom: 12 },
+  card: { borderWidth: 1, borderRadius: 18, padding: 17, marginTop: 14 },
+  sectionLabel: { fontSize: 10, fontWeight: '900', letterSpacing: 2.1, marginBottom: 10, textTransform: 'uppercase' },
+  caseTitle: { fontSize: 22, fontWeight: '800', lineHeight: 28 },
+  cardTitle: { fontSize: 16, fontWeight: '800', lineHeight: 22 },
+  body: { fontSize: 14, lineHeight: 22 },
+  small: { fontSize: 12, lineHeight: 18, marginTop: 3 },
+  statusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 },
+  statusText: { fontSize: 10, fontWeight: '900', letterSpacing: 1.2 },
+  actionButton: { minHeight: 48, borderRadius: 13, borderWidth: 1, paddingHorizontal: 16, paddingVertical: 12, alignItems: 'center', justifyContent: 'center', marginTop: 12 },
+  actionButtonText: { fontSize: 13, fontWeight: '900', letterSpacing: 0.5, textAlign: 'center' },
+  memoryGrid: { flexDirection: 'row', marginTop: 16, marginBottom: 4 },
+  memoryCell: { flex: 1 },
+  memoryNumber: { fontSize: 23, fontWeight: '800' },
+  memoryLabel: { fontSize: 10, lineHeight: 15, marginTop: 4 },
+  memoryNote: { fontSize: 12, lineHeight: 19, marginTop: 13 },
+  footerNote: { fontSize: 11, lineHeight: 18, textAlign: 'center', marginTop: 24, letterSpacing: 0.4 },
+  personRow: { flexDirection: 'row', alignItems: 'flex-start', marginTop: 13 },
+  personInitial: { width: 42, height: 42, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: '#1A2636', marginRight: 12 },
+  personInitialText: { fontSize: 12, fontWeight: '900', letterSpacing: 1 },
+  personCopy: { flex: 1 },
+  flexCopy: { flex: 1 },
+  index: { fontSize: 12, fontWeight: '900', marginRight: 12 },
+  inspectCard: { padding: 15 },
+  detail: { borderTopWidth: 1, borderTopColor: '#344052', marginTop: 13, paddingTop: 12 },
+  progressTrack: { height: 5, borderRadius: 4, overflow: 'hidden', marginTop: 14 },
+  progressFill: { height: 5, borderRadius: 4 },
+  progressText: { fontSize: 11, lineHeight: 17, marginTop: 9 },
+  row: { flexDirection: 'row', alignItems: 'center' },
+  questionBlock: { marginTop: 13 },
+  questionButton: { borderWidth: 1, borderRadius: 12, padding: 12 },
+  questionText: { fontSize: 13, fontWeight: '700', lineHeight: 19 },
+  reply: { fontSize: 13, lineHeight: 20, paddingHorizontal: 10, paddingTop: 10 },
+  notice: { fontSize: 13, lineHeight: 20, marginTop: 14, fontWeight: '700' },
+  sequenceItem: { fontSize: 13, lineHeight: 21, marginTop: 6 },
+  optionCard: { borderWidth: 1, borderRadius: 14, padding: 15, marginTop: 10 },
+  choice: { borderWidth: 1, borderRadius: 12, padding: 13, marginTop: 9 },
+  closedStamp: { alignSelf: 'flex-start', borderWidth: 1, borderColor: '#B99A5B', borderRadius: 7, paddingHorizontal: 10, paddingVertical: 7, marginBottom: 16 },
+  closedStampText: { fontSize: 10, fontWeight: '900', letterSpacing: 1.4 },
+  memoryLine: { fontSize: 13, lineHeight: 22, marginTop: 4 },
 });
