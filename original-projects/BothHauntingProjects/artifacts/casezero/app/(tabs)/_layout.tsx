@@ -40,7 +40,6 @@ function ClassicTabLayout() {
         headerShown: false,
         tabBarStyle: {
           display: 'none',
-          display: 'none',
           position: 'absolute',
           backgroundColor: isIOS ? 'transparent' : colors.background,
           borderTopWidth: isWeb ? 1 : 0,
