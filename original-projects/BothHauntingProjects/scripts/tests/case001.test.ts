@@ -37,3 +37,13 @@ test('the case review separates truth, proof and outcome', () => {
   assert.ok(CASE_001.proof.length > 80);
   assert.ok(CASE_001.outcome.length > 40);
 });
+
+test('the protective motive is supported by a dated, signed record', () => {
+  const leakClue = CASE_001.clues.find((clue) => clue.id === 'leak');
+  assert.ok(leakClue);
+  assert.match(leakClue.detail, /21:05/);
+  assert.match(leakClue.detail, /21:11/);
+  assert.match(leakClue.detail, /M\\.R\\./);
+  assert.match(leakClue.detail, /keep it dry/i);
+  assert.match(CASE_001.proof, /maintenance ticket/i);
+});

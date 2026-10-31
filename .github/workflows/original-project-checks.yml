@@ -2,7 +2,7 @@ name: Original CaseZero workspace checks
 
 on:
   push:
-    branches: [casezero-original-work]
+    branches: [casezero-original-work, casezero-development]
     paths:
       - "original-projects/BothHauntingProjects/artifacts/casezero/**"
       - "original-projects/BothHauntingProjects/lib/**"

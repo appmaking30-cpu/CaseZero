@@ -31,7 +31,7 @@ export const CASE_001 = {
       title: "The ceiling stain",
       label: "Physical evidence",
       detail:
-        "A fresh water trail runs down the shelf behind the records cabinet. The envelope would have been directly beneath the leak. The cabinet lock shows no damage.",
+        "A fresh water trail runs down the shelf behind the records cabinet. A maintenance ticket at 21:05 records the leak. A porter addendum at 21:11 reads, 'Moved the sealed blue envelope to the luggage-office shelf to keep it dry' and is signed M.R. The cabinet lock shows no damage.",
     },
     {
       id: "wheel",
@@ -170,7 +170,7 @@ export const CASE_001 = {
   truth:
     "Miles Renn moved the envelope from the records shelf to the luggage office after noticing the leak. He was protecting the roster, not stealing it.",
   proof:
-    "The service-key register gives Miles access at the right time. The chipped cart-wheel mark leads from the records room to the luggage office. Jo heard the cart at 21:12, Nia saw Miles carry the damp parcel, and the 21:18 inventory slip records the envelope under his initials. Ada's 21:16 receipt independently places her at the ticket desk.",
+    "The service-key register gives Miles access at the right time. The 21:05 maintenance ticket and 21:11 porter addendum, signed M.R., show that he moved the sealed envelope to protect it from the leak. The chipped cart-wheel mark leads from the records room to the luggage office. Jo heard the cart at 21:12, Nia saw Miles carry the damp parcel, and the 21:18 inventory slip records the envelope under his initials. Ada's 21:16 receipt independently places her at the ticket desk.",
   outcome:
     "The envelope is returned with its seal intact. The leak is repaired, and the station adds a dry-storage check to the night-shift handover. Miles is cleared of theft but reminded to log emergency moves.",
 } as const;
