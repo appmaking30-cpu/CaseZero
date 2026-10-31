@@ -1,0 +1,32 @@
+name: Original CaseZero workspace checks
+
+on:
+  push:
+    branches: [casezero-original-work]
+    paths:
+      - "original-projects/BothHauntingProjects/**"
+      - ".github/workflows/original-project-checks.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  typecheck-and-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: original-projects/BothHauntingProjects
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install pnpm 10
+        run: npm install --global pnpm@10
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck workspace
+        run: pnpm run typecheck
+      - name: Build workspace
+        run: pnpm run build
