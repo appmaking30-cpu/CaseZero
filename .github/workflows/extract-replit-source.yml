@@ -1,0 +1,31 @@
+name: Extract preserved Replit source
+
+on:
+  push:
+    branches: [casezero-original-work]
+    paths:
+      - ".github/workflows/extract-replit-source.yml"
+      - "scripts/extract-replit-source.py"
+      - "BothHauntingProjects.zip"
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Safely extract preserved workspace
+        run: python3 scripts/extract-replit-source.py BothHauntingProjects.zip
+      - name: Commit extracted source on this working branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add original-projects
+          if ! git diff --cached --quiet; then
+            git commit -m "Extract preserved Replit workspace for continued development"
+            git push
+          else
+            echo "No extracted source changes."
+          fi
