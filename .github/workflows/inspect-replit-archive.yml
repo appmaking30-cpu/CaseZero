@@ -1,0 +1,20 @@
+name: Inspect preserved Replit source archive
+
+on:
+  push:
+    branches: [casezero-original-work]
+    paths:
+      - ".github/workflows/inspect-replit-archive.yml"
+      - "scripts/inspect-replit-archive.py"
+      - "BothHauntingProjects.zip"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inventory and screen the preserved archive
+        run: python3 scripts/inspect-replit-archive.py BothHauntingProjects.zip
