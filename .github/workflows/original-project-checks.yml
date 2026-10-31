@@ -38,3 +38,19 @@ jobs:
         run: pnpm --filter @workspace/casezero exec expo export --platform web
         env:
           EXPO_NO_TELEMETRY: 1
+      - name: Install browser test dependency outside the workspace
+        run: npm install --prefix /tmp/casezero-browser playwright@1.56.1
+      - name: Install Chromium
+        run: /tmp/casezero-browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Run mobile tutorial smoke test
+        run: |
+          python3 -m http.server 4173 --directory artifacts/casezero/dist >/tmp/casezero-http.log 2>&1 &
+          echo $! >/tmp/casezero-http.pid
+          node scripts/tests/browser-smoke.cjs
+      - name: Upload actual mobile preview screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: casezero-mobile-preview
+          path: /tmp/casezero-*.png
+          if-no-files-found: ignore
