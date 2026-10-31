@@ -266,7 +266,7 @@ export default function HomeScreen() {
   if (!loaded) {
     return (
       <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-        <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+        <StatusBar barStyle="light-content" />
         <View style={styles.loading}>
           <Text style={[styles.brand, { color: colors.primary }]}>CASEZERO</Text>
           <Text style={[styles.body, mutedStyle]}>Restoring THE MEMORY…</Text>
@@ -277,7 +277,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+      <StatusBar barStyle="light-content" />
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
