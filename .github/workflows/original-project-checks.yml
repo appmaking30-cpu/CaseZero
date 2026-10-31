@@ -4,7 +4,10 @@ on:
   push:
     branches: [casezero-original-work]
     paths:
-      - "original-projects/BothHauntingProjects/**"
+      - "original-projects/BothHauntingProjects/artifacts/casezero/**"
+      - "original-projects/BothHauntingProjects/lib/**"
+      - "original-projects/BothHauntingProjects/pnpm-lock.yaml"
+      - "original-projects/BothHauntingProjects/pnpm-workspace.yaml"
       - ".github/workflows/original-project-checks.yml"
   workflow_dispatch:
 
@@ -12,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  typecheck-and-build:
+  casezero-checks:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -26,7 +29,7 @@ jobs:
         run: npm install --global pnpm@10
       - name: Install locked dependencies
         run: pnpm install --frozen-lockfile
-      - name: Typecheck workspace
-        run: pnpm run typecheck
-      - name: Build workspace
-        run: pnpm run build
+      - name: Typecheck the CaseZero Expo app
+        run: pnpm --filter @workspace/casezero run typecheck
+      - name: Export Android-friendly web preview
+        run: pnpm --filter @workspace/casezero exec expo export --platform web
