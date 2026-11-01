@@ -1115,6 +1115,15 @@ export default function HomeScreen() {
                 <ActionButton title="Open Case 030" onPress={() => setPhase('case030')} colors={colors} />
               </View>
             )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case030') && !investigationArchive.completedCases.some((record) => record.caseId === 'case031') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Incoming file · 031</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_031_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_031_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>The room was occupied and a shared terminal session followed. Review the profile audit and pending credential request without treating a team login as a named operator.</Text>
+                <ActionButton title="Open Case 031" onPress={() => setPhase('case031')} colors={colors} />
+              </View>
+            )}
             {missingDetectiveConvergence.unlocked && (
               <View style={[styles.card, cardStyle]}>
                 <SectionLabel colors={colors}>Classified · Cross-case review</SectionLabel>
