@@ -13,6 +13,14 @@ import {
 } from '../../artifacts/casezero/game/case001';
 import { CASE_002, getCase002Carryover } from '../../artifacts/casezero/game/case002';
 import { getMissingDetectiveArcStatus, MISSING_DETECTIVE_DOSSIER } from '../../artifacts/casezero/game/missingDetectiveArc';
+import {
+  CASE_003_GAME,
+  EMPTY_CASE003_PROGRESS,
+  getCase003Carryover,
+  getCase003QuestionReply,
+  isCase003DeductionCorrect,
+  isCase003TimelineCorrect,
+} from '../../artifacts/casezero/game/case003Game';
 
 test('Case 001 has a complete, distinct evidence and witness set', () => {
   assert.equal(CASE_001.clues.length, 5);
@@ -220,4 +228,46 @@ test('Missing Detective campaign arc unlocks only after both opening cases close
   assert.equal(unlocked.completedCaseCount, 2);
   assert.deepEqual(unlocked.missingCaseIds, []);
   assert.match(MISSING_DETECTIVE_DOSSIER.recoveredNote, /changed after they were closed/i);
+});
+
+
+test('Missing Detective case has a complete investigation with distinct evidence', () => {
+  assert.equal(CASE_003_GAME.id, 'case003');
+  assert.equal(CASE_003_GAME.clues.length, 4);
+  assert.equal(new Set(CASE_003_GAME.clues.map((clue) => clue.id)).size, 4);
+  assert.equal(CASE_003_GAME.witnesses.length, 3);
+  assert.ok(CASE_003_GAME.witnesses.every((witness) => witness.questions.length === 2));
+  assert.equal(CASE_003_GAME.timelineEvents.length, 4);
+  assert.ok(CASE_003_GAME.truth.length > 80);
+  assert.ok(CASE_003_GAME.proof.length > 100);
+  assert.deepEqual(EMPTY_CASE003_PROGRESS.cluesFound, []);
+});
+
+test('Missing Detective timeline and deduction require a complete evidence-backed solution', () => {
+  assert.equal(isCase003TimelineCorrect(['signout', 'print', 'cabinet', 'delivery']), true);
+  assert.equal(isCase003TimelineCorrect(['signout', 'cabinet', 'print', 'delivery']), false);
+  assert.equal(isCase003TimelineCorrect(['signout', 'print']), false);
+  assert.equal(isCase003DeductionCorrect('arden', 'control'), true);
+  assert.equal(isCase003DeductionCorrect('arden', 'profit'), false);
+  assert.equal(isCase003DeductionCorrect('lyle', 'control'), false);
+});
+
+test('Case 003 carries actual prior investigation choices into witness dialogue', () => {
+  const one = archiveCompletedCase(EMPTY_INVESTIGATION_ARCHIVE, {
+    caseId: 'case001', caseTitle: CASE_001.title, closedAt: '2026-11-01T12:00:00.000Z',
+    selectedSuspectId: 'miles', selectedMotiveId: 'protect', inspectedClues: ['The ceiling stain'],
+    askedQuestions: [], unansweredQuestions: ['Nia Vale: Was the parcel damaged?'],
+  });
+  const both = archiveCompletedCase(one, {
+    caseId: 'case002', caseTitle: 'The Unlit Room', closedAt: '2026-11-01T12:30:00.000Z',
+    selectedSuspectId: 'june', selectedMotiveId: 'protect', inspectedClues: ['The damp shelf'],
+    askedQuestions: [], unansweredQuestions: [],
+  });
+  const carryover = getCase003Carryover(both);
+  assert.equal(carryover.hasBothOpeningCases, true);
+  assert.equal(carryover.openingCasesInspected, 2);
+  assert.equal(carryover.unansweredFromPrior.length, 1);
+  assert.match(getCase003QuestionReply('arden', 'terminal', both), /earlier files taught the Bureau/i);
+  assert.match(getCase003QuestionReply('lyle', 'delivery', both), /order of events matters/i);
+  assert.match(getCase003QuestionReply('arden', 'terminal', EMPTY_INVESTIGATION_ARCHIVE), /terminal log alone/i);
 });
