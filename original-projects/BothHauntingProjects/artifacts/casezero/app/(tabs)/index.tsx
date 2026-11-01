@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
+import Case004Screen from '@/components/Case004Screen';
+import { CASE_004_GAME } from '@/game/case004Game';
 import {
   CASE_001,
   getInvestigationMemory,
@@ -48,7 +50,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase;
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004';
 
 type SavedState = {
   phase: AppPhase;
@@ -665,8 +667,8 @@ export default function HomeScreen() {
                 <SectionLabel colors={colors}>Previous investigations</SectionLabel>
                 <Text style={[styles.cardTitle, textStyle]}>The Bureau remembers.</Text>
                 {investigationArchive.completedCases.map((record) => {
-                  const suspect = (record.caseId === CASE_003_GAME.id ? CASE_003_GAME.suspects : record.caseId === CASE_002_GAME.id ? CASE_002_GAME.suspects : CASE_001.suspects).find((entry) => entry.id === record.selectedSuspectId);
-                  const motive = (record.caseId === CASE_003_GAME.id ? CASE_003_GAME.motives : record.caseId === CASE_002_GAME.id ? CASE_002_GAME.motives : CASE_001.motives).find((entry) => entry.id === record.selectedMotiveId);
+                  const suspect = (record.caseId === 'case004' ? CASE_004_GAME.suspects : record.caseId === CASE_003_GAME.id ? CASE_003_GAME.suspects : record.caseId === CASE_002_GAME.id ? CASE_002_GAME.suspects : CASE_001.suspects).find((entry) => entry.id === record.selectedSuspectId);
+                  const motive = (record.caseId === 'case004' ? CASE_004_GAME.motives : record.caseId === CASE_003_GAME.id ? CASE_003_GAME.motives : record.caseId === CASE_002_GAME.id ? CASE_002_GAME.motives : CASE_001.motives).find((entry) => entry.id === record.selectedMotiveId);
                   return (
                     <View key={record.caseId} style={styles.questionBlock}>
                       <Text style={[styles.cardTitle, textStyle]}>{record.caseId.toUpperCase()} · {record.caseTitle}</Text>
@@ -738,6 +740,15 @@ export default function HomeScreen() {
                   onPress={() => setPhase(case003Progress.completed ? 'case003Review' : 'case003Briefing')}
                   colors={colors}
                 />
+              </View>
+            )}
+            {case003Progress.completed && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Incoming file · 004</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_004_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_004_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>Rowan Vale’s field recorder disappeared from North Quay Signal House. The maintenance override, locker seal and courier docket do not agree.</Text>
+                <ActionButton title="Open Case 004" onPress={() => setPhase('case004')} colors={colors} />
               </View>
             )}
             <Text style={[styles.footerNote, mutedStyle]}>
@@ -1388,6 +1399,14 @@ export default function HomeScreen() {
               disabled={!case003Progress.selectedSuspect || !case003Progress.selectedMotive || !case003AllCluesFound || !case003AllWitnessesHeard || !case003Progress.timelineSolved} />
             <ActionButton title="Back to timeline" onPress={() => setPhase('case003Timeline')} colors={colors} variant="ghost" />
           </>
+        )}
+
+        {phase === 'case004' && (
+          <Case004Screen
+            archive={investigationArchive}
+            onArchive={(record) => setInvestigationArchive((current) => archiveCompletedCase(current, record))}
+            onReturn={() => setPhase('hq')}
+          />
         )}
 
         {phase === 'case003Review' && (
