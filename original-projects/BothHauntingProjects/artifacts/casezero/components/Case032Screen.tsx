@@ -107,7 +107,7 @@ export default function Case032Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase032TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the occupancy, shift handover, export and credential request.'
+      ? 'That sequence conflicts with the time stamps. Compare the roster, signed transfer, terminal session and later variance note.'
       : '');
   };
   const submit = () => {
@@ -218,7 +218,7 @@ export default function Case032Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 032 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>What do the independent room records actually prove?</Text>
+      <Text style={[styles.hero, text]}>What do the independent duty records actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the unresolved terminal operator, then choose the precise fact the records support.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>DISPATCH DESK RESPONSIBILITY UNDER REVIEW</Text>
