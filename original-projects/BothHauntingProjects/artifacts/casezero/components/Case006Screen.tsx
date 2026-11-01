@@ -25,7 +25,7 @@ export default function Case006Screen({ onArchive, onReturn }: Props) {
     AsyncStorage.getItem(SAVE_KEY).then((raw) => {
       if (!active || !raw) return;
       const saved = JSON.parse(raw) as Partial<Progress>;
-      const fragmentIds = new Set(CASE_006_GAME.fragments.map((item) => item.id));
+      const fragmentIds = new Set<string>(CASE_006_GAME.fragments.map((item) => item.id));
       const heard = Array.isArray(saved.heardFragments)
         ? [...new Set(saved.heardFragments.filter((id): id is string => typeof id === 'string' && fragmentIds.has(id)))]
         : [];
@@ -33,7 +33,7 @@ export default function Case006Screen({ onArchive, onReturn }: Props) {
         ? [...new Set(saved.order.filter((id): id is string => typeof id === 'string' && fragmentIds.has(id)))].slice(0, 3)
         : [];
       const validOrder = saved.completed === true && isCase006OrderCorrect(order);
-      const sourceIds = new Set(CASE_006_GAME.sources.map((item) => item.id));
+      const sourceIds = new Set<string>(CASE_006_GAME.sources.map((item) => item.id));
       const restored: Progress = {
         heardFragments: heard,
         order: validOrder ? [...order] : order,
