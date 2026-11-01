@@ -122,7 +122,7 @@ export default function Case011Screen({ archive, onArchive, onReturn }: Props) {
     setPhase('review');
   };
 
-  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING CENTRAL CONTINUITY OPERATIONS VAULT FILE…</Text></View>;
+  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING CONTINUITY OPERATIONS VAULT FILE…</Text></View>;
 
   return <>
     {phase === 'briefing' && <>
@@ -225,7 +225,7 @@ export default function Case011Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 011</Text></View>
       <Text style={[styles.hero, text]}>A roster is not an operator.</Text>
-      <Text style={[styles.subtitle, muted]}>C-4 confirms Emergency Continuity as the active M-2 authority channel during the outage. The sealed C-4 holder identity remains unresolved.</Text>
+      <Text style={[styles.subtitle, muted]}>The rotation ledger confirms Sable Neri was scheduled as primary C-4 coordinator. The shared-terminal operator remains unidentified.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_011_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_011_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_011_GAME.outcome}</Text></View>
