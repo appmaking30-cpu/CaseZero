@@ -27,6 +27,13 @@ import {
   type InvestigationArchive,
 } from '@/game/investigationArchive';
 import { CASE_002, getCase002Carryover } from '@/game/case002';
+import {
+  BUREAU_TEAM_SAVE_KEY,
+  EMPTY_BUREAU_TEAM_BOARD,
+  getBureauSpecialistInsight,
+  normalizeBureauTeamBoard,
+  type BureauTeamBoard,
+} from '@/game/bureauTeam';
 import { getMissingDetectiveArcStatus, MISSING_DETECTIVE_DOSSIER } from '@/game/missingDetectiveArc';
 import {
   CASE_003_GAME,
@@ -128,6 +135,7 @@ export default function HomeScreen() {
   const [loaded, setLoaded] = useState(false);
   const [archiveLoaded, setArchiveLoaded] = useState(false);
   const [investigationArchive, setInvestigationArchive] = useState<InvestigationArchive>(EMPTY_INVESTIGATION_ARCHIVE);
+  const [bureauTeamBoard, setBureauTeamBoard] = useState<BureauTeamBoard>(EMPTY_BUREAU_TEAM_BOARD);
   const [phase, setPhase] = useState<AppPhase>('hq');
   const [case002Progress, setCase002Progress] = useState<Case002Progress>(EMPTY_CASE002_PROGRESS);
   const [case003Progress, setCase003Progress] = useState<Case003Progress>(EMPTY_CASE003_PROGRESS);
@@ -159,14 +167,21 @@ export default function HomeScreen() {
       AsyncStorage.getItem(ARCHIVE_KEY),
       AsyncStorage.getItem(CASE002_SAVE_KEY),
       AsyncStorage.getItem(CASE003_SAVE_KEY),
+      AsyncStorage.getItem(BUREAU_TEAM_SAVE_KEY),
     ])
-      .then(([raw, archiveRaw, case002Raw, case003Raw]) => {
+      .then(([raw, archiveRaw, case002Raw, case003Raw, teamRaw]) => {
         if (!active) return;
+        let restoredArchive = EMPTY_INVESTIGATION_ARCHIVE;
         if (archiveRaw) {
           const parsedArchive = JSON.parse(archiveRaw) as InvestigationArchive;
           if (parsedArchive.version === 1 && Array.isArray(parsedArchive.completedCases)) {
+            restoredArchive = parsedArchive;
             setInvestigationArchive(parsedArchive);
           }
+        }
+        if (teamRaw) {
+          const parsedTeam = JSON.parse(teamRaw) as unknown;
+          setBureauTeamBoard(normalizeBureauTeamBoard(parsedTeam, restoredArchive));
         }
         if (case003Raw) {
           const parsed = JSON.parse(case003Raw) as Partial<Case003Progress> | null;
@@ -409,6 +424,8 @@ export default function HomeScreen() {
     setTimelineMessage('');
   };
   const case002AllCluesFound = case002Progress.cluesFound.length === CASE_002_GAME.clues.length;
+  const case002SpecialistId = bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'case002')?.specialistId ?? null;
+  const case002SpecialistInsight = getBureauSpecialistInsight(case002SpecialistId, 'case002', case002Progress.cluesFound);
   const case002WitnessCount = CASE_002_GAME.witnesses.filter((witness) =>
     witness.questions.some((question) => case002Progress.askedQuestions.includes(`${witness.id}:${question.id}`)),
   ).length;
@@ -481,6 +498,8 @@ export default function HomeScreen() {
 
 
   const case003AllCluesFound = case003Progress.cluesFound.length === CASE_003_GAME.clues.length;
+  const case003SpecialistId = bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'case003')?.specialistId ?? null;
+  const case003SpecialistInsight = getBureauSpecialistInsight(case003SpecialistId, 'case003', case003Progress.cluesFound, case003Progress.askedQuestions);
   const case003WitnessCount = CASE_003_GAME.witnesses.filter((witness) =>
     witness.questions.some((question) => case003Progress.askedQuestions.includes(`${witness.id}:${question.id}`)),
   ).length;
@@ -833,6 +852,12 @@ export default function HomeScreen() {
                 </Pressable>
               );
             })}
+            {case002SpecialistInsight && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>{case002SpecialistInsight.title}</SectionLabel>
+                <Text style={[styles.body, textStyle]}>{case002SpecialistInsight.detail}</Text>
+              </View>
+            )}
             <ActionButton title="Question the witnesses" onPress={() => setPhase('case002Interviews')} colors={colors} disabled={!case002AllCluesFound} />
             <ActionButton title="Back to briefing" onPress={() => setPhase('case002Briefing')} colors={colors} variant="ghost" />
           </>
@@ -1344,6 +1369,12 @@ export default function HomeScreen() {
                 })}
               </View>
             ))}
+            {case003SpecialistInsight && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>{case003SpecialistInsight.title}</SectionLabel>
+                <Text style={[styles.body, textStyle]}>{case003SpecialistInsight.detail}</Text>
+              </View>
+            )}
             <Text style={[styles.progressText, mutedStyle]}>{case003WitnessCount}/3 witnesses heard · {case003Unanswered.length} questions left unasked</Text>
             <ActionButton title="Reconstruct the timeline" onPress={() => setPhase('case003Timeline')} colors={colors} disabled={!case003AllWitnessesHeard} />
             <ActionButton title="Back to evidence" onPress={() => setPhase('case003Evidence')} colors={colors} variant="ghost" />
@@ -1422,6 +1453,7 @@ export default function HomeScreen() {
         {phase === 'case004' && (
           <Case004Screen
             archive={investigationArchive}
+            assignedSpecialistId={bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'case004')?.specialistId ?? null}
             onArchive={(record) => setInvestigationArchive((current) => archiveCompletedCase(current, record))}
             onReturn={() => setPhase('hq')}
           />
