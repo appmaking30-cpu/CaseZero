@@ -63,6 +63,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case031', label: 'Case 031 · The Session Without a Name' },
   { id: 'case032', label: 'Case 032 · The Signed Handover' },
   { id: 'case033', label: 'Case 033 · The Receipt at 07:24' },
+  { id: 'case034', label: 'Case 034 · The Revision in the Margin' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
@@ -303,6 +304,31 @@ export function getBureauSpecialistInsight(
 
   // The late dispatch arc deliberately separates presence, route intent, room occupancy,
   // and identity. Each specialist insight is gated by the records the player has inspected.
+  if (specialistId === 'inez' && caseId === 'case034' && hasClues('manifest', 'revision', 'ledger', 'receipt')) {
+    return {
+      title: 'Inez Shaw · Revision integrity review',
+      detail: 'The manifest records R-14, the comparison sheet records R-15, and the receipt checksum matches R-15. The ledger identifies only the shared profile, so the revision sequence is verified while its individual submitter remains unknown.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'tomas' && caseId === 'case034' &&
+      askedQuestions.includes('niko:edit') && askedQuestions.includes('mara:scope')) {
+    return {
+      title: 'Tomas Reed · Attribution boundary review',
+      detail: 'Niko separates his later receipt acknowledgement from the earlier revision, and Mara confirms the profile was shared. Their statements align with the timestamps but do not identify the person who submitted R-15.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'rhea' && caseId === 'case034' && hasClues('manifest', 'revision', 'receipt')) {
+    return {
+      title: 'Rhea Voss · Export sequence reconstruction',
+      detail: 'The package moved from R-14 to R-15 before the receipt was acknowledged. The checksum closes the version trail; no personal token links that change to a named operator.',
+      rankPerk,
+    };
+  }
+
   if (specialistId === 'inez' && caseId === 'case028' && hasClues('visitor', 'badge', 'purpose', 'exit')) {
     return {
       title: 'Inez Shaw · Reception evidence review',
