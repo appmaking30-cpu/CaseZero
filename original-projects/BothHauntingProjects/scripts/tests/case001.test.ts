@@ -11,6 +11,7 @@ import {
   isDeductionCorrect,
   isTimelineCorrect,
 } from '../../artifacts/casezero/game/case001';
+import { CASE_002, getCase002Carryover } from '../../artifacts/casezero/game/case002';
 
 test('Case 001 has a complete, distinct evidence and witness set', () => {
   assert.equal(CASE_001.clues.length, 5);
@@ -108,4 +109,33 @@ test('cross-case archive stores completed investigations without duplicate cases
     ['case001'],
   );
   assert.equal(updatedFirst.completedCases[1].unansweredQuestions.length, 0);
+});
+
+
+test('Case 002 receives only the actual findings and unanswered lead from Case 001', () => {
+  const fresh = getCase002Carryover(EMPTY_INVESTIGATION_ARCHIVE);
+  assert.equal(fresh.hasPriorCase, false);
+  assert.equal(fresh.unansweredLead, null);
+
+  const prior = archiveCompletedCase(EMPTY_INVESTIGATION_ARCHIVE, {
+    caseId: 'case001',
+    caseTitle: CASE_001.title,
+    closedAt: '2026-11-01T12:00:00.000Z',
+    selectedSuspectId: 'miles',
+    selectedMotiveId: 'protect',
+    inspectedClues: ['The ceiling stain', 'The chipped cart wheel'],
+    askedQuestions: ['Jo Bell: What did you hear near the records room?'],
+    unansweredQuestions: ['Nia Vale: Was the parcel damaged?'],
+  });
+  const carryover = getCase002Carryover(prior);
+
+  assert.equal(CASE_002.id, 'case002');
+  assert.equal(carryover.hasPriorCase, true);
+  assert.match(carryover.priorConclusion ?? '', /Miles Renn moved the envelope/);
+  assert.match(carryover.fieldLesson, /environmental conditions/i);
+  assert.equal(carryover.unansweredLead, 'Nia Vale: Was the parcel damaged?');
+  assert.deepEqual(carryover.inspectedEvidence, [
+    'The ceiling stain',
+    'The chipped cart wheel',
+  ]);
 });
