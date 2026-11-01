@@ -96,14 +96,14 @@ export default function Case017Screen({ archive, onArchive, onReturn }: Props) {
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase017TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the latch event, occupancy interval, terminal session and reconciliation.'
+      ? 'That sequence conflicts with the time stamps. Compare the assignment sheet, token issue, handoff register and sign-out receipt.'
       : '');
   };
   const submit = () => {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase017DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage('The records establish a shared-group door event, an occupancy interval and a shared-account session. They do not identify an individual.');
+      setMessage('The records establish team-level assignment and an incomplete personal handoff. They do not identify the packet recipient or session operator.');
       return;
     }
     archiveLock.current = true;
@@ -207,7 +207,7 @@ export default function Case017Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 017 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>What do the C-4 systems establish separately?</Text>
+      <Text style={[styles.hero, text]}>Where does the shared-account custody trail break?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the shared team assignment, then choose the missing link the records cannot establish.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>SHARED ACCOUNT CUSTODY UNDER REVIEW</Text>
