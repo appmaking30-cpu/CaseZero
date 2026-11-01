@@ -223,7 +223,7 @@ export default function Case008Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'review' && <>
-      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 007</Text></View>
+      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 008</Text></View>
       <Text style={[styles.hero, text]}>A handover is not an authorization.</Text>
       <Text style={[styles.subtitle, muted]}>Bellweather is confirmed as a relay point. The Bureau has separated the physical receipt from the upstream instruction.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_008_GAME.truth}</Text></View>
