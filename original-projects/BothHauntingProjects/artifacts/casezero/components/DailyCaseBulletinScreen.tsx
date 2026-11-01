@@ -24,7 +24,7 @@ const EMPTY_PROGRESS: DailyProgress = {
   phase: 'evidence',
 };
 
-export default function DailyCaseBulletinScreen({ onReturn }: { onReturn: () => void }) {
+export default function DailyCaseBulletinScreen({ onReturn, onComplete }: { onReturn: () => void; onComplete?: (dateKey: string) => void }) {
   const colors = useColors();
   const dateKey = useMemo(() => {
     const now = new Date();
@@ -79,6 +79,7 @@ export default function DailyCaseBulletinScreen({ onReturn }: { onReturn: () => 
       return;
     }
     setProgress((current) => ({ ...current, completed: true, phase: 'review' }));
+    onComplete?.(dateKey);
     setMessage('');
   };
 
