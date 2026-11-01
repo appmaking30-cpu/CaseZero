@@ -62,6 +62,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case030', label: 'Case 030 · The Room That Didn’t Register' },
   { id: 'case031', label: 'Case 031 · The Session Without a Name' },
   { id: 'case032', label: 'Case 032 · The Signed Handover' },
+  { id: 'case033', label: 'Case 033 · The Receipt at 07:24' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
@@ -424,6 +425,31 @@ export function getBureauSpecialistInsight(
     return {
       title: 'Rhea Voss · Shift sequence reconstruction',
       detail: 'The roster precedes the signed transfer, which in turn precedes the D-3 session. The sequence establishes that Blue Team held desk responsibility when the session opened, but does not establish which team member used the terminal.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'inez' && caseId === 'case033' && hasClues('receipt', 'signature', 'queue', 'scope')) {
+    return {
+      title: 'Inez Shaw · Receipt validation review',
+      detail: 'The receipt carries a personal badge signature and credential services validates it to Niko Vale. The queue manifest identifies D-3 as the package source, while the scope note limits the personal attribution to the 07:24 acknowledgement.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'tomas' && caseId === 'case033' &&
+      askedQuestions.includes('niko:session') && askedQuestions.includes('sana:limit')) {
+    return {
+      title: 'Tomas Reed · Statement boundary review',
+      detail: 'Niko distinguishes acknowledging the export from opening the earlier session, and Sana confirms the same boundary from the audit records. Their statements support one attributed action, not a retroactive operator identity.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'rhea' && caseId === 'case033' && hasClues('queue', 'receipt', 'signature')) {
+    return {
+      title: 'Rhea Voss · Terminal sequence reconstruction',
+      detail: 'The queue entry precedes the receipt by one minute, and the later validation identifies the badge used for acknowledgement. The chronology links the package to D-3 and the receipt to Niko, but not Niko to the earlier session.',
       rankPerk,
     };
   }
