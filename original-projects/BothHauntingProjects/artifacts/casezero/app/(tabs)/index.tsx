@@ -15,6 +15,7 @@ import Case005Screen from '@/components/Case005Screen';
 import Case006Screen from '@/components/Case006Screen';
 import Case007Screen from '@/components/Case007Screen';
 import Case008Screen from '@/components/Case008Screen';
+import Case009Screen from '@/components/Case009Screen';
 import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
 import BureauTeamScreen from '@/components/BureauTeamScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
@@ -22,6 +23,7 @@ import { CASE_005_GAME } from '@/game/case005Game';
 import { CASE_006_GAME } from '@/game/case006Game';
 import { CASE_007_GAME } from '@/game/case007Game';
 import { CASE_008_GAME } from '@/game/case008Game';
+import { CASE_009_GAME } from '@/game/case009Game';
 import {
   CASE_001,
   getInvestigationMemory,
@@ -72,7 +74,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'daily' | 'team';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -829,6 +831,22 @@ export default function HomeScreen() {
                 <Text style={[styles.body, mutedStyle]}>The same M-2 route and override reference appear at both sites. That links the process, not a person. The third reference in Bellweather's inventory code is the next lead.</Text>
               </View>
             )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case008') && !investigationArchive.completedCases.some((record) => record.caseId === 'case009') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Incoming file · 009</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_009_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_009_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>Bellweather's inventory code points to schedule D-4 at Meridian Dispatch Annex. The Bureau can now trace the authorization record without assuming it reveals the approver.</Text>
+                <ActionButton title="Open Case 009" onPress={() => setPhase('case009')} colors={colors} />
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case009') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Next lead · Restricted personnel index</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>The approver field is still sealed.</Text>
+                <Text style={[styles.body, mutedStyle]}>Schedule D-4 identifies the record series, not the person who authorized the M-2 renewal. A marginal note points to a sealed personnel index.</Text>
+              </View>
+            )}
             {missingDetectiveConvergence.unlocked && (
               <View style={[styles.card, cardStyle]}>
                 <SectionLabel colors={colors}>Classified · Cross-case review</SectionLabel>
@@ -1531,6 +1549,17 @@ export default function HomeScreen() {
         {phase === 'team' && <BureauTeamScreen archive={investigationArchive} onBoardChange={setBureauTeamBoard} onReturn={() => setPhase('hq')} />}
 
         {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} assignedSpecialistName={BUREAU_SPECIALISTS.find((specialist) => specialist.id === bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'daily')?.specialistId)?.name ?? null} onComplete={(dateKey) => setBureauTeamBoard((current) => awardBureauDailyExperience(current, dateKey))} />}
+
+        {phase === 'case009' && (
+          <Case009Screen
+            archive={investigationArchive}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_009_GAME.id));
+            }}
+            onReturn={() => setPhase('hq')}
+          />
+        )}
 
         {phase === 'case008' && (
           <Case008Screen
