@@ -223,9 +223,9 @@ export default function Case031Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'review' && <>
-      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 030</Text></View>
-      <Text style={[styles.hero, text]}>Brief occupancy does not identify the occupant.</Text>
-      <Text style={[styles.subtitle, muted]}>The corrected 07:19–07:26 sequence supports brief occupancy, but does not identify the occupant or confirm Ivo reached D-3.</Text>
+      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 031</Text></View>
+      <Text style={[styles.hero, text]}>A shared session does not identify its operator.</Text>
+      <Text style={[styles.subtitle, muted]}>The corrected room and terminal records support a shared DISPATCH-OPS session during the occupancy interval, but do not identify the person who operated it.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_031_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_031_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_031_GAME.outcome}</Text></View>
