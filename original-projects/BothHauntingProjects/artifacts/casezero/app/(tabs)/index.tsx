@@ -17,8 +17,14 @@ import {
   isTimelineCorrect,
   type CasePhase,
 } from '@/game/case001';
+import {
+  archiveCompletedCase,
+  EMPTY_INVESTIGATION_ARCHIVE,
+  type InvestigationArchive,
+} from '@/game/investigationArchive';
 
 const SAVE_KEY = 'casezero.case001.memory.v1';
+const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 
 type SavedState = {
   phase: CasePhase;
@@ -92,6 +98,8 @@ function SectionLabel({
 export default function HomeScreen() {
   const colors = useColors();
   const [loaded, setLoaded] = useState(false);
+  const [archiveLoaded, setArchiveLoaded] = useState(false);
+  const [investigationArchive, setInvestigationArchive] = useState<InvestigationArchive>(EMPTY_INVESTIGATION_ARCHIVE);
   const [phase, setPhase] = useState<CasePhase>('hq');
   const [cluesFound, setCluesFound] = useState<string[]>([]);
   const [askedQuestions, setAskedQuestions] = useState<string[]>([]);
@@ -108,8 +116,15 @@ export default function HomeScreen() {
 
   useEffect(() => {
     let active = true;
-    AsyncStorage.getItem(SAVE_KEY)
-      .then((raw) => {
+    Promise.all([AsyncStorage.getItem(SAVE_KEY), AsyncStorage.getItem(ARCHIVE_KEY)])
+      .then(([raw, archiveRaw]) => {
+        if (!active) return;
+        if (archiveRaw) {
+          const parsedArchive = JSON.parse(archiveRaw) as InvestigationArchive;
+          if (parsedArchive.version === 1 && Array.isArray(parsedArchive.completedCases)) {
+            setInvestigationArchive(parsedArchive);
+          }
+        }
         if (!active) return;
         if (raw) {
           const saved = JSON.parse(raw) as Partial<SavedState>;
@@ -130,7 +145,10 @@ export default function HomeScreen() {
       })
       .catch(() => undefined)
       .finally(() => {
-        if (active) setLoaded(true);
+        if (active) {
+          setLoaded(true);
+          setArchiveLoaded(true);
+        }
       });
     return () => {
       active = false;
@@ -162,6 +180,39 @@ export default function HomeScreen() {
     selectedSuspect,
     selectedMotive,
     caseCompleted,
+  ]);
+
+  useEffect(() => {
+    if (!archiveLoaded) return;
+    AsyncStorage.setItem(ARCHIVE_KEY, JSON.stringify(investigationArchive)).catch(() => undefined);
+  }, [archiveLoaded, investigationArchive]);
+
+  useEffect(() => {
+    if (!loaded || !archiveLoaded || !caseCompleted || !selectedSuspect || !selectedMotive) return;
+    const alreadyArchived = investigationArchive.completedCases.some(
+      (record) => record.caseId === CASE_001.id,
+    );
+    if (alreadyArchived) return;
+
+    const record = {
+      caseId: CASE_001.id,
+      caseTitle: CASE_001.title,
+      closedAt: new Date().toISOString(),
+      selectedSuspectId: selectedSuspect,
+      selectedMotiveId: selectedMotive,
+      inspectedClues: investigationMemory.inspectedClues,
+      askedQuestions: investigationMemory.askedQuestions,
+      unansweredQuestions: investigationMemory.unansweredQuestions,
+    };
+    setInvestigationArchive((current) => archiveCompletedCase(current, record));
+  }, [
+    loaded,
+    archiveLoaded,
+    caseCompleted,
+    selectedSuspect,
+    selectedMotive,
+    investigationMemory,
+    investigationArchive.completedCases,
   ]);
 
   const allCluesFound = cluesFound.length === CASE_001.clues.length;
@@ -367,6 +418,27 @@ export default function HomeScreen() {
                 </Text>
               )}
             </View>
+            {investigationArchive.completedCases.length > 0 && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Previous investigations</SectionLabel>
+                <Text style={[styles.cardTitle, textStyle]}>The Bureau remembers.</Text>
+                {investigationArchive.completedCases.map((record) => {
+                  const suspect = CASE_001.suspects.find((entry) => entry.id === record.selectedSuspectId);
+                  const motive = CASE_001.motives.find((entry) => entry.id === record.selectedMotiveId);
+                  return (
+                    <View key={record.caseId} style={styles.questionBlock}>
+                      <Text style={[styles.cardTitle, textStyle]}>{record.caseId.toUpperCase()} · {record.caseTitle}</Text>
+                      <Text style={[styles.small, mutedStyle]}>
+                        Conclusion: {suspect?.name ?? 'Unknown'} · {motive?.label ?? 'Motive not recorded'}
+                      </Text>
+                      <Text style={[styles.memoryNote, mutedStyle]}>
+                        {record.inspectedClues.length} clues inspected · {record.askedQuestions.length} questions asked · {record.unansweredQuestions.length} left unasked
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
+            )}
             <Text style={[styles.footerNote, mutedStyle]}>
               A quiet city. A long night. Nothing is forgotten.
             </Text>
