@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
+import { getBureauSpecialistInsight } from '@/game/bureauTeam';
 import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
 import {
   CASE_004_GAME,
@@ -17,11 +18,12 @@ const SAVE_KEY = 'casezero.case004.progress.v1';
 
 type Props = {
   archive: InvestigationArchive;
+  assignedSpecialistId: string | null;
   onArchive: (record: Parameters<typeof archiveCompletedCase>[1]) => void;
   onReturn: () => void;
 };
 
-export default function Case004Screen({ archive, onArchive, onReturn }: Props) {
+export default function Case004Screen({ archive, assignedSpecialistId, onArchive, onReturn }: Props) {
   const colors = useColors();
   const [loaded, setLoaded] = useState(false);
   const [phase, setPhase] = useState<'briefing' | 'evidence' | 'interviews' | 'timeline' | 'deduction' | 'review'>('briefing');
@@ -31,6 +33,7 @@ export default function Case004Screen({ archive, onArchive, onReturn }: Props) {
   const [timelineMessage, setTimelineMessage] = useState('');
   const [deductionMessage, setDeductionMessage] = useState('');
   const carryover = useMemo(() => getCase004Carryover(archive), [archive]);
+  const specialistInsight = getBureauSpecialistInsight(assignedSpecialistId, 'case004', progress.cluesFound, progress.askedQuestions);
 
   useEffect(() => {
     let active = true;
@@ -169,6 +172,12 @@ export default function Case004Screen({ archive, onArchive, onReturn }: Props) {
               {activeClue === clue.id && <Text style={[styles.body, muted, styles.divider]}>{clue.detail}</Text>}
             </Pressable>;
           })}
+          {specialistInsight && (
+            <View style={[styles.card, card]}>
+              <Text style={[styles.label, { color: colors.primary }]}>{specialistInsight.title}</Text>
+              <Text style={[styles.body, text]}>{specialistInsight.detail}</Text>
+            </View>
+          )}
           <Action title="Question the witnesses" colors={colors} onPress={() => setPhase('interviews')} disabled={!allCluesFound} />
           <Action title="Back to briefing" colors={colors} onPress={() => setPhase('briefing')} ghost />
         </>
