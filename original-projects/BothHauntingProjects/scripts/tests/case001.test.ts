@@ -478,6 +478,9 @@ test('specialist insights require the player to inspect their supporting records
   assert.equal(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf']), null);
   assert.equal(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf', 'transfer']), null);
   assert.ok(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf', 'generator', 'transfer']));
+  assert.equal(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf', 'generator', 'transfer'])?.rankPerk, null);
+  assert.match(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf', 'generator', 'transfer'], [], 1)?.rankPerk ?? '', /Specialist review/);
+  assert.match(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf', 'generator', 'transfer'], [], 2)?.rankPerk ?? '', /Senior review/);
 
   assert.equal(getBureauSpecialistInsight('tomas', 'case003', ['printer', 'ledger'], []), null);
   assert.ok(getBureauSpecialistInsight('tomas', 'case003', ['printer', 'ledger'], ['arden:terminal']));
