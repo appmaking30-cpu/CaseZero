@@ -33,3 +33,12 @@ test('senior review perk is shown only at senior rank', () => {
   assert.equal(trainee?.rankPerk, null);
   assert.match(senior?.rankPerk ?? '', /Senior review/);
 });
+
+test('Case 031 specialists separate shared-profile activity from human identity', () => {
+  const analyst = getBureauSpecialistInsight('inez', 'case031', ['session', 'policy', 'export', 'request']);
+  const interviewer = getBureauSpecialistInsight('tomas', 'case031', [], ['mara:handover', 'sana:limit']);
+  const field = getBureauSpecialistInsight('rhea', 'case031', ['occupancy', 'session', 'export']);
+  assert.match(analyst?.detail ?? '', /not a named operator/);
+  assert.match(interviewer?.detail ?? '', /no contemporaneous record names the operator/);
+  assert.match(field?.detail ?? '', /do not identify who was there/);
+});
