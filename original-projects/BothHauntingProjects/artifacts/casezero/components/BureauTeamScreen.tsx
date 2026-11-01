@@ -11,7 +11,7 @@ import {
   getUnlockedBureauSpecialists,
   removeBureauAssignment,
   normalizeBureauTeamBoard,
-  BUREAU_TEAM_BUREAU_TEAM_SAVE_KEY,
+  BUREAU_TEAM_SAVE_KEY,
   type BureauTeamBoard,
 } from '@/game/bureauTeam';
 
