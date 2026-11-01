@@ -155,8 +155,8 @@ export default function Case035Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 035 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Trace the package revision without treating a shared profile as a named operator.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: original export manifest, revision comparison, shared-profile commit and receipt checksum.</Text>
+      <Text style={[styles.hero, text]}>Trace the attachment to its archive source without treating a routing mark as a person’s identity.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: attachment scan, annex index, sealed intake register and custody routing slip.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_035_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -165,13 +165,13 @@ export default function Case035Screen({ archive, bureauTeamBoard, onArchive, onR
         <Text style={[styles.note, muted]}>{clue.label}</Text>
         {activeClue === clue.id && <Text style={[styles.body, text, styles.divider]}>{clue.detail}</Text>}
       </Pressable>)}
-      <Action title="Interview the records desk staff" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
+      <Action title="Interview the archive and dispatch staff" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
       <Action title="Back to briefing" colors={colors} onPress={() => setPhase('briefing')} ghost />
     </>}
 
     {phase === 'interviews' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 035 · WITNESS INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What do the revision and receipt records actually prove?</Text>
+      <Text style={[styles.hero, text]}>What do the source and custody records actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and are preserved in the archived report.</Text>
       {CASE_035_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -188,7 +188,7 @@ export default function Case035Screen({ archive, bureauTeamBoard, onArchive, onR
         })}
       </View>)}
       <Text style={[styles.note, muted]}>{heardWitnesses}/3 witnesses heard · {unanswered.length} optional follow-ups remaining</Text>
-      <Action title="Reconstruct the access sequence" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
+      <Action title="Reconstruct the archive custody sequence" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
       <Action title="Back to evidence" colors={colors} onPress={() => setPhase('evidence')} ghost />
     </>}
 
@@ -218,10 +218,10 @@ export default function Case035Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 035 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>What do the independent duty records actually prove?</Text>
-      <Text style={[styles.subtitle, muted]}>Identify the unresolved revision submitter, then choose the precise fact the records support.</Text>
+      <Text style={[styles.hero, text]}>What do the independent archive records actually prove?</Text>
+      <Text style={[styles.subtitle, muted]}>Identify the unresolved original handler, then choose the precise fact the records support.</Text>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>DISPATCH DESK RESPONSIBILITY UNDER REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>ARCHIVE SOURCE AND CUSTODY UNDER REVIEW</Text>
         {CASE_035_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
