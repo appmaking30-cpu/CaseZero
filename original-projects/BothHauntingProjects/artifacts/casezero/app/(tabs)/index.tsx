@@ -14,12 +14,14 @@ import Case004Screen from '@/components/Case004Screen';
 import Case005Screen from '@/components/Case005Screen';
 import Case006Screen from '@/components/Case006Screen';
 import Case007Screen from '@/components/Case007Screen';
+import Case008Screen from '@/components/Case008Screen';
 import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
 import BureauTeamScreen from '@/components/BureauTeamScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
 import { CASE_005_GAME } from '@/game/case005Game';
 import { CASE_006_GAME } from '@/game/case006Game';
 import { CASE_007_GAME } from '@/game/case007Game';
+import { CASE_008_GAME } from '@/game/case008Game';
 import {
   CASE_001,
   getInvestigationMemory,
@@ -70,7 +72,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'daily' | 'team';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -631,7 +633,7 @@ export default function HomeScreen() {
             <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
           </View>
           <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
-            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : 'FILE 001'}</Text>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : 'FILE 001'}</Text>
           </View>
         </View>
 
@@ -811,11 +813,20 @@ export default function HomeScreen() {
                 <ActionButton title="Open Case 007" onPress={() => setPhase('case007')} colors={colors} />
               </View>
             )}
-            {investigationArchive.completedCases.some((record) => record.caseId === 'case007') && (
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case007') && !investigationArchive.completedCases.some((record) => record.caseId === 'case008') && (
               <View style={[styles.card, cardStyle]}>
-                <SectionLabel colors={colors}>Next lead · Secondary relay</SectionLabel>
-                <Text style={[styles.caseTitle, textStyle]}>The M-2 route continues.</Text>
-                <Text style={[styles.body, mutedStyle]}>Station Three confirms the handover but not the authorizer. Its retained index points to a second relay address. The next file will test whether both stations answer to the same dispatch channel.</Text>
+                <SectionLabel colors={colors}>Incoming file · 008</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_008_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_008_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>Station Three's duplicate index names Bellweather Archive Exchange. Compare its intake receipt and maintenance register with the first relay's records.</Text>
+                <ActionButton title="Open Case 008" onPress={() => setPhase('case008')} colors={colors} />
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case008') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Next lead · Shared authorization</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>Two relays. One unresolved authority.</Text>
+                <Text style={[styles.body, mutedStyle]}>The same M-2 route and override reference appear at both sites. That links the process, not a person. The third reference in Bellweather's inventory code is the next lead.</Text>
               </View>
             )}
             {missingDetectiveConvergence.unlocked && (
@@ -1520,6 +1531,17 @@ export default function HomeScreen() {
         {phase === 'team' && <BureauTeamScreen archive={investigationArchive} onBoardChange={setBureauTeamBoard} onReturn={() => setPhase('hq')} />}
 
         {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} assignedSpecialistName={BUREAU_SPECIALISTS.find((specialist) => specialist.id === bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'daily')?.specialistId)?.name ?? null} onComplete={(dateKey) => setBureauTeamBoard((current) => awardBureauDailyExperience(current, dateKey))} />}
+
+        {phase === 'case008' && (
+          <Case008Screen
+            archive={investigationArchive}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_008_GAME.id));
+            }}
+            onReturn={() => setPhase('hq')}
+          />
+        )}
 
         {phase === 'case007' && (
           <Case007Screen
