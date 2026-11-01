@@ -23,6 +23,7 @@ import {
   type InvestigationArchive,
 } from '@/game/investigationArchive';
 import { CASE_002, getCase002Carryover } from '@/game/case002';
+import { getMissingDetectiveArcStatus, MISSING_DETECTIVE_DOSSIER } from '@/game/missingDetectiveArc';
 import {
   CASE_002_GAME,
   EMPTY_CASE002_PROGRESS,
@@ -235,6 +236,10 @@ export default function HomeScreen() {
   );
   const case002Carryover = useMemo(
     () => getCase002Carryover(investigationArchive),
+    [investigationArchive],
+  );
+  const missingDetectiveArc = useMemo(
+    () => getMissingDetectiveArcStatus(investigationArchive),
     [investigationArchive],
   );
 
@@ -564,6 +569,20 @@ export default function HomeScreen() {
                 colors={colors}
               />
             </View>
+            {missingDetectiveArc.unlocked && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Classified · New lead</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{MISSING_DETECTIVE_DOSSIER.title}</Text>
+                <Text style={[styles.small, { color: colors.primary }]}>{MISSING_DETECTIVE_DOSSIER.label} · {MISSING_DETECTIVE_DOSSIER.detective}</Text>
+                <Text style={[styles.body, mutedStyle]}>{MISSING_DETECTIVE_DOSSIER.briefing}</Text>
+                <View style={[styles.detail, { borderTopColor: colors.border }]}>
+                  <SectionLabel colors={colors}>Recovered note · R.V.</SectionLabel>
+                  <Text style={[styles.body, textStyle]}>{MISSING_DETECTIVE_DOSSIER.recoveredNote}</Text>
+                </View>
+                <Text style={[styles.memoryNote, mutedStyle]}>{MISSING_DETECTIVE_DOSSIER.firstLead}</Text>
+                <Text style={[styles.small, { color: colors.primary }]}>Campaign arc unlocked · {missingDetectiveArc.completedCaseCount}/{missingDetectiveArc.requiredCaseCount} opening cases closed</Text>
+              </View>
+            )}
             <Text style={[styles.footerNote, mutedStyle]}>
               A quiet city. A long night. Nothing is forgotten.
             </Text>
