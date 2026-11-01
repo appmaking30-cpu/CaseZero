@@ -1495,7 +1495,12 @@ export default function HomeScreen() {
         {phase === 'case005' && (
           <Case005Screen
             archive={investigationArchive}
-            onArchive={(record) => setInvestigationArchive((current) => archiveCompletedCase(current, record))}
+            assignedSpecialistId={bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'case005')?.specialistId ?? null}
+            assignedSpecialistRank={(() => { const id = bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'case005')?.specialistId; return id ? getBureauSpecialistProgress(bureauTeamBoard, id).rank : 0; })()}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_005_GAME.id));
+            }}
             onReturn={() => setPhase('hq')}
           />
         )}
