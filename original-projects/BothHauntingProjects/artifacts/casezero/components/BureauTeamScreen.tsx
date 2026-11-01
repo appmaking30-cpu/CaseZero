@@ -150,7 +150,7 @@ export default function BureauTeamScreen({ archive, onReturn, onBoardChange }: {
             </View>;
           })}
       </View>
-      <Text style={[styles.note, muted]}>Assigned specialists now provide evidence-gated insights in their matching active investigations. They never reveal uninspected records or choose the culprit for you. Training upgrades are planned for a later Bureau systems pass.</Text>
+      <Text style={[styles.note, muted]}>Assigned specialists now provide evidence-gated insights in their matching active investigations. They never reveal uninspected records or choose the culprit for you. Higher ranks unlock deeper evidence-review support in assigned campaign files. Assign a specialist to the Daily Case Bulletin to earn one additional XP when you solve that day’s file; rewards are limited to once per date.</Text>
       <Action title="Return to Detective Bureau" colors={colors} onPress={onReturn} />
     </>
   );
