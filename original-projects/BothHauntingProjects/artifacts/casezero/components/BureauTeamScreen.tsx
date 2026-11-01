@@ -9,6 +9,7 @@ import {
   BUREAU_SPECIALISTS,
   EMPTY_BUREAU_TEAM_BOARD,
   getUnlockedBureauSpecialists,
+  getBureauSpecialistProgress,
   removeBureauAssignment,
   restoreBureauTeamBoard,
   BUREAU_TEAM_SAVE_KEY,
@@ -93,6 +94,19 @@ export default function BureauTeamScreen({ archive, onReturn, onBoardChange }: {
             <Text style={[styles.status, { color: isUnlocked ? colors.primary : colors.mutedForeground }]}>{isUnlocked ? selected ? 'SELECTED' : 'RECRUITED' : 'LOCKED'}</Text>
           </View>
           <Text style={[styles.note, muted]}>{specialist.specialty}</Text>
+          {isUnlocked && (() => {
+            const progress = getBureauSpecialistProgress(board, specialist.id);
+            return <View style={[styles.training, { borderColor: colors.border }]}>
+              <View style={styles.row}>
+                <Text style={[styles.label, { color: colors.primary }]}>{progress.rankLabel}</Text>
+                <Text style={[styles.note, muted]}>{progress.experience} XP</Text>
+              </View>
+              <View style={[styles.trainingTrack, { backgroundColor: colors.border }]}>
+                <View style={[styles.trainingFill, { backgroundColor: colors.primary, width: progress.rank >= 2 ? '100%' : `${(progress.progressToNextRank / 2) * 100}%` }]} />
+              </View>
+              <Text style={[styles.note, muted]}>{progress.rank >= 2 ? 'Maximum current rank reached' : `${progress.experienceForNextRank} more assigned case closure(s) to next rank`}</Text>
+            </View>;
+          })()}
           <Text style={[styles.body, text]}>{specialist.profile}</Text>
           {assignedTarget && <Text style={[styles.note, { color: colors.primary }]}>Currently assigned: {assignedTarget.label}</Text>}
           {!isUnlocked && <Text style={[styles.note, muted]}>Unlock requirement: {specialist.unlockLabel}</Text>}
@@ -170,6 +184,9 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   option: { borderWidth: 1, borderRadius: 11, padding: 11, marginTop: 8 },
   assignment: { flexDirection: 'row', alignItems: 'center', marginTop: 12 },
+  training: { borderWidth: 1, borderRadius: 10, padding: 10, marginTop: 10 },
+  trainingTrack: { height: 6, borderRadius: 5, overflow: 'hidden', marginTop: 2 },
+  trainingFill: { height: 6, borderRadius: 5 },
   remove: { fontSize: 10, fontWeight: '900', letterSpacing: 1 },
   action: { minHeight: 48, borderWidth: 1, borderRadius: 13, padding: 13, alignItems: 'center', justifyContent: 'center', marginTop: 12 },
   actionText: { fontSize: 13, fontWeight: '900', textAlign: 'center' },
