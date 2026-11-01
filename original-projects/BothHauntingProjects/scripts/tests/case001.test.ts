@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
+  archiveCompletedCase,
+  EMPTY_INVESTIGATION_ARCHIVE,
+  getPriorCaseMemory,
+} from '../../artifacts/casezero/game/investigationArchive';
+import {
   CASE_001,
   getInvestigationMemory,
   isDeductionCorrect,
