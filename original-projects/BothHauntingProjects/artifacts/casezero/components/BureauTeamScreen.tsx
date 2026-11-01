@@ -26,6 +26,13 @@ export default function BureauTeamScreen({ archive, onReturn }: {
   const [selectedTarget, setSelectedTarget] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const unlocked = useMemo(() => getUnlockedBureauSpecialists(archive), [archive]);
+  const availableTargets = useMemo(
+    () => BUREAU_ASSIGNMENT_TARGETS.filter((target) =>
+      target.id === 'next-case' || target.id === 'daily' ||
+      !archive.completedCases.some((record) => record.caseId === target.id),
+    ),
+    [archive],
+  );
 
   useEffect(() => {
     let active = true;
@@ -103,7 +110,7 @@ export default function BureauTeamScreen({ archive, onReturn }: {
         <Text style={[styles.label, { color: colors.primary }]}>ASSIGNMENT BOARD</Text>
         <Text style={[styles.body, muted]}>Select a recruited specialist, then choose the file they will support. A specialist can hold one assignment at a time, and each file can have one assigned specialist.</Text>
         <Text style={[styles.section, { color: colors.primary }]}>1 · SELECT FILE</Text>
-        {BUREAU_ASSIGNMENT_TARGETS.map((target) => {
+        {availableTargets.map((target) => {
           const selected = selectedTarget === target.id;
           const existing = board.assignments.find((assignment) => assignment.targetId === target.id);
           const existingName = BUREAU_SPECIALISTS.find((specialist) => specialist.id === existing?.specialistId)?.name;
