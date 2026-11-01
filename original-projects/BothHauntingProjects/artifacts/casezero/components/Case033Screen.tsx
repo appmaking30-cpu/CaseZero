@@ -114,7 +114,7 @@ export default function Case033Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase033DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage('The records confirm Niko's acknowledgement of the export receipt, not the identity of its terminal operator.');
+      setMessage(`The records confirm Niko's acknowledgement of the export receipt, not the identity of its terminal operator.`);
       return;
     }
     archiveLock.current = true;
