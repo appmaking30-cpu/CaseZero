@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import Case004Screen from '@/components/Case004Screen';
 import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
+import BureauTeamScreen from '@/components/BureauTeamScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
 import {
   CASE_001,
@@ -51,7 +52,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'daily';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -590,7 +591,7 @@ export default function HomeScreen() {
             <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
           </View>
           <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
-            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003' : phase.startsWith('case004') || phase === 'case004' ? 'FILE 004' : 'FILE 001'}</Text>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003' : phase.startsWith('case004') ? 'FILE 004' : 'FILE 001'}</Text>
           </View>
         </View>
 
@@ -743,6 +744,12 @@ export default function HomeScreen() {
                 />
               </View>
             )}
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Bureau operations</SectionLabel>
+              <Text style={[styles.caseTitle, textStyle]}>Build your specialist team.</Text>
+              <Text style={[styles.body, mutedStyle]}>Recruit specialists as campaign files close, then assign them to active investigations from the Bureau board.</Text>
+              <ActionButton title="Open Bureau Team" onPress={() => setPhase('team')} colors={colors} />
+            </View>
             <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>Daily case bulletin</SectionLabel>
               <Text style={[styles.caseTitle, textStyle]}>A new file every day.</Text>
@@ -1407,6 +1414,8 @@ export default function HomeScreen() {
             <ActionButton title="Back to timeline" onPress={() => setPhase('case003Timeline')} colors={colors} variant="ghost" />
           </>
         )}
+
+        {phase === 'team' && <BureauTeamScreen archive={investigationArchive} onReturn={() => setPhase('hq')} />}
 
         {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} />}
 
