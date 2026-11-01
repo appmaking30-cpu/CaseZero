@@ -114,7 +114,7 @@ export default function Case032Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase032DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage('The records confirm a shared shift handover, not the identity of its operator.');
+      setMessage('The records confirm Blue Team responsibility for the desk, not the identity of its terminal operator.');
       return;
     }
     archiveLock.current = true;
@@ -143,7 +143,7 @@ export default function Case032Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_032_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_032_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files tied the source version to a shared profile. This file traces the shift handover, shared-profile policy, export reconciliation and pending credential cross-reference.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the room event and shared terminal session. This file traces the duty roster, desk responsibility, signed shift transfer and unresolved operator field.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>INTAKE RECORDS</Text>
@@ -219,9 +219,9 @@ export default function Case032Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 032 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>What do the independent room records actually prove?</Text>
-      <Text style={[styles.subtitle, muted]}>Identify the unresolved operator, then choose the precise fact the records support.</Text>
+      <Text style={[styles.subtitle, muted]}>Identify the unresolved terminal operator, then choose the precise fact the records support.</Text>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>D-3 ROOM EVENT UNDER REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>DISPATCH DESK RESPONSIBILITY UNDER REVIEW</Text>
         {CASE_032_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
@@ -235,8 +235,8 @@ export default function Case032Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 032</Text></View>
-      <Text style={[styles.hero, text]}>A shared session does not identify its operator.</Text>
-      <Text style={[styles.subtitle, muted]}>The corrected room and terminal records support a shared DISPATCH-OPS session during the occupancy interval, but do not identify the person who operated it.</Text>
+      <Text style={[styles.hero, text]}>Team responsibility does not identify the terminal operator.</Text>
+      <Text style={[styles.subtitle, muted]}>The duty roster and signed handover establish that Blue Team held desk responsibility when the D-3 session opened. The blank operator field prevents attribution to an individual.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_032_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_032_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_032_GAME.outcome}</Text></View>
