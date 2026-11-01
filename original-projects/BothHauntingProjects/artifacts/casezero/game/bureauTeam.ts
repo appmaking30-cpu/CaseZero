@@ -177,6 +177,7 @@ export const BUREAU_TEAM_SAVE_KEY = 'casezero.bureau-team.v1';
 export type BureauSpecialistInsight = {
   title: string;
   detail: string;
+  rankPerk: string | null;
 };
 
 /**
@@ -188,13 +189,20 @@ export function getBureauSpecialistInsight(
   caseId: string,
   cluesFound: readonly string[],
   askedQuestions: readonly string[] = [],
+  rank = 0,
 ): BureauSpecialistInsight | null {
   const hasClues = (...ids: string[]) => ids.every((id) => cluesFound.includes(id));
+  const rankPerk = rank >= 2
+    ? 'Senior review: Before filing your conclusion, identify one record that independently confirms the sequence and one that only provides context. Keep those roles separate.'
+    : rank >= 1
+      ? 'Specialist review: Recheck the timestamps against the physical evidence. A matching sequence supports an explanation; it does not automatically prove who performed every action.'
+      : null;
 
   if (specialistId === 'inez' && caseId === 'case002' && hasClues('access', 'shelf', 'generator', 'transfer')) {
     return {
       title: 'Inez Shaw · Evidence cross-check',
       detail: 'The access panel places the entry before the power dip, while the transfer tag places the ledger in the dry alcove afterward. The damp shelf gives a reason for the move; the records do not support a removal during the blackout.',
+      rankPerk,
     };
   }
 
@@ -207,6 +215,7 @@ export function getBureauSpecialistInsight(
     return {
       title: 'Tomas Reed · Statement comparison',
       detail: 'Arden says the terminal log alone cannot identify who typed the job. Compare that statement with the printer record tying the only routing-slip job to the terminal assigned to his desk, then check the cabinet-access entry.',
+      rankPerk,
     };
   }
 
@@ -214,6 +223,7 @@ export function getBureauSpecialistInsight(
     return {
       title: 'Rhea Voss · Transfer reconstruction',
       detail: 'The custody sequence is now visible in the records you inspected: the duplicate key was signed out, the locker was sealed, the maintenance override followed, and the courier collection came last. Separate the approving authority from the person who carried the case.',
+      rankPerk,
     };
   }
 
