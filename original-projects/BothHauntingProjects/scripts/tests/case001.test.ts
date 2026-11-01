@@ -426,7 +426,8 @@ test('Bureau board normalization safely handles malformed saved data', () => {
 
 test('specialist insights require the player to inspect their supporting records', () => {
   assert.equal(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf']), null);
-  assert.ok(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf', 'transfer']));
+  assert.equal(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf', 'transfer']), null);
+  assert.ok(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf', 'generator', 'transfer']));
 
   assert.equal(getBureauSpecialistInsight('tomas', 'case003', ['printer', 'ledger'], []), null);
   assert.ok(getBureauSpecialistInsight('tomas', 'case003', ['printer', 'ledger'], ['arden:terminal']));
