@@ -76,6 +76,7 @@ export function assignBureauSpecialist(
     (assignment) => assignment.specialistId !== specialistId && assignment.targetId !== targetId,
   );
   return {
+    ...board,
     version: 1,
     assignments: [...assignments, { specialistId, targetId, assignedAt }],
   };
@@ -165,6 +166,7 @@ export function restoreBureauTeamBoard(raw: string | null, archive: Investigatio
 
 export function removeBureauAssignment(board: BureauTeamBoard, targetId: string): BureauTeamBoard {
   return {
+    ...board,
     version: 1,
     assignments: board.assignments.filter((assignment) => assignment.targetId !== targetId),
   };
