@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import {
   CASE_001,
+  getInvestigationMemory,
   isDeductionCorrect,
   isTimelineCorrect,
   type CasePhase,
@@ -188,6 +189,11 @@ export default function HomeScreen() {
     [askedQuestions],
   );
 
+  const investigationMemory = useMemo(
+    () => getInvestigationMemory(cluesFound, askedQuestions),
+    [cluesFound, askedQuestions],
+  );
+
   const resetCase = () => {
     setPhase('hq');
     setCluesFound([]);
@@ -345,6 +351,16 @@ export default function HomeScreen() {
                   <Text style={[styles.memoryLabel, mutedStyle]}>Questions unasked</Text>
                 </View>
               </View>
+              {investigationMemory.inspectedClues.length > 0 && (
+                <Text style={[styles.memoryNote, mutedStyle]}>
+                  Evidence on file: {investigationMemory.inspectedClues.join(' · ')}
+                </Text>
+              )}
+              {investigationMemory.askedQuestions.length > 0 && (
+                <Text style={[styles.memoryNote, mutedStyle]}>
+                  Interview notes: {investigationMemory.askedQuestions.join(' · ')}
+                </Text>
+              )}
               {caseCompleted && (
                 <Text style={[styles.memoryNote, mutedStyle]}>
                   Your recorded conclusion: Miles Renn moved the envelope to protect it from the leak.
@@ -624,6 +640,15 @@ export default function HomeScreen() {
               <Text style={[styles.memoryLine, textStyle]}>Witness questions asked: {askedQuestions.length}/6</Text>
               <Text style={[styles.memoryLine, textStyle]}>Questions left unasked: {unansweredQuestions}</Text>
               <Text style={[styles.memoryLine, textStyle]}>Timeline attempts: {timelineAttempts + 1}</Text>
+              <Text style={[styles.memoryNote, mutedStyle]}>
+                Evidence you inspected: {investigationMemory.inspectedClues.join(' · ') || 'No evidence inspected yet.'}
+              </Text>
+              <Text style={[styles.memoryNote, mutedStyle]}>
+                Questions you asked: {investigationMemory.askedQuestions.join(' · ') || 'No witness questions recorded yet.'}
+              </Text>
+              <Text style={[styles.memoryNote, mutedStyle]}>
+                Questions left in the notebook: {investigationMemory.unansweredQuestions.join(' · ') || 'Every available question was asked.'}
+              </Text>
               <Text style={[styles.memoryNote, mutedStyle]}>
                 The next file can remember what you noticed, what you missed and which theory you trusted.
               </Text>
