@@ -143,7 +143,7 @@ export default function Case031Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_031_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_031_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files tied the source version to a shared profile. This file traces the radio check, door register, occupancy counter and clock reconciliation.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files tied the source version to a shared profile. This file traces the terminal session, shared-profile policy, export reconciliation and pending credential cross-reference.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>INTAKE RECORDS</Text>
@@ -156,7 +156,7 @@ export default function Case031Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 031 · EVIDENCE REVIEW</Text>
       <Text style={[styles.hero, text]}>Trace the room event without treating a masked credential as a named identity.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: radio check, door register, occupancy counter and clock reconciliation.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: terminal session audit, shared-profile policy, export reconciliation and credential request.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_031_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -171,7 +171,7 @@ export default function Case031Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'interviews' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 031 · WITNESS INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What do the independent room records actually prove?</Text>
+      <Text style={[styles.hero, text]}>What do the terminal and access records actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and are preserved in the archived report.</Text>
       {CASE_031_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -194,7 +194,7 @@ export default function Case031Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 031 · EVENT SEQUENCE</Text>
-      <Text style={[styles.hero, text]}>Put the room records in order.</Text>
+      <Text style={[styles.hero, text]}>Put the audit records in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four records from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -219,7 +219,7 @@ export default function Case031Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 031 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>What do the independent room records actually prove?</Text>
-      <Text style={[styles.subtitle, muted]}>Identify the unresolved occupant, then choose the precise fact the records support.</Text>
+      <Text style={[styles.subtitle, muted]}>Identify the unresolved operator, then choose the precise fact the records support.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>D-3 ROOM EVENT UNDER REVIEW</Text>
         {CASE_031_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
