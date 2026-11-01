@@ -127,7 +127,7 @@ export function getBureauSpecialistInsight(
 ): BureauSpecialistInsight | null {
   const hasClues = (...ids: string[]) => ids.every((id) => cluesFound.includes(id));
 
-  if (specialistId === 'inez' && caseId === 'case002' && hasClues('access', 'shelf', 'transfer')) {
+  if (specialistId === 'inez' && caseId === 'case002' && hasClues('access', 'shelf', 'generator', 'transfer')) {
     return {
       title: 'Inez Shaw · Evidence cross-check',
       detail: 'The access panel places the entry before the power dip, while the transfer tag places the ledger in the dry alcove afterward. The damp shelf gives a reason for the move; the records do not support a removal during the blackout.',
