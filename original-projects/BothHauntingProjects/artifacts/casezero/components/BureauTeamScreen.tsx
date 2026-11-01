@@ -10,7 +10,7 @@ import {
   EMPTY_BUREAU_TEAM_BOARD,
   getUnlockedBureauSpecialists,
   removeBureauAssignment,
-  normalizeBureauTeamBoard,
+  restoreBureauTeamBoard,
   BUREAU_TEAM_SAVE_KEY,
   type BureauTeamBoard,
 } from '@/game/bureauTeam';
@@ -39,12 +39,7 @@ export default function BureauTeamScreen({ archive, onReturn, onBoardChange }: {
     let active = true;
     AsyncStorage.getItem(BUREAU_TEAM_SAVE_KEY).then((raw) => {
       if (!active) return;
-      if (raw) {
-        const saved = JSON.parse(raw) as Partial<BureauTeamBoard>;
-        if (saved.version === 1 && Array.isArray(saved.assignments)) {
-          setBoard(normalizeBureauTeamBoard(saved, archive));
-        }
-      }
+      setBoard(restoreBureauTeamBoard(raw, archive));
     }).catch(() => undefined).finally(() => { if (active) setLoaded(true); });
     return () => { active = false; };
   }, [archive]);
