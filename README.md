@@ -36,12 +36,12 @@ The canonical app uses Expo Router, React Native, TypeScript, and AsyncStorage f
 - **Case 004 — The Last Signal:** playable continuation following Rowan Vale's missing field recorder to North Quay Signal House. It includes four records, three witnesses, six questions, a timeline puzzle, a suspect-and-motive deduction, and a full review.
 - Cases 002–004 preserve separate local progress and feed completed findings into the shared investigation archive. Later case dialogue can change based on earlier recorded conclusions and unanswered questions.
 - The Bureau archive displays each completed investigation and its recorded conclusion.
-- Automated checks currently pass for TypeScript, unit tests, Expo web export, and the Playwright mobile-viewport walkthrough through all four cases.
+- **Daily Case Bulletin:** seven short standalone investigations rotate deterministically by the device's local calendar date. Each has three inspectable records, a suspect-and-motive deduction, retryable wrong answers, and separate on-device progress. Daily files do not alter the main campaign archive.
+- Automated checks currently pass for TypeScript, unit tests, Expo web export, and the Playwright mobile-viewport walkthrough through the four campaign cases and the daily bulletin.
 
 **Not yet implemented**
 
 - Specialist/team recruitment, assignments, or upgrade systems.
-- Daily case bulletin and rotating case content.
 - Cloud accounts or cross-device saves.
 - Multiplayer or online services.
 - Monetization or paid features.
