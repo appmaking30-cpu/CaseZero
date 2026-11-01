@@ -30,6 +30,7 @@ import Case020Screen from '@/components/Case020Screen';
 import Case021Screen from '@/components/Case021Screen';
 import Case022Screen from '@/components/Case022Screen';
 import Case023Screen from '@/components/Case023Screen';
+import Case024Screen from '@/components/Case024Screen';
 import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
 import BureauTeamScreen from '@/components/BureauTeamScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
@@ -52,6 +53,7 @@ import { CASE_020_GAME } from '@/game/case020Game';
 import { CASE_021_GAME } from '@/game/case021Game';
 import { CASE_022_GAME } from '@/game/case022Game';
 import { CASE_023_GAME } from '@/game/case023Game';
+import { CASE_024_GAME } from '@/game/case024Game';
 import {
   CASE_001,
   getInvestigationMemory,
@@ -102,7 +104,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'daily' | 'team';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -663,7 +665,7 @@ export default function HomeScreen() {
             <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
           </View>
           <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
-            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : phase.startsWith('case012') ? 'FILE 012' : phase.startsWith('case013') ? 'FILE 013' : phase.startsWith('case014') ? 'FILE 014' : phase.startsWith('case015') ? 'FILE 015' : phase.startsWith('case016') ? 'FILE 016' : phase.startsWith('case017') ? 'FILE 017' : phase.startsWith('case018') ? 'FILE 018' : phase.startsWith('case019') ? 'FILE 019' : phase.startsWith('case020') ? 'FILE 020' : phase.startsWith('case021') ? 'FILE 021' : phase.startsWith('case022') ? 'FILE 022' : phase.startsWith('case023') ? 'FILE 023' : 'FILE 001'}</Text>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : phase.startsWith('case012') ? 'FILE 012' : phase.startsWith('case013') ? 'FILE 013' : phase.startsWith('case014') ? 'FILE 014' : phase.startsWith('case015') ? 'FILE 015' : phase.startsWith('case016') ? 'FILE 016' : phase.startsWith('case017') ? 'FILE 017' : phase.startsWith('case018') ? 'FILE 018' : phase.startsWith('case019') ? 'FILE 019' : phase.startsWith('case020') ? 'FILE 020' : phase.startsWith('case021') ? 'FILE 021' : phase.startsWith('case022') ? 'FILE 022' : phase.startsWith('case023') ? 'FILE 023' : phase.startsWith('case024') ? 'FILE 024' : 'FILE 001'}</Text>
           </View>
         </View>
 
@@ -1034,6 +1036,15 @@ export default function HomeScreen() {
                 <Text style={[styles.body, mutedStyle]}>{CASE_023_GAME.subtitle}</Text>
                 <Text style={[styles.memoryNote, textStyle]}>E-44 was flagged for a blank receiver field. Check whether an amendment was actually submitted, whether the page changed, and what the audit could verify.</Text>
                 <ActionButton title="Open Case 023" onPress={() => setPhase('case023')} colors={colors} />
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case023') && !investigationArchive.completedCases.some((record) => record.caseId === 'case024') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Incoming file · 024</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_024_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_024_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>The East Archive register already carried a blank receiver field. Trace H-9 back through the dispatch tally, archive-bound copy, transfer docket and duplicate control.</Text>
+                <ActionButton title="Open Case 024" onPress={() => setPhase('case024')} colors={colors} />
               </View>
             )}
             {missingDetectiveConvergence.unlocked && (
@@ -1786,6 +1797,16 @@ export default function HomeScreen() {
             onReturn={() => setPhase('hq')}
           />
         )}
+        {phase === 'case024' && (
+          <Case024Screen archive={investigationArchive}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_024_GAME.id));
+            }}
+            onReturn={() => setPhase('hq')}
+          />
+        )}
+
 
 
 
