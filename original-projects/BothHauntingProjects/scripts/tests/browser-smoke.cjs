@@ -255,6 +255,17 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Review evidence again' }).click();
     await page.getByRole('button', { name: 'Back to Detective Bureau' }).click();
 
+
+    // The Bureau roster unlocks from campaign milestones and saves specialist assignments.
+    await page.getByRole('button', { name: 'Open Bureau Team' }).click();
+    await page.getByText('Specialist Team', { exact: true }).waitFor();
+    await page.getByRole('button', { name: /Inez Shaw/ }).click();
+    await page.getByRole('button', { name: /Case 004 · The Last Signal/ }).click();
+    await page.getByRole('button', { name: 'Assign specialist' }).click();
+    await page.getByText(/Inez Shaw assigned to Case 004/).waitFor();
+    await page.getByText(/Currently assigned: Case 004/).waitFor();
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001, Case 002 and Case 003 investigations, cross-case memory, timelines, deductions, reviews and persisted archive');
   } finally {
