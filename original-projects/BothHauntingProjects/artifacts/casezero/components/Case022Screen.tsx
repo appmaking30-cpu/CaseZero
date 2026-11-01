@@ -103,7 +103,7 @@ export default function Case022Screen({ archive, onArchive, onReturn }: Props) {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase022DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage('The records establish entry E-44 assignment and staffing, but do not identify who handled H-9.');
+      setMessage('The records establish H-9 as register entry E-44, but do not identify who handled the packet.');
       return;
     }
     archiveLock.current = true;
@@ -144,7 +144,7 @@ export default function Case022Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 022 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Trace the missing packet without assuming a seal inspection report identifies its receiver.</Text>
+      <Text style={[styles.hero, text]}>Trace H-9’s register entry without assuming a seal identifies its handler.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all four records: sealed register, opening-control sheet, page-index carbon copy and seal inspection report.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
@@ -225,7 +225,7 @@ export default function Case022Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 022</Text></View>
       <Text style={[styles.hero, text]}>A register entry stamp is not a person.</Text>
-      <Text style={[styles.subtitle, muted]}>The 07:45 roster assigns entry E-44, the 07:52 allocation records its intake duty, and the 08:35 reconciliation confirms staffing. No record names H-9’s individual receiver.</Text>
+      <Text style={[styles.subtitle, muted]}>The 08:42 control sheet records group release, the 08:50 register records H-9 as E-44, and the 09:05 carbon repeats it. The receiving-person field remains blank.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_022_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_022_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_022_GAME.outcome}</Text></View>
