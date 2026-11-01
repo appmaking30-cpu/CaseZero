@@ -1,3 +1,5 @@
+import { getPriorCaseMemory, type InvestigationArchive } from './investigationArchive';
+
 export const CASE_007_GAME = {
   id: 'case007',
   title: 'The Relay at Station Three',
@@ -64,4 +66,12 @@ export function isCase007TimelineCorrect(order: readonly string[]) {
 
 export function isCase007DeductionCorrect(suspectId: string | null, motiveId: string | null) {
   return suspectId === CASE_007_GAME.correctSuspect && motiveId === CASE_007_GAME.correctMotive;
+}
+
+export function getCase007Carryover(archive: InvestigationArchive) {
+  const priorFiles = getPriorCaseMemory(archive, CASE_007_GAME.id);
+  return {
+    priorFiles,
+    clueCount: priorFiles.reduce((total, record) => total + record.inspectedClues.length, 0),
+  };
 }
