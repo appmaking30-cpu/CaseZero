@@ -101,13 +101,17 @@ export function normalizeBureauTeamBoard(input: unknown, archive: InvestigationA
   return board;
 }
 
-export function restoreBureauTeamBoard(raw: string | null, archive: InvestigationArchive): BureauTeamBoard {
-  if (!raw) return EMPTY_BUREAU_TEAM_BOARD;
+export function parseStoredJson(raw: string | null): unknown {
+  if (!raw) return null;
   try {
-    return normalizeBureauTeamBoard(JSON.parse(raw) as unknown, archive);
+    return JSON.parse(raw) as unknown;
   } catch {
-    return EMPTY_BUREAU_TEAM_BOARD;
+    return null;
   }
+}
+
+export function restoreBureauTeamBoard(raw: string | null, archive: InvestigationArchive): BureauTeamBoard {
+  return normalizeBureauTeamBoard(parseStoredJson(raw), archive);
 }
 
 export function removeBureauAssignment(board: BureauTeamBoard, targetId: string): BureauTeamBoard {
