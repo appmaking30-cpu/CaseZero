@@ -29,6 +29,7 @@ import {
 import { CASE_002, getCase002Carryover } from '@/game/case002';
 import {
   BUREAU_TEAM_SAVE_KEY,
+  BUREAU_SPECIALISTS,
   EMPTY_BUREAU_TEAM_BOARD,
   getBureauSpecialistInsight,
   getBureauSpecialistProgress,
