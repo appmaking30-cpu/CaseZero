@@ -360,6 +360,8 @@ import {
   getBureauSpecialistInsight,
   restoreBureauTeamBoard,
   parseStoredJson,
+  awardBureauCaseExperience,
+  getBureauSpecialistProgress,
 } from '../../artifacts/casezero/game/bureauTeam';
 
 test('Bureau specialists unlock only after their campaign milestones', () => {
@@ -437,6 +439,40 @@ test('Bureau board normalization safely handles malformed saved data', () => {
   assert.deepEqual(normalizeBureauTeamBoard({ version: 9, assignments: 'broken' }, EMPTY_INVESTIGATION_ARCHIVE), EMPTY_BUREAU_TEAM_BOARD);
 });
 
+
+test('assigned specialists earn persistent experience when their case closes', () => {
+  const assigned = assignBureauSpecialist(
+    EMPTY_BUREAU_TEAM_BOARD,
+    'inez',
+    'case002',
+    '2026-11-01T12:00:00.000Z',
+  );
+  const rewarded = awardBureauCaseExperience(assigned, 'case002');
+
+  assert.equal(rewarded.experienceBySpecialist?.inez, 1);
+  assert.equal(rewarded.assignments.length, 0);
+  assert.deepEqual(rewarded.rewardedCaseIds, ['case002']);
+  assert.equal(awardBureauCaseExperience(rewarded, 'case002'), rewarded);
+
+  const restored = normalizeBureauTeamBoard(rewarded, EMPTY_INVESTIGATION_ARCHIVE);
+  assert.equal(restored.experienceBySpecialist?.inez, 1);
+  assert.deepEqual(restored.rewardedCaseIds, ['case002']);
+});
+
+test('specialist rank advances at two assigned case closures', () => {
+  const one = {
+    ...EMPTY_BUREAU_TEAM_BOARD,
+    experienceBySpecialist: { inez: 1 },
+  };
+  const two = {
+    ...one,
+    experienceBySpecialist: { inez: 2 },
+  };
+  assert.equal(getBureauSpecialistProgress(one, 'inez').rank, 0);
+  assert.equal(getBureauSpecialistProgress(one, 'inez').experienceForNextRank, 1);
+  assert.equal(getBureauSpecialistProgress(two, 'inez').rank, 1);
+  assert.equal(getBureauSpecialistProgress(two, 'inez').rankLabel, 'CASE SPECIALIST');
+});
 
 test('specialist insights require the player to inspect their supporting records', () => {
   assert.equal(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf']), null);
