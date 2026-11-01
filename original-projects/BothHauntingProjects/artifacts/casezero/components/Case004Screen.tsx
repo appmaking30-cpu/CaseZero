@@ -177,6 +177,7 @@ export default function Case004Screen({ archive, assignedSpecialistId, assignedS
             <View style={[styles.card, card]}>
               <Text style={[styles.label, { color: colors.primary }]}>{specialistInsight.title}</Text>
               <Text style={[styles.body, text]}>{specialistInsight.detail}</Text>
+              {specialistInsight.rankPerk && <Text style={[styles.body, muted]}>{specialistInsight.rankPerk}</Text>}
             </View>
           )}
           <Action title="Question the witnesses" colors={colors} onPress={() => setPhase('interviews')} disabled={!allCluesFound} />
