@@ -114,7 +114,7 @@ export default function Case036Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase036DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records confirm the restricted review source and recorded custody path, not the identity of the reviewer.`);
+      setMessage(`The records confirm Rowan’s authorized review, but not who physically moved the folio.`);
       return;
     }
     archiveLock.current = true;
@@ -137,25 +137,25 @@ export default function Case036Screen({ archive, bureauTeamBoard, onArchive, onR
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 036 · ANNEX SOURCE REVIEW</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 036 · RESTRICTED REVIEW</Text>
       <Text style={[styles.hero, text]}>{CASE_036_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_036_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_036_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_036_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the export revision and receipt acknowledgement. This file traces the attachment back to its review trail.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files verified the Annex K-17 page and its source. This file tests the restricted review trail without assuming a transfer.</Text>
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>INTAKE RECORDS</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>REVIEW RECORDS</Text>
         {CASE_036_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
-      <Action title="Review Intake Records" colors={colors} onPress={() => setPhase('evidence')} />
+      <Action title="Review Restricted Records" colors={colors} onPress={() => setPhase('evidence')} />
       <Action title="Back to Bureau" colors={colors} onPress={onReturn} ghost />
     </>}
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 036 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Trace the attachment to its review trail without treating a routing mark as a person’s identity.</Text>
+      <Text style={[styles.hero, text]}>Trace the restricted review without treating room access as proof of document custody.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all four records: review register, access log, reviewer note and page comparison.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
@@ -221,7 +221,7 @@ export default function Case036Screen({ archive, bureauTeamBoard, onArchive, onR
       <Text style={[styles.hero, text]}>What do the independent review records actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the unresolved reviewer, then choose the precise fact the records support.</Text>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>ARCHIVE SOURCE AND CUSTODY UNDER REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>REVIEW AUTHORIZATION AND TRANSFER UNDER REVIEW</Text>
         {CASE_036_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
@@ -236,7 +236,7 @@ export default function Case036Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 036</Text></View>
       <Text style={[styles.hero, text]}>The review trail are established; the reviewer is not.</Text>
-      <Text style={[styles.subtitle, muted]}>The document hash, page index and custody register establish that the attachment came from restricted review. The routing mark and initials do not identify the person who handled or marked the review file.</Text>
+      <Text style={[styles.subtitle, muted]}>The review register, room log, reviewer note and sign-off establish an authorized review sequence. They do not identify who physically moved the folio or applied the access stamp.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_036_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_036_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_036_GAME.outcome}</Text></View>
