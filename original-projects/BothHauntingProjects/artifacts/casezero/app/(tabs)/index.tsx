@@ -19,6 +19,7 @@ import Case009Screen from '@/components/Case009Screen';
 import Case010Screen from '@/components/Case010Screen';
 import Case011Screen from '@/components/Case011Screen';
 import Case012Screen from '@/components/Case012Screen';
+import Case013Screen from '@/components/Case013Screen';
 import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
 import BureauTeamScreen from '@/components/BureauTeamScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
@@ -30,6 +31,7 @@ import { CASE_009_GAME } from '@/game/case009Game';
 import { CASE_010_GAME } from '@/game/case010Game';
 import { CASE_011_GAME } from '@/game/case011Game';
 import { CASE_012_GAME } from '@/game/case012Game';
+import { CASE_013_GAME } from '@/game/case013Game';
 import {
   CASE_001,
   getInvestigationMemory,
@@ -80,7 +82,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'daily' | 'team';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -641,7 +643,7 @@ export default function HomeScreen() {
             <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
           </View>
           <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
-            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : phase.startsWith('case012') ? 'FILE 012' : 'FILE 001'}</Text>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : phase.startsWith('case012') ? 'FILE 012' : phase.startsWith('case013') ? 'FILE 013' : 'FILE 001'}</Text>
           </View>
         </View>
 
@@ -899,6 +901,22 @@ export default function HomeScreen() {
                 <SectionLabel colors={colors}>Next lead · Badge custody register</SectionLabel>
                 <Text style={[styles.caseTitle, textStyle]}>Who had badge B-17 at 01:27?</Text>
                 <Text style={[styles.body, mutedStyle]}>The south vestibule is confirmed as the route matching the C-4 session. The badge custody and temporary-loan register may explain whether B-17 changed hands before the entry.</Text>
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case012') && !investigationArchive.completedCases.some((record) => record.caseId === 'case013') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Incoming file · 013</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_013_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_013_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>The L-204 custody register may identify who was recorded as borrowing B-17 during the 01:27 access window. It cannot, by itself, identify who presented the badge.</Text>
+                <ActionButton title="Open Case 013" onPress={() => setPhase('case013')} colors={colors} />
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case013') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Next lead · Reader exception packet</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>Did S-04 record a normal badge presentation?</Text>
+                <Text style={[styles.body, mutedStyle]}>The loan register identifies Ivo as the recorded borrower, not the person who necessarily presented the badge. The reader maintenance and exception packet may clarify how the access event was accepted.</Text>
               </View>
             )}
             {missingDetectiveConvergence.unlocked && (
@@ -1603,6 +1621,17 @@ export default function HomeScreen() {
         {phase === 'team' && <BureauTeamScreen archive={investigationArchive} onBoardChange={setBureauTeamBoard} onReturn={() => setPhase('hq')} />}
 
         {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} assignedSpecialistName={BUREAU_SPECIALISTS.find((specialist) => specialist.id === bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'daily')?.specialistId)?.name ?? null} onComplete={(dateKey) => setBureauTeamBoard((current) => awardBureauDailyExperience(current, dateKey))} />}
+
+        {phase === 'case013' && (
+          <Case013Screen
+            archive={investigationArchive}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_013_GAME.id));
+            }}
+            onReturn={() => setPhase('hq')}
+          />
+        )}
 
         {phase === 'case012' && (
           <Case012Screen
