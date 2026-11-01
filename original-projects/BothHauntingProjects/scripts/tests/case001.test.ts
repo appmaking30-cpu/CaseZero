@@ -139,3 +139,46 @@ test('Case 002 receives only the actual findings and unanswered lead from Case 0
     'The chipped cart wheel',
   ]);
 });
+
+
+import {
+  CASE_002_GAME,
+  getCase002QuestionReply,
+  isCase002DeductionCorrect,
+  isCase002TimelineCorrect,
+} from '../../artifacts/casezero/game/case002Game';
+
+test('Case 002 is a complete, evidence-backed investigation', () => {
+  assert.equal(CASE_002_GAME.clues.length, 4);
+  assert.equal(CASE_002_GAME.witnesses.length, 3);
+  assert.ok(CASE_002_GAME.witnesses.every((witness) => witness.questions.length === 2));
+  assert.equal(CASE_002_GAME.timelineEvents.length, 4);
+  assert.ok(CASE_002_GAME.truth.length > 60);
+  assert.ok(CASE_002_GAME.proof.length > 100);
+});
+
+test('Case 002 timeline and deduction require the complete correct solution', () => {
+  assert.equal(isCase002TimelineCorrect(['access', 'closed', 'outage', 'transfer']), true);
+  assert.equal(isCase002TimelineCorrect(['access', 'outage', 'closed', 'transfer']), false);
+  assert.equal(isCase002DeductionCorrect('june', 'protect'), true);
+  assert.equal(isCase002DeductionCorrect('june', 'steal'), false);
+  assert.equal(isCase002DeductionCorrect('ellis', 'protect'), false);
+});
+
+test('Case 001 history changes Case 002 interview dialogue', () => {
+  const emptyReply = getCase002QuestionReply('ellis', 'water', EMPTY_INVESTIGATION_ARCHIVE);
+  const withPrior = archiveCompletedCase(EMPTY_INVESTIGATION_ARCHIVE, {
+    caseId: 'case001',
+    caseTitle: CASE_001.title,
+    closedAt: '2026-11-01T12:00:00.000Z',
+    selectedSuspectId: 'miles',
+    selectedMotiveId: 'protect',
+    inspectedClues: ['The ceiling stain'],
+    askedQuestions: [],
+    unansweredQuestions: ['Nia Vale: Was the parcel damaged?'],
+  });
+  const rememberedReply = getCase002QuestionReply('ellis', 'water', withPrior);
+  assert.notEqual(rememberedReply, emptyReply);
+  assert.match(rememberedReply, /previous file/i);
+  assert.match(getCase002QuestionReply('mara', 'key', withPrior), /left a question unanswered/i);
+});
