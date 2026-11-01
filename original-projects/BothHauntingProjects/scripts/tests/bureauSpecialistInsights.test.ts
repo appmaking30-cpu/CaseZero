@@ -42,3 +42,13 @@ test('Case 031 specialists separate shared-profile activity from human identity'
   assert.match(interviewer?.detail ?? '', /no contemporaneous record names the operator/);
   assert.match(field?.detail ?? '', /do not identify who was there/);
 });
+
+
+test('Case 032 specialists distinguish team responsibility from individual terminal use', () => {
+  const analyst = getBureauSpecialistInsight('inez', 'case032', ['roster', 'ledger', 'handover', 'variance']);
+  const interviewer = getBureauSpecialistInsight('tomas', 'case032', [], ['eli:sign', 'sana:limit']);
+  const field = getBureauSpecialistInsight('rhea', 'case032', ['roster', 'handover', 'variance']);
+  assert.match(analyst?.detail ?? '', /none of these records names the person/);
+  assert.match(interviewer?.detail ?? '', /not personal operation of D-3/);
+  assert.match(field?.detail ?? '', /does not establish which team member used the terminal/);
+});
