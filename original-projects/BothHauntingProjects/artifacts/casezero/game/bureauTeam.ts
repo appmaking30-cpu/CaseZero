@@ -60,6 +60,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case028', label: 'Case 028 · The Visitor Register' },
   { id: 'case029', label: 'Case 029 · The Escort Sheet' },
   { id: 'case030', label: 'Case 030 · The Room That Didn’t Register' },
+  { id: 'case031', label: 'Case 031 · The Session Without a Name' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
