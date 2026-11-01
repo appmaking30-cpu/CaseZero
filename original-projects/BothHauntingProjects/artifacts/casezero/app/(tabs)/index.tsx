@@ -39,6 +39,7 @@ import Case029Screen from '@/components/Case029Screen';
 import Case030Screen from '@/components/Case030Screen';
 import Case031Screen from '@/components/Case031Screen';
 import Case032Screen from '@/components/Case032Screen';
+import Case033Screen from '@/components/Case033Screen';
 import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
 import BureauTeamScreen from '@/components/BureauTeamScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
@@ -70,6 +71,7 @@ import { CASE_029_GAME } from '@/game/case029Game';
 import { CASE_030_GAME } from '@/game/case030Game';
 import { CASE_031_GAME } from '@/game/case031Game';
 import { CASE_032_GAME } from '@/game/case032Game';
+import { CASE_033_GAME } from '@/game/case033Game';
 import {
   CASE_001,
   getInvestigationMemory,
@@ -120,7 +122,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'daily' | 'team';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -1126,6 +1128,15 @@ export default function HomeScreen() {
                 <ActionButton title="Open Case 031" onPress={() => setPhase('case031')} colors={colors} />
               </View>
             )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case032') && !investigationArchive.completedCases.some((record) => record.caseId === 'case033') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Incoming file · 033</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_033_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_033_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>A newly recovered export receipt carries a personal badge signature. Determine exactly which action it identifies without extending that proof to the earlier shared terminal session.</Text>
+                <ActionButton title="Open Case 033" onPress={() => setPhase('case033')} colors={colors} />
+              </View>
+            )}
             {investigationArchive.completedCases.some((record) => record.caseId === 'case031') && !investigationArchive.completedCases.some((record) => record.caseId === 'case032') && (
               <View style={[styles.card, cardStyle]}>
                 <SectionLabel colors={colors}>Incoming file · 032</SectionLabel>
@@ -1954,6 +1965,16 @@ export default function HomeScreen() {
             onArchive={(record) => {
               setInvestigationArchive((current) => archiveCompletedCase(current, record));
               setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_031_GAME.id));
+            }}
+            onReturn={() => setPhase('hq')}
+          />
+        )}
+
+        {phase === 'case033' && (
+          <Case033Screen archive={investigationArchive} bureauTeamBoard={bureauTeamBoard}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_033_GAME.id));
             }}
             onReturn={() => setPhase('hq')}
           />
