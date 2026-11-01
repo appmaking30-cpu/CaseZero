@@ -18,6 +18,7 @@ import Case008Screen from '@/components/Case008Screen';
 import Case009Screen from '@/components/Case009Screen';
 import Case010Screen from '@/components/Case010Screen';
 import Case011Screen from '@/components/Case011Screen';
+import Case012Screen from '@/components/Case012Screen';
 import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
 import BureauTeamScreen from '@/components/BureauTeamScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
@@ -28,6 +29,7 @@ import { CASE_008_GAME } from '@/game/case008Game';
 import { CASE_009_GAME } from '@/game/case009Game';
 import { CASE_010_GAME } from '@/game/case010Game';
 import { CASE_011_GAME } from '@/game/case011Game';
+import { CASE_012_GAME } from '@/game/case012Game';
 import {
   CASE_001,
   getInvestigationMemory,
@@ -78,7 +80,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'daily' | 'team';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -639,7 +641,7 @@ export default function HomeScreen() {
             <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
           </View>
           <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
-            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : 'FILE 001'}</Text>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : phase.startsWith('case012') ? 'FILE 012' : 'FILE 001'}</Text>
           </View>
         </View>
 
@@ -881,6 +883,22 @@ export default function HomeScreen() {
                 <SectionLabel colors={colors}>Next lead · Terminal access corridor</SectionLabel>
                 <Text style={[styles.caseTitle, textStyle]}>C-4-OPS-2 had a physical access route.</Text>
                 <Text style={[styles.body, mutedStyle]}>The roster identifies Sable as primary, but the shared session has no personal operator. The access-control log may show who could reach the terminal.</Text>
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case011') && !investigationArchive.completedCases.some((record) => record.caseId === 'case012') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Incoming file · 012</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_012_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_012_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>The C-4 access export records badge B-17 at the south vestibule around the terminal session. The next file reconstructs the route without assuming who carried the badge.</Text>
+                <ActionButton title="Open Case 012" onPress={() => setPhase('case012')} colors={colors} />
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case012') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Next lead · Badge custody register</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>Who had badge B-17 at 01:27?</Text>
+                <Text style={[styles.body, mutedStyle]}>The south vestibule is confirmed as the route matching the C-4 session. The badge custody and temporary-loan register may explain whether B-17 changed hands before the entry.</Text>
               </View>
             )}
             {missingDetectiveConvergence.unlocked && (
@@ -1585,6 +1603,17 @@ export default function HomeScreen() {
         {phase === 'team' && <BureauTeamScreen archive={investigationArchive} onBoardChange={setBureauTeamBoard} onReturn={() => setPhase('hq')} />}
 
         {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} assignedSpecialistName={BUREAU_SPECIALISTS.find((specialist) => specialist.id === bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'daily')?.specialistId)?.name ?? null} onComplete={(dateKey) => setBureauTeamBoard((current) => awardBureauDailyExperience(current, dateKey))} />}
+
+        {phase === 'case012' && (
+          <Case012Screen
+            archive={investigationArchive}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_012_GAME.id));
+            }}
+            onReturn={() => setPhase('hq')}
+          />
+        )}
 
         {phase === 'case011' && (
           <Case011Screen
