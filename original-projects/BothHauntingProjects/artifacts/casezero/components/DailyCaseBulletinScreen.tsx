@@ -24,7 +24,7 @@ const EMPTY_PROGRESS: DailyProgress = {
   phase: 'evidence',
 };
 
-export default function DailyCaseBulletinScreen({ onReturn, onComplete }: { onReturn: () => void; onComplete?: (dateKey: string) => void }) {
+export default function DailyCaseBulletinScreen({ onReturn, onComplete, assignedSpecialistName }: { onReturn: () => void; onComplete?: (dateKey: string) => void; assignedSpecialistName?: string | null }) {
   const colors = useColors();
   const dateKey = useMemo(() => {
     const now = new Date();
@@ -95,6 +95,7 @@ export default function DailyCaseBulletinScreen({ onReturn, onComplete }: { onRe
           <Text style={[styles.hero, text]}>{dailyCase.title}</Text>
           <Text style={[styles.location, { color: colors.primary }]}>{dailyCase.location}</Text>
           <Text style={[styles.subtitle, muted]}>{dailyCase.briefing}</Text>
+          {assignedSpecialistName && <Text style={[styles.note, { color: colors.primary }]}>{assignedSpecialistName} is assigned to this bulletin and will earn 1 XP when you solve it.</Text>}
           <View style={[styles.card, card]}>
             <Text style={[styles.label, { color: colors.primary }]}>FIELD RECORDS</Text>
             <Text style={[styles.note, muted]}>Inspect all three records before making your deduction.</Text>
@@ -140,6 +141,7 @@ export default function DailyCaseBulletinScreen({ onReturn, onComplete }: { onRe
           <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>DAILY FILE · CLOSED</Text></View>
           <Text style={[styles.hero, text]}>{dailyCase.title}</Text>
           <Text style={[styles.subtitle, muted]}>Today’s investigation is complete. Your conclusion has been saved on this device.</Text>
+          {assignedSpecialistName && <Text style={[styles.note, { color: colors.primary }]}>{assignedSpecialistName} received the daily case experience reward.</Text>}
           <View style={[styles.card, card]}>
             <Text style={[styles.label, { color: colors.primary }]}>TRUTH</Text>
             <Text style={[styles.body, text]}>{dailyCase.truth}</Text>
