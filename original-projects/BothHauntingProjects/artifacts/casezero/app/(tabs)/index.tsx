@@ -23,12 +23,21 @@ import {
   type InvestigationArchive,
 } from '@/game/investigationArchive';
 import { CASE_002, getCase002Carryover } from '@/game/case002';
+import {
+  CASE_002_GAME,
+  EMPTY_CASE002_PROGRESS,
+  getCase002QuestionReply,
+  isCase002DeductionCorrect,
+  isCase002TimelineCorrect,
+  type Case002Phase,
+  type Case002Progress,
+} from '@/game/case002Game';
 
 const SAVE_KEY = 'casezero.case001.memory.v1';
-const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
+const ARCHIVE_KEY = 'casezero.investigation.archive.v1';\nconst CASE002_SAVE_KEY = 'casezero.case002.progress.v1';\ntype AppPhase = CasePhase | Case002Phase;
 
 type SavedState = {
-  phase: CasePhase;
+  phase: AppPhase;
   cluesFound: string[];
   askedQuestions: string[];
   timelineOrder: string[];
@@ -101,7 +110,12 @@ export default function HomeScreen() {
   const [loaded, setLoaded] = useState(false);
   const [archiveLoaded, setArchiveLoaded] = useState(false);
   const [investigationArchive, setInvestigationArchive] = useState<InvestigationArchive>(EMPTY_INVESTIGATION_ARCHIVE);
-  const [phase, setPhase] = useState<CasePhase>('hq');
+  const [phase, setPhase] = useState<AppPhase>('hq');
+  const [case002Progress, setCase002Progress] = useState<Case002Progress>(EMPTY_CASE002_PROGRESS);
+  const [case002ActiveClue, setCase002ActiveClue] = useState<string | null>(null);
+  const [case002ActiveReply, setCase002ActiveReply] = useState<string | null>(null);
+  const [case002TimelineMessage, setCase002TimelineMessage] = useState('');
+  const [case002DeductionMessage, setCase002DeductionMessage] = useState('');
   const [cluesFound, setCluesFound] = useState<string[]>([]);
   const [askedQuestions, setAskedQuestions] = useState<string[]>([]);
   const [timelineOrder, setTimelineOrder] = useState<string[]>([]);
@@ -305,6 +319,77 @@ export default function HomeScreen() {
     setTimelineOrder([]);
     setTimelineMessage('');
   };
+  const case002AllCluesFound = case002Progress.cluesFound.length === CASE_002_GAME.clues.length;
+  const case002WitnessCount = CASE_002_GAME.witnesses.filter((witness) =>
+    witness.questions.some((question) => case002Progress.askedQuestions.includes(`${witness.id}:${question.id}`)),
+  ).length;
+  const case002AllWitnessesHeard = case002WitnessCount === CASE_002_GAME.witnesses.length;
+  const case002Unanswered = CASE_002_GAME.witnesses.flatMap((witness) =>
+    witness.questions.filter((question) => !case002Progress.askedQuestions.includes(`${witness.id}:${question.id}`))
+      .map((question) => `${witness.name}: ${question.prompt}`),
+  );
+
+  const inspectCase002Clue = (clueId: string) => {
+    setCase002Progress((current) => ({
+      ...current,
+      cluesFound: current.cluesFound.includes(clueId) ? current.cluesFound : [...current.cluesFound, clueId],
+    }));
+    setCase002ActiveClue((current) => current === clueId ? null : clueId);
+  };
+
+  const askCase002Question = (witnessId: string, questionId: string) => {
+    const key = `${witnessId}:${questionId}`;
+    setCase002Progress((current) => ({
+      ...current,
+      askedQuestions: current.askedQuestions.includes(key) ? current.askedQuestions : [...current.askedQuestions, key],
+    }));
+    setCase002ActiveReply(key);
+  };
+
+  const selectCase002TimelineEvent = (eventId: string) => {
+    if (case002Progress.timelineSolved || case002Progress.timelineOrder.includes(eventId) || case002Progress.timelineOrder.length >= 4) return;
+    const next = [...case002Progress.timelineOrder, eventId];
+    if (next.length === 4) {
+      if (isCase002TimelineCorrect(next)) {
+        setCase002Progress((current) => ({ ...current, timelineOrder: next, timelineSolved: true }));
+        setCase002TimelineMessage('Timeline confirmed. The outage happened after the ledger was moved.');
+      } else {
+        setCase002Progress((current) => ({ ...current, timelineOrder: next }));
+        setCase002TimelineMessage('That sequence does not fit the access panel and generator log. Reset and try again.');
+      }
+    } else {
+      setCase002Progress((current) => ({ ...current, timelineOrder: next }));
+    }
+  };
+
+  const resetCase002Timeline = () => {
+    setCase002Progress((current) => ({ ...current, timelineOrder: [] }));
+    setCase002TimelineMessage('');
+  };
+
+  const submitCase002Deduction = () => {
+    if (!isCase002DeductionCorrect(case002Progress.selectedSuspect, case002Progress.selectedMotive)) {
+      setCase002DeductionMessage('That theory does not fit the access log, the outage time and the transfer tag. Recheck the sequence.');
+      return;
+    }
+    const record = {
+      caseId: CASE_002_GAME.id,
+      caseTitle: CASE_002_GAME.title,
+      closedAt: new Date().toISOString(),
+      selectedSuspectId: case002Progress.selectedSuspect!,
+      selectedMotiveId: case002Progress.selectedMotive!,
+      inspectedClues: CASE_002_GAME.clues.filter((clue) => case002Progress.cluesFound.includes(clue.id)).map((clue) => clue.title),
+      askedQuestions: CASE_002_GAME.witnesses.flatMap((witness) => witness.questions
+        .filter((question) => case002Progress.askedQuestions.includes(`${witness.id}:${question.id}`))
+        .map((question) => `${witness.name}: ${question.prompt}`)),
+      unansweredQuestions: case002Unanswered,
+    };
+    setInvestigationArchive((current) => archiveCompletedCase(current, record));
+    setCase002Progress((current) => ({ ...current, completed: true }));
+    setCase002DeductionMessage('');
+    setPhase('case002Review');
+  };
+
 
   const submitDeduction = () => {
     if (isDeductionCorrect(selectedSuspect, selectedMotive)) {
