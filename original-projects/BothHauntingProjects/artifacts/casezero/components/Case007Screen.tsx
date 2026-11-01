@@ -2,18 +2,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
-import { archiveCompletedCase } from '@/game/investigationArchive';
-import { CASE_007_GAME, CASE_007_EMPTY_PROGRESS, isCase007DeductionCorrect, isCase007TimelineCorrect } from '@/game/case007Game';
+import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
+import { CASE_007_GAME, CASE_007_EMPTY_PROGRESS, getCase007Carryover, isCase007DeductionCorrect, isCase007TimelineCorrect } from '@/game/case007Game';
 
 const SAVE_KEY = 'casezero.case007.progress.v1';
 type Progress = typeof CASE_007_EMPTY_PROGRESS;
 type Phase = 'briefing' | 'evidence' | 'interviews' | 'timeline' | 'deduction' | 'review';
 type Props = {
+  archive: InvestigationArchive;
   onArchive: (record: Parameters<typeof archiveCompletedCase>[1]) => void;
   onReturn: () => void;
 };
 
-export default function Case007Screen({ onArchive, onReturn }: Props) {
+export default function Case007Screen({ archive, onArchive, onReturn }: Props) {
   const colors = useColors();
   const [loaded, setLoaded] = useState(false);
   const [phase, setPhase] = useState<Phase>('briefing');
@@ -22,6 +23,7 @@ export default function Case007Screen({ onArchive, onReturn }: Props) {
   const [activeReply, setActiveReply] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const archiveLock = useRef(false);
+  const carryover = getCase007Carryover(archive);
 
   useEffect(() => {
     let active = true;
@@ -130,7 +132,7 @@ export default function Case007Screen({ onArchive, onReturn }: Props) {
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_007_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_007_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Carryover: the recorder confirmed a relay destination, but did not identify its speaker. This file investigates the physical handover only.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The recorder confirmed a relay destination, but did not identify its speaker. This file investigates the physical handover only.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>NIGHT SHIFT PERSONNEL</Text>
