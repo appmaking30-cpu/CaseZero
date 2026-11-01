@@ -355,6 +355,7 @@ import {
   EMPTY_BUREAU_TEAM_BOARD,
   assignBureauSpecialist,
   getUnlockedBureauSpecialists,
+  normalizeBureauTeamBoard,
   removeBureauAssignment,
 } from '../../artifacts/casezero/game/bureauTeam';
 
@@ -390,4 +391,33 @@ test('Bureau assignments keep one specialist per file and one file per specialis
   assert.equal(moved.assignments.length, 1);
   assert.equal(moved.assignments[0].targetId, 'next-case');
   assert.equal(removeBureauAssignment(moved, 'next-case').assignments.length, 0);
+});
+
+
+test('saved Bureau assignments discard locked specialists, completed files and malformed entries', () => {
+  const archive = archiveCompletedCase(EMPTY_INVESTIGATION_ARCHIVE, {
+    caseId: 'case001', caseTitle: CASE_001.title, closedAt: '2026-11-01T12:00:00.000Z',
+    selectedSuspectId: 'miles', selectedMotiveId: 'protect',
+    inspectedClues: [], askedQuestions: [], unansweredQuestions: [],
+  });
+  const repaired = normalizeBureauTeamBoard({
+    version: 1,
+    assignments: [
+      { specialistId: 'tomas', targetId: 'case004', assignedAt: '2026-11-01T12:01:00.000Z' },
+      { specialistId: 'inez', targetId: 'case001', assignedAt: '2026-11-01T12:02:00.000Z' },
+      { specialistId: 'inez', targetId: 'case004', assignedAt: '2026-11-01T12:03:00.000Z' },
+      { specialistId: 'inez', targetId: 'daily', assignedAt: 'not-a-date' },
+      { specialistId: 'unknown', targetId: 'daily', assignedAt: '2026-11-01T12:04:00.000Z' },
+      null,
+    ],
+  }, archive);
+
+  assert.deepEqual(repaired.assignments, [
+    { specialistId: 'inez', targetId: 'case004', assignedAt: '2026-11-01T12:03:00.000Z' },
+  ]);
+});
+
+test('Bureau board normalization safely handles malformed saved data', () => {
+  assert.deepEqual(normalizeBureauTeamBoard(null, EMPTY_INVESTIGATION_ARCHIVE), EMPTY_BUREAU_TEAM_BOARD);
+  assert.deepEqual(normalizeBureauTeamBoard({ version: 9, assignments: 'broken' }, EMPTY_INVESTIGATION_ARCHIVE), EMPTY_BUREAU_TEAM_BOARD);
 });
