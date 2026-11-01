@@ -184,6 +184,37 @@ export type CasePhase =
   | "deduction"
   | "review";
 
+export type InvestigationMemory = {
+  inspectedClues: string[];
+  askedQuestions: string[];
+  unansweredQuestions: string[];
+};
+
+export function getInvestigationMemory(
+  clueIds: readonly string[],
+  questionKeys: readonly string[],
+): InvestigationMemory {
+  const inspectedClues = CASE_001.clues
+    .filter((clue) => clueIds.includes(clue.id))
+    .map((clue) => clue.title);
+
+  const askedQuestions: string[] = [];
+  const unansweredQuestions: string[] = [];
+
+  for (const witness of CASE_001.witnesses) {
+    for (const question of witness.questions) {
+      const note = `${witness.name}: ${question.prompt}`;
+      if (questionKeys.includes(`${witness.id}:${question.id}`)) {
+        askedQuestions.push(note);
+      } else {
+        unansweredQuestions.push(note);
+      }
+    }
+  }
+
+  return { inspectedClues, askedQuestions, unansweredQuestions };
+}
+
 export function isTimelineCorrect(order: readonly string[]): boolean {
   return (
     order.length === CASE_001.correctTimelineOrder.length &&
