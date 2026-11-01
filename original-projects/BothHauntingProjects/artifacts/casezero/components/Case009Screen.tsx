@@ -96,7 +96,7 @@ export default function Case009Screen({ archive, onArchive, onReturn }: Props) {
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase009TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the counter receipt with the switchboard and index records.'
+      ? 'That sequence conflicts with the time stamps. Compare the drawer log with the renewal register and inventory record.'
       : '');
   };
   const submit = () => {
@@ -132,7 +132,7 @@ export default function Case009Screen({ archive, onArchive, onReturn }: Props) {
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_009_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_009_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The recorder confirmed a relay destination, but did not identify its speaker. This file investigates the physical handover only.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier relay files identify a shared route and a third schedule reference. This file investigates record access without assuming it reveals the approver.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>DISPATCH SHIFT PERSONNEL</Text>
@@ -177,7 +177,7 @@ export default function Case009Screen({ archive, onArchive, onReturn }: Props) {
         })}
       </View>)}
       <Text style={[styles.note, muted]}>{heardWitnesses}/3 witnesses heard · {unanswered.length} optional follow-ups remaining</Text>
-      <Action title="Reconstruct the handover" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
+      <Action title="Reconstruct the dispatch sequence" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
       <Action title="Back to evidence" colors={colors} onPress={() => setPhase('evidence')} ghost />
     </>}
 
