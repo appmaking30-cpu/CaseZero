@@ -22,6 +22,7 @@ import {
   EMPTY_INVESTIGATION_ARCHIVE,
   type InvestigationArchive,
 } from '@/game/investigationArchive';
+import { CASE_002, getCase002Carryover } from '@/game/case002';
 
 const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
@@ -215,6 +216,10 @@ export default function HomeScreen() {
   const investigationMemory = useMemo(
     () => getInvestigationMemory(cluesFound, askedQuestions),
     [cluesFound, askedQuestions],
+  );
+  const case002Carryover = useMemo(
+    () => getCase002Carryover(investigationArchive),
+    [investigationArchive],
   );
 
   useEffect(() => {
@@ -439,6 +444,34 @@ export default function HomeScreen() {
                 })}
               </View>
             )}
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Incoming file · 002</SectionLabel>
+              <Text style={[styles.caseTitle, textStyle]}>{CASE_002.title}</Text>
+              <Text style={[styles.body, mutedStyle]}>{CASE_002.subtitle}</Text>
+              <Text style={[styles.memoryNote, textStyle]}>{CASE_002.briefing}</Text>
+              <View style={[styles.detail, { borderTopColor: colors.border }]}>
+                <SectionLabel colors={colors}>THE MEMORY · Carryover intelligence</SectionLabel>
+                <Text style={[styles.body, mutedStyle]}>{case002Carryover.fieldLesson}</Text>
+                {case002Carryover.priorConclusion && (
+                  <Text style={[styles.memoryNote, textStyle]}>{case002Carryover.priorConclusion}</Text>
+                )}
+                {case002Carryover.unansweredLead && (
+                  <Text style={[styles.memoryNote, { color: colors.primary }]}>
+                    Unanswered lead from your last file: {case002Carryover.unansweredLead}
+                  </Text>
+                )}
+                {case002Carryover.inspectedEvidence.length > 0 && (
+                  <Text style={[styles.memoryNote, mutedStyle]}>
+                    Evidence you previously noticed: {case002Carryover.inspectedEvidence.join(' · ')}
+                  </Text>
+                )}
+              </View>
+              <Text style={[styles.small, mutedStyle]}>
+                {case002Carryover.hasPriorCase
+                  ? 'Your previous investigation has shaped this briefing.'
+                  : 'Close Case 001 to carry your investigation history into this file.'}
+              </Text>
+            </View>
             <Text style={[styles.footerNote, mutedStyle]}>
               A quiet city. A long night. Nothing is forgotten.
             </Text>
