@@ -28,25 +28,25 @@ The canonical app uses Expo Router, React Native, TypeScript, and AsyncStorage f
 
 **Playable in the active Expo app**
 
-- Dark-first Detective Bureau home screen and case-file navigation.
-- **Case 001 — The Last Train Home:** complete tutorial flow with five inspectable records, three witnesses (two questions each), a four-event chronological timeline, suspect-plus-motive deduction, and separate Truth / Proof / Outcome review.
-- Case 001 fairness gates: all five records must be inspected, at least one question must be asked of each witness, the timeline must be solved, and an unsupported deduction can be retried.
-- Case 001 local save/resume and an investigation archive recording inspected clues, asked questions, unanswered questions, and the player's conclusion.
-- **Case 002 — The Unlit Room:** a connected follow-on investigation with four records, three witnesses, a four-event timeline, suspect-plus-motive deduction, and its own Truth / Proof / Outcome review. It unlocks after Case 001 is closed and can use the previous case's actual recorded findings and unanswered lead.
-- Case 002 local progress save/resume and cross-case archive memory.
-- A basic Bureau archive that displays completed investigations.
-- **The Missing Detective:** an unlockable dossier/story teaser after both opening cases close. It is a hook for the next investigation, not yet a playable case.
+- Dark-first Detective Bureau home screen and connected case-file navigation.
+- **Case 001 — The Last Train Home:** complete tutorial flow with five inspectable records, three witnesses, a four-event timeline, suspect-plus-motive deduction, retryable conclusions, and Truth / Proof / Outcome review.
+- Case 001 local save/resume and a cross-case investigation archive recording inspected clues, asked questions, unanswered questions, and the player's conclusion.
+- **Case 002 — The Unlit Room:** connected follow-on investigation with four records, three witnesses, a four-event timeline, deduction, and Truth / Proof / Outcome review. It uses the actual findings and unanswered lead from Case 001.
+- **Case 003 — The Black Square:** playable Missing Detective investigation. It traces the black-square mark through the records annex, includes four records, three witnesses, six questions, a timeline puzzle, a deduction, and a full review.
+- **Case 004 — The Last Signal:** playable continuation following Rowan Vale's missing field recorder to North Quay Signal House. It includes four records, three witnesses, six questions, a timeline puzzle, a suspect-and-motive deduction, and a full review.
+- Cases 002–004 preserve separate local progress and feed completed findings into the shared investigation archive. Later case dialogue can change based on earlier recorded conclusions and unanswered questions.
+- The Bureau archive displays each completed investigation and its recorded conclusion.
+- Automated checks currently pass for TypeScript, unit tests, Expo web export, and the Playwright mobile-viewport walkthrough through all four cases.
 
 **Not yet implemented**
 
-- Playable Missing Detective investigation, its evidence, witnesses, timeline, and deduction.
 - Specialist/team recruitment, assignments, or upgrade systems.
 - Daily case bulletin and rotating case content.
 - Cloud accounts or cross-device saves.
 - Multiplayer or online services.
 - Monetization or paid features.
 
-The Bureau screen and case archive are a foundation, not a finished team-management HQ. Optional monetization remains a late-stage choice and must never block the core game.
+The Bureau screen and case archive are still a foundation, not a finished team-management HQ. Optional monetization remains a late-stage choice and must never block the core game.
 
 ## Sustainable, no-Agent development workflow
 
