@@ -65,6 +65,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case033', label: 'Case 033 · The Receipt at 07:24' },
   { id: 'case034', label: 'Case 034 · The Revision in the Margin' },
   { id: 'case035', label: 'Case 035 · The Page from Annex K-17' },
+  { id: 'case036', label: 'Case 036 · The Restricted Review' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
@@ -305,6 +306,16 @@ export function getBureauSpecialistInsight(
 
   // The late dispatch arc deliberately separates presence, route intent, room occupancy,
   // and identity. Each specialist insight is gated by the records the player has inspected.
+  if (specialistId === 'inez' && caseId === 'case036' && hasClues('register', 'access', 'note', 'comparison')) {
+    return { title: 'Inez Shaw · Review record audit', detail: 'The register and access log establish Rowan’s authorized review and room entry. The comparison sign-off validates the page match, but no custody event identifies who moved the folio.', rankPerk };
+  }
+  if (specialistId === 'tomas' && caseId === 'case036' && askedQuestions.includes('rowan:handling') && askedQuestions.includes('elias:access')) {
+    return { title: 'Tomas Reed · Attribution boundary review', detail: 'Rowan distinguishes review from transfer, and Elias confirms that room access is not document custody. Their statements match the missing movement record: the handler remains unidentified.', rankPerk };
+  }
+  if (specialistId === 'rhea' && caseId === 'case036' && hasClues('register', 'access', 'note')) {
+    return { title: 'Rhea Voss · Review sequence reconstruction', detail: 'The assignment precedes the door event, followed by the saved reviewer note and later comparison sign-off. The sequence verifies the review workflow, not a physical route for the folio.', rankPerk };
+  }
+
   if (specialistId === 'inez' && caseId === 'case035' && hasClues('scan', 'index', 'intake', 'routing')) {
     return {
       title: 'Inez Shaw · Source integrity review',
