@@ -101,6 +101,15 @@ export function normalizeBureauTeamBoard(input: unknown, archive: InvestigationA
   return board;
 }
 
+export function restoreBureauTeamBoard(raw: string | null, archive: InvestigationArchive): BureauTeamBoard {
+  if (!raw) return EMPTY_BUREAU_TEAM_BOARD;
+  try {
+    return normalizeBureauTeamBoard(JSON.parse(raw) as unknown, archive);
+  } catch {
+    return EMPTY_BUREAU_TEAM_BOARD;
+  }
+}
+
 export function removeBureauAssignment(board: BureauTeamBoard, targetId: string): BureauTeamBoard {
   return {
     version: 1,
