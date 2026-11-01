@@ -103,7 +103,7 @@ export default function Case030Screen({ archive, onArchive, onReturn }: Props) {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase030DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage('The records confirm an radio check and assignment, not completed escort, room entry or terminal use.');
+      setMessage('The records confirm brief room occupancy, not the identity of the occupant.');
       return;
     }
     archiveLock.current = true;
@@ -144,7 +144,7 @@ export default function Case030Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 030 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Trace the room-access sequence without treating an assignment as confirmed room entry.</Text>
+      <Text style={[styles.hero, text]}>Trace the room event without treating a masked credential as a named identity.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all four records: radio check, door register, occupancy counter and clock reconciliation.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
@@ -225,7 +225,7 @@ export default function Case030Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 030</Text></View>
       <Text style={[styles.hero, text]}>Brief occupancy does not identify the occupant.</Text>
-      <Text style={[styles.subtitle, muted]}>The 07:10 request, 07:12 assignment, 07:18 corridor badge event and 07:20 clock reconciliation establish an intended room-access sequence, but do not confirm Ivo reached D-3.</Text>
+      <Text style={[styles.subtitle, muted]}>The corrected 07:19–07:26 sequence supports brief occupancy, but does not identify the occupant or confirm Ivo reached D-3.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_030_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_030_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_030_GAME.outcome}</Text></View>
