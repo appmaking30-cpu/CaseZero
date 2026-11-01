@@ -19,11 +19,12 @@ const SAVE_KEY = 'casezero.case004.progress.v1';
 type Props = {
   archive: InvestigationArchive;
   assignedSpecialistId: string | null;
+  assignedSpecialistRank: number;
   onArchive: (record: Parameters<typeof archiveCompletedCase>[1]) => void;
   onReturn: () => void;
 };
 
-export default function Case004Screen({ archive, assignedSpecialistId, onArchive, onReturn }: Props) {
+export default function Case004Screen({ archive, assignedSpecialistId, assignedSpecialistRank, onArchive, onReturn }: Props) {
   const colors = useColors();
   const [loaded, setLoaded] = useState(false);
   const [phase, setPhase] = useState<'briefing' | 'evidence' | 'interviews' | 'timeline' | 'deduction' | 'review'>('briefing');
@@ -33,7 +34,7 @@ export default function Case004Screen({ archive, assignedSpecialistId, onArchive
   const [timelineMessage, setTimelineMessage] = useState('');
   const [deductionMessage, setDeductionMessage] = useState('');
   const carryover = useMemo(() => getCase004Carryover(archive), [archive]);
-  const specialistInsight = getBureauSpecialistInsight(assignedSpecialistId, 'case004', progress.cluesFound, progress.askedQuestions);
+  const specialistInsight = getBureauSpecialistInsight(assignedSpecialistId, 'case004', progress.cluesFound, progress.askedQuestions, assignedSpecialistRank);
 
   useEffect(() => {
     let active = true;
