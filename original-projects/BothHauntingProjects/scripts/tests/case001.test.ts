@@ -358,6 +358,7 @@ import {
   normalizeBureauTeamBoard,
   removeBureauAssignment,
   getBureauSpecialistInsight,
+  restoreBureauTeamBoard,
 } from '../../artifacts/casezero/game/bureauTeam';
 
 test('Bureau specialists unlock only after their campaign milestones', () => {
@@ -416,6 +417,12 @@ test('saved Bureau assignments discard locked specialists, completed files and m
   assert.deepEqual(repaired.assignments, [
     { specialistId: 'inez', targetId: 'case004', assignedAt: '2026-11-01T12:03:00.000Z' },
   ]);
+});
+
+test('Bureau roster restoration survives corrupt JSON without blocking startup', () => {
+  assert.deepEqual(restoreBureauTeamBoard(null, EMPTY_INVESTIGATION_ARCHIVE), EMPTY_BUREAU_TEAM_BOARD);
+  assert.deepEqual(restoreBureauTeamBoard('{broken-json', EMPTY_INVESTIGATION_ARCHIVE), EMPTY_BUREAU_TEAM_BOARD);
+  assert.deepEqual(restoreBureauTeamBoard('{"version":1,"assignments":[]}', EMPTY_INVESTIGATION_ARCHIVE), EMPTY_BUREAU_TEAM_BOARD);
 });
 
 test('Bureau board normalization safely handles malformed saved data', () => {
