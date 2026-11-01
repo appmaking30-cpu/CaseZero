@@ -134,13 +134,45 @@ export default function HomeScreen() {
 
   useEffect(() => {
     let active = true;
-    Promise.all([AsyncStorage.getItem(SAVE_KEY), AsyncStorage.getItem(ARCHIVE_KEY)])
-      .then(([raw, archiveRaw]) => {
+    Promise.all([
+      AsyncStorage.getItem(SAVE_KEY),
+      AsyncStorage.getItem(ARCHIVE_KEY),
+      AsyncStorage.getItem(CASE002_SAVE_KEY),
+    ])
+      .then(([raw, archiveRaw, case002Raw]) => {
         if (!active) return;
         if (archiveRaw) {
           const parsedArchive = JSON.parse(archiveRaw) as InvestigationArchive;
           if (parsedArchive.version === 1 && Array.isArray(parsedArchive.completedCases)) {
             setInvestigationArchive(parsedArchive);
+          }
+        }
+        if (case002Raw) {
+          const parsedCase002 = JSON.parse(case002Raw) as Partial<Case002Progress> | null;
+          if (parsedCase002 && typeof parsedCase002 === 'object') {
+            setCase002Progress({
+              cluesFound: Array.isArray(parsedCase002.cluesFound)
+                ? parsedCase002.cluesFound.filter((id): id is string => typeof id === 'string')
+                : [],
+              askedQuestions: Array.isArray(parsedCase002.askedQuestions)
+                ? parsedCase002.askedQuestions.filter((key): key is string => typeof key === 'string')
+                : [],
+              timelineOrder: Array.isArray(parsedCase002.timelineOrder)
+                ? parsedCase002.timelineOrder.filter((id): id is string => typeof id === 'string')
+                : [],
+              timelineSolved: typeof parsedCase002.timelineSolved === 'boolean'
+                ? parsedCase002.timelineSolved
+                : false,
+              selectedSuspect: typeof parsedCase002.selectedSuspect === 'string'
+                ? parsedCase002.selectedSuspect
+                : null,
+              selectedMotive: typeof parsedCase002.selectedMotive === 'string'
+                ? parsedCase002.selectedMotive
+                : null,
+              completed: typeof parsedCase002.completed === 'boolean'
+                ? parsedCase002.completed
+                : false,
+            });
           }
         }
         if (!active) return;
@@ -205,6 +237,11 @@ export default function HomeScreen() {
     AsyncStorage.setItem(ARCHIVE_KEY, JSON.stringify(investigationArchive)).catch(() => undefined);
   }, [archiveLoaded, investigationArchive]);
 
+  useEffect(() => {
+    if (!loaded) return;
+    AsyncStorage.setItem(CASE002_SAVE_KEY, JSON.stringify(case002Progress)).catch(() => undefined);
+  }, [loaded, case002Progress]);
+
   const allCluesFound = cluesFound.length === CASE_001.clues.length;
   const witnessCount = useMemo(
     () =>
@@ -241,6 +278,10 @@ export default function HomeScreen() {
   const missingDetectiveArc = useMemo(
     () => getMissingDetectiveArcStatus(investigationArchive),
     [investigationArchive],
+  );
+
+  const case001Archived = investigationArchive.completedCases.some(
+    (record) => record.caseId === CASE_001.id,
   );
 
   useEffect(() => {
@@ -559,14 +600,21 @@ export default function HomeScreen() {
                 )}
               </View>
               <Text style={[styles.small, mutedStyle]}>
-                {case002Carryover.hasPriorCase
+                {case001Archived
                   ? 'Your previous investigation has shaped this briefing.'
-                  : 'Close Case 001 to carry your investigation history into this file.'}
+                  : 'Complete Case 001 to unlock this connected investigation.'}
               </Text>
               <ActionButton
-                title={case002Progress.completed ? 'Review Case 002' : 'Open Case 002'}
+                title={
+                  case002Progress.completed
+                    ? 'Review Case 002'
+                    : case001Archived
+                      ? 'Open Case 002'
+                      : 'Complete Case 001 to unlock'
+                }
                 onPress={() => setPhase(case002Progress.completed ? 'case002Review' : 'case002Briefing')}
                 colors={colors}
+                disabled={!case001Archived && !case002Progress.completed}
               />
             </View>
             {missingDetectiveArc.unlocked && (
