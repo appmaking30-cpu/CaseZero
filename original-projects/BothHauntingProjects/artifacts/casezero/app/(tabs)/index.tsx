@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import Case004Screen from '@/components/Case004Screen';
+import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
 import {
   CASE_001,
@@ -50,7 +51,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'daily';
 
 type SavedState = {
   phase: AppPhase;
@@ -589,7 +590,7 @@ export default function HomeScreen() {
             <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
           </View>
           <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
-            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003' : 'FILE 001'}</Text>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003' : phase.startsWith('case004') || phase === 'case004' ? 'FILE 004' : 'FILE 001'}</Text>
           </View>
         </View>
 
@@ -742,6 +743,12 @@ export default function HomeScreen() {
                 />
               </View>
             )}
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Daily case bulletin</SectionLabel>
+              <Text style={[styles.caseTitle, textStyle]}>A new file every day.</Text>
+              <Text style={[styles.body, mutedStyle]}>Short standalone investigations rotate with your local calendar date. They do not alter the main campaign archive.</Text>
+              <ActionButton title="Open Daily Case Bulletin" onPress={() => setPhase('daily')} colors={colors} />
+            </View>
             {case003Progress.completed && (
               <View style={[styles.card, cardStyle]}>
                 <SectionLabel colors={colors}>Incoming file · 004</SectionLabel>
@@ -1400,6 +1407,8 @@ export default function HomeScreen() {
             <ActionButton title="Back to timeline" onPress={() => setPhase('case003Timeline')} colors={colors} variant="ghost" />
           </>
         )}
+
+        {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} />}
 
         {phase === 'case004' && (
           <Case004Screen
