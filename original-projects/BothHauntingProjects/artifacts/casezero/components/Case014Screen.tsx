@@ -132,7 +132,7 @@ export default function Case014Screen({ archive, onArchive, onReturn }: Props) {
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_014_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_014_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier files establish the relay authority trail and the C-4 duty roster. This file tests which physical route matches the shared-terminal window without treating a badge assignment as personal identification.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier files establish the B-17 custody trail and the south vestibule access event. This file checks how S-04 processed the credential without treating a normal reader event as personal identification.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>CREDENTIAL READER DECISION UNDER REVIEW</Text>
