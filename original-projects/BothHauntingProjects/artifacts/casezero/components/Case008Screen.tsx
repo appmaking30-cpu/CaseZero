@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
-import { CASE_008_GAME, CASE_008_EMPTY_PROGRESS, getCase008Carryover, isCase008DeductionCorrect, isCase008TimelineCorrect } from '@/game/case007Game';
+import { CASE_008_GAME, CASE_008_EMPTY_PROGRESS, getCase008Carryover, isCase008DeductionCorrect, isCase008TimelineCorrect } from '@/game/case008Game';
 
 const SAVE_KEY = 'casezero.case008.progress.v1';
 type Progress = typeof CASE_008_EMPTY_PROGRESS;
