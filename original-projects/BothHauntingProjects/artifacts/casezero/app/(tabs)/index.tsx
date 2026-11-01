@@ -287,6 +287,11 @@ export default function HomeScreen() {
   }, [archiveLoaded, investigationArchive]);
 
   useEffect(() => {
+    if (!archiveLoaded) return;
+    AsyncStorage.setItem(BUREAU_TEAM_SAVE_KEY, JSON.stringify(bureauTeamBoard)).catch(() => undefined);
+  }, [archiveLoaded, bureauTeamBoard]);
+
+  useEffect(() => {
     if (!loaded) return;
     AsyncStorage.setItem(CASE002_SAVE_KEY, JSON.stringify(case002Progress)).catch(() => undefined);
   }, [loaded, case002Progress]);
