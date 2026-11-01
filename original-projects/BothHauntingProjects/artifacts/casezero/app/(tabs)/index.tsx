@@ -1461,7 +1461,7 @@ export default function HomeScreen() {
 
         {phase === 'team' && <BureauTeamScreen archive={investigationArchive} onBoardChange={setBureauTeamBoard} onReturn={() => setPhase('hq')} />}
 
-        {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} onComplete={(dateKey) => setBureauTeamBoard((current) => awardBureauDailyExperience(current, dateKey))} />}
+        {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} assignedSpecialistName={BUREAU_SPECIALISTS.find((specialist) => specialist.id === bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'daily')?.specialistId)?.name ?? null} onComplete={(dateKey) => setBureauTeamBoard((current) => awardBureauDailyExperience(current, dateKey))} />}
 
         {phase === 'case004' && (
           <Case004Screen
