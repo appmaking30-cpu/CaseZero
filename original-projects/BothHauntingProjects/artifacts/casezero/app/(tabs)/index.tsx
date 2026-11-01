@@ -21,6 +21,7 @@ import Case011Screen from '@/components/Case011Screen';
 import Case012Screen from '@/components/Case012Screen';
 import Case013Screen from '@/components/Case013Screen';
 import Case014Screen from '@/components/Case014Screen';
+import Case015Screen from '@/components/Case015Screen';
 import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
 import BureauTeamScreen from '@/components/BureauTeamScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
@@ -34,6 +35,7 @@ import { CASE_011_GAME } from '@/game/case011Game';
 import { CASE_012_GAME } from '@/game/case012Game';
 import { CASE_013_GAME } from '@/game/case013Game';
 import { CASE_014_GAME } from '@/game/case014Game';
+import { CASE_015_GAME } from '@/game/case015Game';
 import {
   CASE_001,
   getInvestigationMemory,
@@ -84,7 +86,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'daily' | 'team';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -645,7 +647,7 @@ export default function HomeScreen() {
             <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
           </View>
           <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
-            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : phase.startsWith('case012') ? 'FILE 012' : phase.startsWith('case013') ? 'FILE 013' : phase.startsWith('case014') ? 'FILE 014' : 'FILE 001'}</Text>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : phase.startsWith('case012') ? 'FILE 012' : phase.startsWith('case013') ? 'FILE 013' : phase.startsWith('case014') ? 'FILE 014' : phase.startsWith('case015') ? 'FILE 015' : 'FILE 001'}</Text>
           </View>
         </View>
 
@@ -935,6 +937,15 @@ export default function HomeScreen() {
                 <SectionLabel colors={colors}>Next lead · Signed maintenance work order</SectionLabel>
                 <Text style={[styles.caseTitle, textStyle]}>Who was authorized to configure fallback?</Text>
                 <Text style={[styles.body, mutedStyle]}>The event packet explains the reader path but not who configured it. The signed work order and technician handoff may establish the authorized maintenance window.</Text>
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case014') && !investigationArchive.completedCases.some((record) => record.caseId === 'case015') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Incoming file · 015</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_015_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_015_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>A secure-floor checkpoint places Ivo Dane’s staff pass beside the C-4 inner door. Establish what the credential record proves—and what it cannot.</Text>
+                <ActionButton title="Open Case 015" onPress={() => setPhase('case015')} colors={colors} />
               </View>
             )}
             {missingDetectiveConvergence.unlocked && (
@@ -1645,6 +1656,16 @@ export default function HomeScreen() {
             onArchive={(record) => {
               setInvestigationArchive((current) => archiveCompletedCase(current, record));
               setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_014_GAME.id));
+            }}
+            onReturn={() => setPhase('hq')}
+          />
+        )}
+
+        {phase === 'case015' && (
+          <Case015Screen archive={investigationArchive}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_015_GAME.id));
             }}
             onReturn={() => setPhase('hq')}
           />
