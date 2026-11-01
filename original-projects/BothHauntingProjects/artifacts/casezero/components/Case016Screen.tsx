@@ -126,7 +126,7 @@ export default function Case016Screen({ archive, onArchive, onReturn }: Props) {
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · MISSING DETECTIVE TRAIL</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 016 · MISSING DETECTIVE TRAIL</Text>
       <Text style={[styles.hero, text]}>{CASE_016_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_016_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
@@ -143,7 +143,7 @@ export default function Case016Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'evidence' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · EVIDENCE REVIEW</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 016 · EVIDENCE REVIEW</Text>
       <Text style={[styles.hero, text]}>Separate door access, room occupancy and terminal activity from proof of personal identity.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all four records: latch event, occupancy counter, shared terminal session and audit reconciliation.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
@@ -159,7 +159,7 @@ export default function Case016Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'interviews' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · WITNESS INTERVIEWS</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 016 · WITNESS INTERVIEWS</Text>
       <Text style={[styles.hero, text]}>What do the C-4 systems establish separately?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and are preserved in the archived report.</Text>
       {CASE_016_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
@@ -182,7 +182,7 @@ export default function Case016Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · EVENT SEQUENCE</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 016 · EVENT SEQUENCE</Text>
       <Text style={[styles.hero, text]}>Put the C-4 system events in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four records from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
@@ -206,7 +206,7 @@ export default function Case016Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'deduction' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · FINAL DEDUCTION</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 016 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>What does the movement ledger actually establish?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the system group recorded at the door, then choose the narrow conclusion supported by all three systems.</Text>
       <View style={[styles.card, card]}>
@@ -223,7 +223,7 @@ export default function Case016Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'review' && <>
-      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 015</Text></View>
+      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 016</Text></View>
       <Text style={[styles.hero, text]}>A credential entry is not a person.</Text>
       <Text style={[styles.subtitle, muted]}>The C-4 latch records a shared-group open event at 01:29; occupancy is one from 01:30 to 01:42; a shared service session opens at 01:33. The individual inside and the terminal operator remain unknown.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_016_GAME.truth}</Text></View>
