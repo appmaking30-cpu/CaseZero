@@ -2,9 +2,11 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
   CASE_007_GAME,
+  getCase007Carryover,
   isCase007DeductionCorrect,
   isCase007TimelineCorrect,
 } from '../../artifacts/casezero/game/case007Game';
+import { archiveCompletedCase, EMPTY_INVESTIGATION_ARCHIVE } from '../../artifacts/casezero/game/investigationArchive';
 
 test('Case 007 has four distinct records and three interview witnesses', () => {
   assert.equal(CASE_007_GAME.clues.length, 4);
@@ -26,4 +28,21 @@ test('Case 007 deduction distinguishes physical receipt from upstream authorizat
   assert.equal(isCase007DeductionCorrect('pavel', 'authorize'), false);
   assert.equal(isCase007DeductionCorrect(null, 'receipt'), false);
   assert.equal(isCase007DeductionCorrect('ada', null), false);
+});
+
+test('Case 007 receives earlier archived evidence as campaign memory', () => {
+  const archive = archiveCompletedCase(EMPTY_INVESTIGATION_ARCHIVE, {
+    caseId: 'case006',
+    caseTitle: 'The Voice Between Stations',
+    closedAt: '2026-11-01T00:00:00.000Z',
+    selectedSuspectId: 'dispatch-control',
+    selectedMotiveId: 'conceal-authority',
+    inspectedClues: ['Fragment A', 'Fragment B', 'Fragment C'],
+    askedQuestions: [],
+    unansweredQuestions: [],
+  });
+  const carryover = getCase007Carryover(archive);
+  assert.equal(carryover.priorFiles.length, 1);
+  assert.equal(carryover.priorFiles[0]?.caseId, 'case006');
+  assert.equal(carryover.clueCount, 3);
 });
