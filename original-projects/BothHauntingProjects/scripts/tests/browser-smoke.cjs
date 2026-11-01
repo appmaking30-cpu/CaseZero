@@ -149,6 +149,47 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('The Detective Who Disappeared', { exact: true }).waitFor();
     await page.getByText(/same handwritten mark: a small black square/).waitFor();
     await page.getByText(/Campaign arc unlocked · 2\/2 opening cases closed/).waitFor();
+    await page.getByRole('button', { name: 'Open Missing Detective investigation' }).click();
+    await page.getByText('The Black Square', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Begin evidence review' }).click();
+    for (const clue of [
+      'The inserted routing slip',
+      'The annex printer log',
+      'The broken file seal',
+      'The after-hours cabinet ledger',
+    ]) {
+      await page.getByText(clue, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: 'Question the witnesses' }).click();
+    await page.getByText('When did you deliver the closed reports?', { exact: true }).click();
+    await page.getByText(/Both opening files show why the order of events matters/).waitFor();
+    await page.getByText('Did you create the black-square routing slip?', { exact: true }).click();
+    await page.getByText('Who entered the records annex before midnight?', { exact: true }).click();
+    await page.getByText('Did you use the annex printer?', { exact: true }).click();
+    await page.getByText('Why is there no staff signature on the routing slip?', { exact: true }).click();
+    await page.getByText('Was terminal RS-04 used during your shift?', { exact: true }).click();
+    await page.getByText(/earlier files taught the Bureau not to accept a witness’s explanation/).waitFor();
+    await page.getByRole('button', { name: 'Reconstruct the timeline' }).click();
+    for (const event of [
+      'The replacement seal batch is signed out',
+      'The routing slip is printed',
+      'The annex cabinet is opened',
+      'Dispatch logs the sealed delivery',
+    ]) {
+      await page.getByText(event, { exact: true }).click();
+    }
+    await page.getByText(/Timeline confirmed. The altered routing slip predates the cabinet access/).waitFor();
+    await page.getByRole('button', { name: 'Make your deduction' }).click();
+    await page.getByText('Silas Arden', { exact: true }).click();
+    await page.getByText('To control which evidence reaches investigators', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The mark was never routine.', { exact: true }).waitFor();
+    await page.getByText(/Silas Arden used the records supervisor terminal/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case003-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+    await page.getByText(/CASE003 · The Black Square/).waitFor();
+    await page.getByText(/Conclusion: Silas Arden · To control which evidence reaches investigators/).waitFor();
+
     await page.screenshot({ path: '/tmp/casezero-missing-detective-unlocked.png', fullPage: true });
 
     await page.reload({ waitUntil: 'networkidle' });
@@ -156,7 +197,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Review Case 002' }).waitFor();
 
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
-    console.log('PASS: mobile Case 001 briefing, five clues, witness questions, wrong-order retry, correct timeline, deduction retry, truth/proof/outcome review, unanswered-question memory, and persisted completion');
+    console.log('PASS: mobile Case 001, Case 002 and Case 003 investigations, cross-case memory, timelines, deductions, reviews and persisted archive');
   } finally {
     await browser.close();
   }
