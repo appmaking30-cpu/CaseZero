@@ -297,6 +297,84 @@ export function getBureauSpecialistInsight(
     };
   }
 
+
+  // The late dispatch arc deliberately separates presence, route intent, room occupancy,
+  // and identity. Each specialist insight is gated by the records the player has inspected.
+  if (specialistId === 'inez' && caseId === 'case028' && hasClues('visitor', 'badge', 'purpose', 'exit')) {
+    return {
+      title: 'Inez Shaw · Reception evidence review',
+      detail: 'The signed visitor register and personal badge independently support Ivo’s presence in reception. The reader coverage map and purpose slip limit that finding: neither record connects him to terminal D-3, the shared credential, or the H-9 edit.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'tomas' && caseId === 'case028' &&
+      askedQuestions.includes('pavel:limit') && askedQuestions.includes('sana:window')) {
+    return {
+      title: 'Tomas Reed · Visitor statement comparison',
+      detail: 'The registrar confirms the badge reader covers reception only, while the auditor confirms the visit overlaps the team checkout window. Those facts explain why the times coincide without proving Ivo used the shared credential.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'rhea' && caseId === 'case028' && hasClues('visitor', 'badge', 'exit')) {
+    return {
+      title: 'Rhea Voss · Reception route reconstruction',
+      detail: 'The entry and exit records keep Ivo inside the reception zone for a short visit. No inspected record traces a route from reception to the terminal desks, so do not extend the mapped path beyond the reader coverage.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'inez' && caseId === 'case029' && hasClues('request', 'assignment', 'checkpoint', 'room')) {
+    return {
+      title: 'Inez Shaw · Escort record audit',
+      detail: 'The request proves intent and the stub proves assignment acceptance. The checkpoint records Mara’s staff badge only, while the reconciled room ledger contains no visitor entry for Ivo. The records do not prove the escort was completed.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'tomas' && caseId === 'case029' &&
+      askedQuestions.includes('mara:assignment') && askedQuestions.includes('sana:limit')) {
+    return {
+      title: 'Tomas Reed · Escort statement comparison',
+      detail: 'Mara confirms she accepted the assignment but not that she collected Ivo. Sana confirms the records cannot place him inside D-3. Read the acceptance and checkpoint as separate facts, not as a completed journey.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'rhea' && caseId === 'case029' && hasClues('assignment', 'checkpoint', 'room')) {
+    return {
+      title: 'Rhea Voss · Corridor route reconstruction',
+      detail: 'The corridor checkpoint is a staff-badge event, not a visitor movement record. The separate D-3 ledger has no Ivo entry. The route has a documented checkpoint but no verified visitor arrival at the destination.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'inez' && caseId === 'case030' && hasClues('occupancy', 'door', 'clock')) {
+    return {
+      title: 'Inez Shaw · Independent record cross-check',
+      detail: 'Clock correction aligns the door event with the short occupancy interval. The counter establishes one occupant and the door export establishes an accepted masked staff credential; neither record supplies a name. Timing agreement is not identity proof.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'tomas' && caseId === 'case030' &&
+      askedQuestions.includes('pavel:door') && askedQuestions.includes('sana:limit')) {
+    return {
+      title: 'Tomas Reed · Identity-limit interview review',
+      detail: 'Pavel confirms the credential export masks its holder, and Sana confirms the aligned records still cannot identify the occupant. The interviews agree on the key limit: the room event is supported, but the person is unresolved.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'rhea' && caseId === 'case030' && hasClues('radio', 'occupancy', 'door', 'clock')) {
+    return {
+      title: 'Rhea Voss · Room-event reconstruction',
+      detail: 'The radio log places Mara at the approach, the corrected counter interval records brief occupancy, and the door event records a masked staff credential. These records support a room event but do not establish who crossed the threshold.',
+      rankPerk,
+    };
+  }
+
   return null;
 }
 
