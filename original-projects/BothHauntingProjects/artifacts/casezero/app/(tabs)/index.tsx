@@ -1512,7 +1512,10 @@ export default function HomeScreen() {
 
         {phase === 'case006' && (
           <Case006Screen
-            onArchive={(record) => setInvestigationArchive((current) => archiveCompletedCase(current, record))}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_006_GAME.id));
+            }}
             onReturn={() => setPhase('hq')}
           />
         )}
