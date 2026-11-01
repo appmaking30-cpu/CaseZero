@@ -33,6 +33,7 @@ import {
   getBureauSpecialistInsight,
   getBureauSpecialistProgress,
   awardBureauCaseExperience,
+  awardBureauDailyExperience,
   restoreBureauTeamBoard,
   parseStoredJson,
   type BureauTeamBoard,
@@ -1459,7 +1460,7 @@ export default function HomeScreen() {
 
         {phase === 'team' && <BureauTeamScreen archive={investigationArchive} onBoardChange={setBureauTeamBoard} onReturn={() => setPhase('hq')} />}
 
-        {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} />}
+        {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} onComplete={(dateKey) => setBureauTeamBoard((current) => awardBureauDailyExperience(current, dateKey))} />}
 
         {phase === 'case004' && (
           <Case004Screen
