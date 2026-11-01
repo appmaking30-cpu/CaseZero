@@ -67,3 +67,40 @@ test('investigation memory records exact evidence and interview choices', () => 
   assert.equal(memory.unansweredQuestions.length, 4);
   assert.ok(memory.unansweredQuestions.every((note) => !memory.askedQuestions.includes(note)));
 });
+
+
+test('cross-case archive stores completed investigations without duplicate cases', () => {
+  const firstRecord = {
+    caseId: 'case001',
+    caseTitle: 'The Last Train Home',
+    closedAt: '2026-11-01T12:00:00.000Z',
+    selectedSuspectId: 'miles',
+    selectedMotiveId: 'protect',
+    inspectedClues: ['The ceiling stain'],
+    askedQuestions: ['Jo Bell: What did you hear near the records room?'],
+    unansweredQuestions: ['Nia Vale: Was the parcel damaged?'],
+  };
+  const secondRecord = {
+    ...firstRecord,
+    caseId: 'case002',
+    caseTitle: 'The Unlit Room',
+  };
+
+  const withFirst = archiveCompletedCase(EMPTY_INVESTIGATION_ARCHIVE, firstRecord);
+  const withBoth = archiveCompletedCase(withFirst, secondRecord);
+  const updatedFirst = archiveCompletedCase(withBoth, {
+    ...firstRecord,
+    unansweredQuestions: [],
+  });
+
+  assert.equal(updatedFirst.version, 1);
+  assert.deepEqual(
+    updatedFirst.completedCases.map((record) => record.caseId),
+    ['case002', 'case001'],
+  );
+  assert.deepEqual(
+    getPriorCaseMemory(updatedFirst, 'case002').map((record) => record.caseId),
+    ['case001'],
+  );
+  assert.equal(updatedFirst.completedCases[1].unansweredQuestions.length, 0);
+});
