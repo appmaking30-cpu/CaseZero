@@ -64,6 +64,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case032', label: 'Case 032 · The Signed Handover' },
   { id: 'case033', label: 'Case 033 · The Receipt at 07:24' },
   { id: 'case034', label: 'Case 034 · The Revision in the Margin' },
+  { id: 'case035', label: 'Case 035 · The Page from Annex K-17' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
@@ -304,6 +305,31 @@ export function getBureauSpecialistInsight(
 
   // The late dispatch arc deliberately separates presence, route intent, room occupancy,
   // and identity. Each specialist insight is gated by the records the player has inspected.
+  if (specialistId === 'inez' && caseId === 'case035' && hasClues('scan', 'index', 'intake', 'routing')) {
+    return {
+      title: 'Inez Shaw · Source integrity review',
+      detail: 'The scan checksum matches the Annex K-17 index. The intake register and countersigned routing slip establish the packet’s recorded custody path, but neither identifies the original courier or author of the routing mark.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'tomas' && caseId === 'case035' &&
+      askedQuestions.includes('mara:packet') && askedQuestions.includes('elias:notation')) {
+    return {
+      title: 'Tomas Reed · Statement boundary review',
+      detail: 'Mara confirms that the receiving register names a desk rather than a courier. Elias confirms that “R.V.” has no approved identity key. Neither witness can turn the initials or custody notation into a named handler.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'rhea' && caseId === 'case035' && hasClues('intake', 'routing', 'index')) {
+    return {
+      title: 'Rhea Voss · Archive route reconstruction',
+      detail: 'The packet moved from receiving at 06:48 to the restricted shelf at 06:52, then entered the K-17 index at 07:02. The later R-15 scan matches that folio, completing the documented route without proving who carried it.',
+      rankPerk,
+    };
+  }
+
   if (specialistId === 'inez' && caseId === 'case034' && hasClues('manifest', 'revision', 'ledger', 'receipt')) {
     return {
       title: 'Inez Shaw · Revision integrity review',
