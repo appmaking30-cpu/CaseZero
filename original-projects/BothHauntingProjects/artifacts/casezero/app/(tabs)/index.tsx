@@ -187,34 +187,6 @@ export default function HomeScreen() {
     AsyncStorage.setItem(ARCHIVE_KEY, JSON.stringify(investigationArchive)).catch(() => undefined);
   }, [archiveLoaded, investigationArchive]);
 
-  useEffect(() => {
-    if (!loaded || !archiveLoaded || !caseCompleted || !selectedSuspect || !selectedMotive) return;
-    const alreadyArchived = investigationArchive.completedCases.some(
-      (record) => record.caseId === CASE_001.id,
-    );
-    if (alreadyArchived) return;
-
-    const record = {
-      caseId: CASE_001.id,
-      caseTitle: CASE_001.title,
-      closedAt: new Date().toISOString(),
-      selectedSuspectId: selectedSuspect,
-      selectedMotiveId: selectedMotive,
-      inspectedClues: investigationMemory.inspectedClues,
-      askedQuestions: investigationMemory.askedQuestions,
-      unansweredQuestions: investigationMemory.unansweredQuestions,
-    };
-    setInvestigationArchive((current) => archiveCompletedCase(current, record));
-  }, [
-    loaded,
-    archiveLoaded,
-    caseCompleted,
-    selectedSuspect,
-    selectedMotive,
-    investigationMemory,
-    investigationArchive.completedCases,
-  ]);
-
   const allCluesFound = cluesFound.length === CASE_001.clues.length;
   const witnessCount = useMemo(
     () =>
@@ -244,6 +216,34 @@ export default function HomeScreen() {
     () => getInvestigationMemory(cluesFound, askedQuestions),
     [cluesFound, askedQuestions],
   );
+
+  useEffect(() => {
+    if (!loaded || !archiveLoaded || !caseCompleted || !selectedSuspect || !selectedMotive) return;
+    const alreadyArchived = investigationArchive.completedCases.some(
+      (record) => record.caseId === CASE_001.id,
+    );
+    if (alreadyArchived) return;
+
+    const record = {
+      caseId: CASE_001.id,
+      caseTitle: CASE_001.title,
+      closedAt: new Date().toISOString(),
+      selectedSuspectId: selectedSuspect,
+      selectedMotiveId: selectedMotive,
+      inspectedClues: investigationMemory.inspectedClues,
+      askedQuestions: investigationMemory.askedQuestions,
+      unansweredQuestions: investigationMemory.unansweredQuestions,
+    };
+    setInvestigationArchive((current) => archiveCompletedCase(current, record));
+  }, [
+    loaded,
+    archiveLoaded,
+    caseCompleted,
+    selectedSuspect,
+    selectedMotive,
+    investigationMemory,
+    investigationArchive.completedCases,
+  ]);
 
   const resetCase = () => {
     setPhase('hq');
