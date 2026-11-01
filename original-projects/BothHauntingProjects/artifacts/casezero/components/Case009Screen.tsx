@@ -122,7 +122,7 @@ export default function Case009Screen({ archive, onArchive, onReturn }: Props) {
     setPhase('review');
   };
 
-  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING BELLWEATHER ARCHIVE EXCHANGE FILE…</Text></View>;
+  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING MERIDIAN DISPATCH ANNEX FILE…</Text></View>;
 
   return <>
     {phase === 'briefing' && <>
