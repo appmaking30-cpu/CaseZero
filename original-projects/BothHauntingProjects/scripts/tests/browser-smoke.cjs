@@ -17,6 +17,9 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
     await page.getByText('Detective Bureau', { exact: true }).waitFor();
     await page.getByText('The Last Train Home', { exact: true }).first().waitFor();
+    const lockedCaseButton = page.getByRole('button', { name: 'Complete Case 001 to unlock' });
+    await lockedCaseButton.waitFor();
+    assert.equal(await lockedCaseButton.isDisabled(), true, 'Case 002 must remain locked until the tutorial is closed');
     await page.screenshot({ path: '/tmp/casezero-hq-before.png', fullPage: true });
 
     await page.getByRole('button', { name: 'Open case file' }).click();
@@ -90,11 +93,21 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Review closed file' }).waitFor();
 
     // Case 002 must use the archived Case 001 memory in its actual dialogue.
-    await page.getByRole('button', { name: 'Open Case 002' }).click();
+    const openCase002Button = page.getByRole('button', { name: 'Open Case 002' });
+    await openCase002Button.waitFor();
+    await openCase002Button.click();
     await page.getByText('Case 002 · Incoming file').waitFor();
     await page.getByRole('button', { name: 'Begin evidence review' }).click();
+    await page.getByText('Case 002 · Evidence').waitFor();
+
+    // Verify Case 002 investigation progress survives a browser reload.
+    await page.getByText('The access-panel printout', { exact: true }).click();
+    await page.getByText('1 of 4 records logged', { exact: true }).waitFor();
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.getByText('Case 002 · Evidence').waitFor();
+    await page.getByText('1 of 4 records logged', { exact: true }).waitFor();
+
     for (const clue of [
-      'The access-panel printout',
       'The damp shelf',
       'The generator log',
       'The linen transfer tag',
@@ -137,6 +150,10 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText(/same handwritten mark: a small black square/).waitFor();
     await page.getByText(/Campaign arc unlocked · 2\/2 opening cases closed/).waitFor();
     await page.screenshot({ path: '/tmp/casezero-missing-detective-unlocked.png', fullPage: true });
+
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.getByText('The Detective Who Disappeared', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Review Case 002' }).waitFor();
 
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001 briefing, five clues, witness questions, wrong-order retry, correct timeline, deduction retry, truth/proof/outcome review, unanswered-question memory, and persisted completion');
