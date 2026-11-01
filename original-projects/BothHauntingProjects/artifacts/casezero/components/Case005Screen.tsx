@@ -3,12 +3,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
+import { getBureauSpecialistInsight } from '@/game/bureauTeam';
 import { CASE_005_GAME, EMPTY_CASE005_PROGRESS, getCase005Carryover, isCase005DeductionCorrect, isCase005TimelineCorrect, type Case005Progress } from '@/game/case005Game';
 
 const SAVE_KEY = 'casezero.case005.progress.v1';
-type Props = { archive: InvestigationArchive; onArchive: (record: Parameters<typeof archiveCompletedCase>[1]) => void; onReturn: () => void };
+type Props = { archive: InvestigationArchive; assignedSpecialistId: string | null; assignedSpecialistRank: number; onArchive: (record: Parameters<typeof archiveCompletedCase>[1]) => void; onReturn: () => void };
 
-export default function Case005Screen({ archive, onArchive, onReturn }: Props) {
+export default function Case005Screen({ archive, assignedSpecialistId, assignedSpecialistRank, onArchive, onReturn }: Props) {
   const colors = useColors();
   const [loaded, setLoaded] = useState(false);
   const [phase, setPhase] = useState<'briefing' | 'evidence' | 'interviews' | 'timeline' | 'deduction' | 'review'>('briefing');
@@ -17,6 +18,7 @@ export default function Case005Screen({ archive, onArchive, onReturn }: Props) {
   const [activeReply, setActiveReply] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const carryover = useMemo(() => getCase005Carryover(archive), [archive]);
+  const specialistInsight = getBureauSpecialistInsight(assignedSpecialistId, 'case005', progress.cluesFound, progress.askedQuestions, assignedSpecialistRank);
   useEffect(() => {
     let active = true;
     AsyncStorage.getItem(SAVE_KEY).then((raw) => {
@@ -116,6 +118,7 @@ export default function Case005Screen({ archive, onArchive, onReturn }: Props) {
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_005_GAME.clues.map((c, i) => <Pressable key={c.id} onPress={() => inspect(c.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(c.id) ? colors.primary : colors.border }]}><Text style={[styles.label, { color: colors.primary }]}>0{i + 1} · {progress.cluesFound.includes(c.id) ? 'LOGGED' : 'INSPECT'}</Text><Text style={[styles.cardTitle, text]}>{c.title}</Text><Text style={[styles.note, muted]}>{c.label}</Text>{activeClue === c.id && <Text style={[styles.body, muted, styles.divider]}>{c.detail}</Text>}</Pressable>)}
+      {specialistInsight && <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>{specialistInsight.title}</Text><Text style={[styles.body, text]}>{specialistInsight.detail}</Text>{specialistInsight.rankPerk && <Text style={[styles.note, muted]}>{specialistInsight.rankPerk}</Text>}</View>}
       <Action title="Question the witnesses" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
       <Action title="Back to briefing" colors={colors} onPress={() => setPhase('briefing')} ghost />
     </>}
@@ -124,6 +127,7 @@ export default function Case005Screen({ archive, onArchive, onReturn }: Props) {
       <Text style={[styles.hero, text]}>Who controlled the receiving desk?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each witness to unlock the timeline. Follow-up questions are optional, but every answer you collect is saved in the case record.</Text>
       {CASE_005_GAME.witnesses.map((w, i) => <View key={w.id} style={[styles.card, card]}><Text style={[styles.cardTitle, text]}>{w.name}</Text><Text style={[styles.note, muted]}>{w.role} · {w.questions.some((q) => progress.askedQuestions.includes(w.id + ':' + q.id)) ? 'HEARD' : 'WITNESS 0' + (i + 1)}</Text>{w.questions.map((q) => { const key = w.id + ':' + q.id; return <View key={key} style={styles.question}><Pressable onPress={() => ask(w.id, q.id)} style={[styles.questionButton, { borderColor: progress.askedQuestions.includes(key) ? colors.primary : colors.border }]}><Text style={[styles.body, text]}>{q.prompt}</Text><Text style={[styles.note, { color: colors.primary }]}>{progress.askedQuestions.includes(key) ? 'ASKED' : 'ASK QUESTION'}</Text></Pressable>{activeReply === key && <Text style={[styles.reply, muted]}>{q.reply}</Text>}</View>; })}</View>)}
+      {specialistInsight && <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>{specialistInsight.title}</Text><Text style={[styles.body, text]}>{specialistInsight.detail}</Text>{specialistInsight.rankPerk && <Text style={[styles.note, muted]}>{specialistInsight.rankPerk}</Text>}</View>}
       <Text style={[styles.note, muted]}>{heard}/3 witnesses heard · {unanswered.length} questions left unasked</Text>
       <Action title="Reconstruct the timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allHeard} />
       <Action title="Back to evidence" colors={colors} onPress={() => setPhase('evidence')} ghost />
