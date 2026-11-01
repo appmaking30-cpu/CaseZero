@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
   CASE_001,
+  getInvestigationMemory,
   isDeductionCorrect,
   isTimelineCorrect,
 } from '../../artifacts/casezero/game/case001';
@@ -46,4 +47,23 @@ test('the protective motive is supported by a dated, signed record', () => {
   assert.ok(leakClue.detail.includes('M.R.'));
   assert.match(leakClue.detail, /keep it dry/i);
   assert.match(CASE_001.proof, /maintenance ticket/i);
+});
+
+
+test('investigation memory records exact evidence and interview choices', () => {
+  const memory = getInvestigationMemory(
+    ['leak', 'wheel'],
+    ['jo:sound', 'nia:route'],
+  );
+
+  assert.deepEqual(memory.inspectedClues, [
+    'The ceiling stain',
+    'The chipped cart wheel',
+  ]);
+  assert.deepEqual(memory.askedQuestions, [
+    'Jo Bell: What did you hear near the records room?',
+    'Nia Vale: What did you see after the departure announcement?',
+  ]);
+  assert.equal(memory.unansweredQuestions.length, 4);
+  assert.ok(memory.unansweredQuestions.every((note) => !memory.askedQuestions.includes(note)));
 });
