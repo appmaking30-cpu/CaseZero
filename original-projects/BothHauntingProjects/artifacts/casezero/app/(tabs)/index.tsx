@@ -1836,7 +1836,7 @@ export default function HomeScreen() {
             }}
             onReturn={() => setPhase('hq')}
           />
-        )
+        )}
         {phase === 'case026' && (
           <Case026Screen archive={investigationArchive}
             onArchive={(record) => {
@@ -1846,7 +1846,6 @@ export default function HomeScreen() {
             onReturn={() => setPhase('hq')}
           />
         )}
-}
 
         {phase === 'case019' && (
           <Case019Screen archive={investigationArchive}
