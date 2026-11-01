@@ -225,7 +225,7 @@ export default function Case023Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 023</Text></View>
       <Text style={[styles.hero, text]}>A exception record stamp is not a person.</Text>
-      <Text style={[styles.subtitle, muted]}>The 08:42 exception log records group release, the 08:50 register records E-44 exception, and the 09:05 page-image repeats it. The receiver field remains blank.</Text>
+      <Text style={[styles.subtitle, muted]}>The 09:20 log flags E-44, the 09:28 index reserves A-12 without submission, the 09:40 images match, and audit closes the issue unresolved at 10:05.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_023_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_023_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_023_GAME.outcome}</Text></View>
