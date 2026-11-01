@@ -12,10 +12,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import Case004Screen from '@/components/Case004Screen';
 import Case005Screen from '@/components/Case005Screen';
+import Case006Screen from '@/components/Case006Screen';
 import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
 import BureauTeamScreen from '@/components/BureauTeamScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
 import { CASE_005_GAME } from '@/game/case005Game';
+import { CASE_006_GAME } from '@/game/case006Game';
 import {
   CASE_001,
   getInvestigationMemory,
@@ -66,7 +68,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'daily' | 'team';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -627,7 +629,7 @@ export default function HomeScreen() {
             <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
           </View>
           <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
-            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004' : phase.startsWith('case005') ? 'FILE 005' : 'FILE 001'}</Text>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : 'FILE 001'}</Text>
           </View>
         </View>
 
@@ -780,13 +782,29 @@ export default function HomeScreen() {
                 />
               </View>
             )}
-            {missingDetectiveConvergence.unlocked && (
+            {missingDetectiveConvergence.unlocked && !investigationArchive.completedCases.some((record) => record.caseId === 'case005') && (
               <View style={[styles.card, cardStyle]}>
                 <SectionLabel colors={colors}>Incoming file · 005</SectionLabel>
                 <Text style={[styles.caseTitle, textStyle]}>{CASE_005_GAME.title}</Text>
                 <Text style={[styles.body, mutedStyle]}>{CASE_005_GAME.subtitle}</Text>
                 <Text style={[styles.memoryNote, textStyle]}>The North Quay transfer has a destination after all. A carbon receipt survived at East Freight Registry.</Text>
                 <ActionButton title="Open Case 005" onPress={() => setPhase('case005')} colors={colors} />
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case005') && !investigationArchive.completedCases.some((record) => record.caseId === 'case006') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Classified incoming file · 006</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_006_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_006_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>The recovered recorder is ready for controlled review. Its transcript may identify the authority behind the M-2 transfer, but not the speaker.</Text>
+                <ActionButton title="Open recorder review" onPress={() => setPhase('case006')} colors={colors} />
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case006') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Next lead · Relay desk</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>The M-2 authority remains active.</Text>
+                <Text style={[styles.body, mutedStyle]}>The recorder confirms a deliberate off-ledger transfer to a relay desk. The voice is still unidentified. The Bureau must now trace the relay route without assigning a name the evidence cannot support.</Text>
               </View>
             )}
             {missingDetectiveConvergence.unlocked && (
@@ -1491,6 +1509,13 @@ export default function HomeScreen() {
         {phase === 'team' && <BureauTeamScreen archive={investigationArchive} onBoardChange={setBureauTeamBoard} onReturn={() => setPhase('hq')} />}
 
         {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} assignedSpecialistName={BUREAU_SPECIALISTS.find((specialist) => specialist.id === bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'daily')?.specialistId)?.name ?? null} onComplete={(dateKey) => setBureauTeamBoard((current) => awardBureauDailyExperience(current, dateKey))} />}
+
+        {phase === 'case006' && (
+          <Case006Screen
+            onArchive={(record) => setInvestigationArchive((current) => archiveCompletedCase(current, record))}
+            onReturn={() => setPhase('hq')}
+          />
+        )}
 
         {phase === 'case005' && (
           <Case005Screen
