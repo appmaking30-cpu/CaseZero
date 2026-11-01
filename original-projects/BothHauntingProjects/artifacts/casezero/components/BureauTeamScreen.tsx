@@ -15,9 +15,10 @@ import {
   type BureauTeamBoard,
 } from '@/game/bureauTeam';
 
-export default function BureauTeamScreen({ archive, onReturn }: {
+export default function BureauTeamScreen({ archive, onReturn, onBoardChange }: {
   archive: InvestigationArchive;
   onReturn: () => void;
+  onBoardChange?: (board: BureauTeamBoard) => void;
 }) {
   const colors = useColors();
   const [loaded, setLoaded] = useState(false);
@@ -51,7 +52,8 @@ export default function BureauTeamScreen({ archive, onReturn }: {
   useEffect(() => {
     if (!loaded) return;
     AsyncStorage.setItem(BUREAU_TEAM_SAVE_KEY, JSON.stringify(board)).catch(() => undefined);
-  }, [loaded, board]);
+    onBoardChange?.(board);
+  }, [loaded, board, onBoardChange]);
 
   const card = { backgroundColor: colors.card, borderColor: colors.border };
   const text = { color: colors.foreground };
