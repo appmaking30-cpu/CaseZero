@@ -476,6 +476,73 @@ export default function HomeScreen() {
   };
 
 
+  const case003AllCluesFound = case003Progress.cluesFound.length === CASE_003_GAME.clues.length;
+  const case003WitnessCount = CASE_003_GAME.witnesses.filter((witness) =>
+    witness.questions.some((question) => case003Progress.askedQuestions.includes(`${witness.id}:${question.id}`)),
+  ).length;
+  const case003AllWitnessesHeard = case003WitnessCount === CASE_003_GAME.witnesses.length;
+  const case003Unanswered = CASE_003_GAME.witnesses.flatMap((witness) =>
+    witness.questions.filter((question) => !case003Progress.askedQuestions.includes(`${witness.id}:${question.id}`))
+      .map((question) => `${witness.name}: ${question.prompt}`),
+  );
+
+  const inspectCase003Clue = (clueId: string) => {
+    setCase003Progress((current) => ({
+      ...current,
+      cluesFound: current.cluesFound.includes(clueId) ? current.cluesFound : [...current.cluesFound, clueId],
+    }));
+    setCase003ActiveClue((current) => current === clueId ? null : clueId);
+  };
+  const askCase003Question = (witnessId: string, questionId: string) => {
+    const key = `${witnessId}:${questionId}`;
+    setCase003Progress((current) => ({
+      ...current,
+      askedQuestions: current.askedQuestions.includes(key) ? current.askedQuestions : [...current.askedQuestions, key],
+    }));
+    setCase003ActiveReply(key);
+  };
+  const selectCase003TimelineEvent = (eventId: string) => {
+    if (case003Progress.timelineSolved || case003Progress.timelineOrder.includes(eventId) || case003Progress.timelineOrder.length >= 4) return;
+    const next = [...case003Progress.timelineOrder, eventId];
+    if (next.length === 4) {
+      if (isCase003TimelineCorrect(next)) {
+        setCase003Progress((current) => ({ ...current, timelineOrder: next, timelineSolved: true }));
+        setCase003TimelineMessage('Timeline confirmed. The altered routing slip predates the cabinet access and dispatch delivery.');
+      } else {
+        setCase003Progress((current) => ({ ...current, timelineOrder: next }));
+        setCase003TimelineMessage('That sequence conflicts with the printer and cabinet records. Reset and compare the timestamps.');
+      }
+    } else {
+      setCase003Progress((current) => ({ ...current, timelineOrder: next }));
+    }
+  };
+  const resetCase003Timeline = () => {
+    setCase003Progress((current) => ({ ...current, timelineOrder: [] }));
+    setCase003TimelineMessage('');
+  };
+  const submitCase003Deduction = () => {
+    if (!isCase003DeductionCorrect(case003Progress.selectedSuspect, case003Progress.selectedMotive)) {
+      setCase003DeductionMessage('That theory does not explain the terminal job, seal custody and cabinet access together. Recheck the records.');
+      return;
+    }
+    const record = {
+      caseId: CASE_003_GAME.id,
+      caseTitle: CASE_003_GAME.title,
+      closedAt: new Date().toISOString(),
+      selectedSuspectId: case003Progress.selectedSuspect!,
+      selectedMotiveId: case003Progress.selectedMotive!,
+      inspectedClues: CASE_003_GAME.clues.filter((clue) => case003Progress.cluesFound.includes(clue.id)).map((clue) => clue.title),
+      askedQuestions: CASE_003_GAME.witnesses.flatMap((witness) => witness.questions
+        .filter((question) => case003Progress.askedQuestions.includes(`${witness.id}:${question.id}`))
+        .map((question) => `${witness.name}: ${question.prompt}`)),
+      unansweredQuestions: case003Unanswered,
+    };
+    setInvestigationArchive((current) => archiveCompletedCase(current, record));
+    setCase003Progress((current) => ({ ...current, completed: true }));
+    setCase003DeductionMessage('');
+    setPhase('case003Review');
+  };
+
   const submitDeduction = () => {
     if (isDeductionCorrect(selectedSuspect, selectedMotive)) {
       setCaseCompleted(true);
@@ -666,6 +733,11 @@ export default function HomeScreen() {
                 </View>
                 <Text style={[styles.memoryNote, mutedStyle]}>{MISSING_DETECTIVE_DOSSIER.firstLead}</Text>
                 <Text style={[styles.small, { color: colors.primary }]}>Campaign arc unlocked · {missingDetectiveArc.completedCaseCount}/{missingDetectiveArc.requiredCaseCount} opening cases closed</Text>
+                <ActionButton
+                  title={case003Progress.completed ? 'Review The Black Square' : 'Open Missing Detective investigation'}
+                  onPress={() => setPhase(case003Progress.completed ? 'case003Review' : 'case003Briefing')}
+                  colors={colors}
+                />
               </View>
             )}
             <Text style={[styles.footerNote, mutedStyle]}>
