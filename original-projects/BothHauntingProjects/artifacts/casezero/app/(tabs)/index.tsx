@@ -495,6 +495,7 @@ export default function HomeScreen() {
       unansweredQuestions: case002Unanswered,
     };
     setInvestigationArchive((current) => archiveCompletedCase(current, record));
+    setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_002_GAME.id));
     setCase002Progress((current) => ({ ...current, completed: true }));
     setCase002DeductionMessage('');
     setPhase('case002Review');
@@ -565,6 +566,7 @@ export default function HomeScreen() {
       unansweredQuestions: case003Unanswered,
     };
     setInvestigationArchive((current) => archiveCompletedCase(current, record));
+    setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_003_GAME.id));
     setCase003Progress((current) => ({ ...current, completed: true }));
     setCase003DeductionMessage('');
     setPhase('case003Review');
