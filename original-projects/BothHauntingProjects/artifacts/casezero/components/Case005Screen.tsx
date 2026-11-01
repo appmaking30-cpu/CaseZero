@@ -28,8 +28,8 @@ export default function Case005Screen({ archive, assignedSpecialistId, assignedS
         const validClueIds = new Set(CASE_005_GAME.clues.map((clue) => clue.id));
         const validQuestionIds = new Set(CASE_005_GAME.witnesses.flatMap((witness) => witness.questions.map((question) => witness.id + ':' + question.id)));
         const validEventIds = new Set(CASE_005_GAME.timelineEvents.map((event) => event.id));
-        const validSuspectIds = new Set(CASE_005_GAME.suspects.map((suspect) => suspect.id));
-        const validMotiveIds = new Set(CASE_005_GAME.motives.map((motive) => motive.id));
+        const validSuspectIds = new Set<string>(CASE_005_GAME.suspects.map((suspect) => suspect.id));
+        const validMotiveIds = new Set<string>(CASE_005_GAME.motives.map((motive) => motive.id));
         const uniqueValid = (items: unknown, allowed: Set<string>) =>
           Array.isArray(items)
             ? [...new Set(items.filter((item): item is string => typeof item === 'string' && allowed.has(item)))]
