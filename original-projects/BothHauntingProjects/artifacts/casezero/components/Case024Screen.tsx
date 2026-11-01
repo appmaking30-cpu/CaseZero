@@ -103,7 +103,7 @@ export default function Case024Screen({ archive, onArchive, onReturn }: Props) {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase024DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage('The records establish H-9 as dispatch tally H-9, but do not identify who amended the record.');
+      setMessage('The records establish H-9 was listed in outgoing batch 6B, but do not identify a named carrier or recipient.');
       return;
     }
     archiveLock.current = true;
@@ -144,7 +144,7 @@ export default function Case024Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 024 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Trace H-9’s dispatch tally trail without assuming a dispatch tally identifies its author.</Text>
+      <Text style={[styles.hero, text]}>Trace H-9’s transfer trail without assuming a dispatch record identifies its carrier.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all four records: dispatch batch tally, archive-bound transfer copy, register transfer docket and duplicate-control sheet.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
@@ -224,8 +224,8 @@ export default function Case024Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 024</Text></View>
-      <Text style={[styles.hero, text]}>A dispatch tally record stamp is not a person.</Text>
-      <Text style={[styles.subtitle, muted]}>The 09:20 log flags H-9, the 09:28 index reserves batch 6B without submission, the 09:40 images match, and audit closes the issue unresolved at 10:05.</Text>
+      <Text style={[styles.hero, text]}>A dispatch record is not a personal handover.</Text>
+      <Text style={[styles.subtitle, muted]}>The 07:05 tally lists H-9, the 07:12 copy already has a blank receiver field, the 07:18 docket records departure, and the 07:24 sheet confirms copy control.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_024_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_024_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_024_GAME.outcome}</Text></View>
