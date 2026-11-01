@@ -56,6 +56,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case024', label: 'Case 024 · The First Copy' },
   { id: 'case025', label: 'Case 025 · The Print Queue' },
   { id: 'case026', label: 'Case 026 · The Source File' },
+  { id: 'case027', label: 'Case 027 · The Handover Note' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
