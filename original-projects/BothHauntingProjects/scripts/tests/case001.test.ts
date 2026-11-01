@@ -324,3 +324,27 @@ test('Case 004 carries the first three case conclusions and open questions forwa
   assert.match(getCase004QuestionReply('marr', 'override', archive), /After the Black Square file/);
   assert.match(getCase004QuestionReply('holt', 'key', archive), /earlier files left questions open/i);
 });
+
+
+import {
+  DAILY_BULLETIN_CASES,
+  getDailyCaseForDate,
+  isDailyCaseSolutionCorrect,
+} from '../../artifacts/casezero/game/dailyCaseBulletin';
+
+test('daily bulletin rotates deterministically and each short case has a complete evidence set', () => {
+  const selected = getDailyCaseForDate('2026-11-01');
+  assert.equal(getDailyCaseForDate('2026-11-01').id, selected.id);
+  assert.equal(DAILY_BULLETIN_CASES.length, 7);
+  assert.ok(DAILY_BULLETIN_CASES.every((dailyCase) => dailyCase.clues.length === 3));
+  assert.ok(DAILY_BULLETIN_CASES.every((dailyCase) => dailyCase.suspects.length === 3));
+  assert.ok(DAILY_BULLETIN_CASES.every((dailyCase) => dailyCase.motives.length === 3));
+  assert.ok(DAILY_BULLETIN_CASES.every((dailyCase) => dailyCase.truth.length > 40 && dailyCase.proof.length > 50));
+});
+
+test('daily bulletin deduction requires the correct person and motive', () => {
+  const dailyCase = getDailyCaseForDate('2026-11-01');
+  assert.equal(isDailyCaseSolutionCorrect(dailyCase, dailyCase.correctSuspectId, dailyCase.correctMotiveId), true);
+  assert.equal(isDailyCaseSolutionCorrect(dailyCase, null, dailyCase.correctMotiveId), false);
+  assert.equal(isDailyCaseSolutionCorrect(dailyCase, dailyCase.correctSuspectId, 'not-the-motive'), false);
+});
