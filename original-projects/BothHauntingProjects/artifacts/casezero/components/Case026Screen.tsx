@@ -96,7 +96,7 @@ export default function Case026Screen({ archive, onArchive, onReturn }: Props) {
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase026TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the duty roster, queue snapshot, release counterfoil and paper reconciliation.'
+      ? 'That sequence conflicts with the time stamps. Compare the team access sheet, terminal sign-in, version save and field comparison.'
       : '');
   };
   const submit = () => {
@@ -122,7 +122,7 @@ export default function Case026Screen({ archive, onArchive, onReturn }: Props) {
     setPhase('review');
   };
 
-  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING COPY ROOM FILE…</Text></View>;
+  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING SOURCE FILE…</Text></View>;
 
   return <>
     {phase === 'briefing' && <>
@@ -132,7 +132,7 @@ export default function Case026Screen({ archive, onArchive, onReturn }: Props) {
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_026_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_026_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files establish the blank receiver field on the earliest surviving copy. This file traces the print queue, release counterfoil, duty roster and paper stock.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the copy-room print job. This file traces the shared terminal session, saved source version, field comparison and team access allocation.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>INTAKE RECORDS</Text>
@@ -144,8 +144,8 @@ export default function Case026Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 026 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Trace the print process without assuming printer access identifies the document author.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: print queue snapshot, release counterfoil, copy-room duty roster and paper stock reconciliation.</Text>
+      <Text style={[styles.hero, text]}>Trace the source version without mistaking a shared terminal session for a named author.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: terminal sign-in ledger, source-file version register, field comparison audit and access allocation sheet.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_026_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
