@@ -361,6 +361,7 @@ import {
   restoreBureauTeamBoard,
   parseStoredJson,
   awardBureauCaseExperience,
+  awardBureauDailyExperience,
   getBureauSpecialistProgress,
 } from '../../artifacts/casezero/game/bureauTeam';
 
@@ -472,6 +473,23 @@ test('specialist rank advances at two assigned case closures', () => {
   assert.equal(getBureauSpecialistProgress(one, 'inez').experienceForNextRank, 1);
   assert.equal(getBureauSpecialistProgress(two, 'inez').rank, 1);
   assert.equal(getBureauSpecialistProgress(two, 'inez').rankLabel, 'CASE SPECIALIST');
+});
+
+test('daily bulletin rewards the assigned specialist once per date without removing the assignment', () => {
+  const assigned = assignBureauSpecialist(
+    EMPTY_BUREAU_TEAM_BOARD,
+    'rhea',
+    'daily',
+    '2026-11-01T12:00:00.000Z',
+  );
+  const rewarded = awardBureauDailyExperience(assigned, '2026-11-01');
+  assert.equal(rewarded.experienceBySpecialist?.rhea, 1);
+  assert.equal(rewarded.assignments.length, 1);
+  assert.equal(rewarded.assignments[0].targetId, 'daily');
+  assert.equal(awardBureauDailyExperience(rewarded, '2026-11-01'), rewarded);
+  assert.equal(awardBureauDailyExperience(rewarded, 'not-a-date'), rewarded);
+  const nextDay = awardBureauDailyExperience(rewarded, '2026-11-02');
+  assert.equal(nextDay.experienceBySpecialist?.rhea, 2);
 });
 
 test('specialist insights require the player to inspect their supporting records', () => {
