@@ -34,7 +34,9 @@ import {
 } from '@/game/case002Game';
 
 const SAVE_KEY = 'casezero.case001.memory.v1';
-const ARCHIVE_KEY = 'casezero.investigation.archive.v1';\nconst CASE002_SAVE_KEY = 'casezero.case002.progress.v1';\ntype AppPhase = CasePhase | Case002Phase;
+const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
+const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
+type AppPhase = CasePhase | Case002Phase;
 
 type SavedState = {
   phase: AppPhase;
