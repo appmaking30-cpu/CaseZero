@@ -271,3 +271,56 @@ test('Case 003 carries actual prior investigation choices into witness dialogue'
   assert.match(getCase003QuestionReply('lyle', 'delivery', both), /order of events matters/i);
   assert.match(getCase003QuestionReply('arden', 'terminal', EMPTY_INVESTIGATION_ARCHIVE), /terminal log alone/i);
 });
+
+
+import {
+  CASE_004_GAME,
+  EMPTY_CASE004_PROGRESS,
+  getCase004Carryover,
+  getCase004QuestionReply,
+  isCase004DeductionCorrect,
+  isCase004TimelineCorrect,
+} from '../../artifacts/casezero/game/case004Game';
+
+test('Case 004 is a complete, distinct investigation with an evidence-backed solution', () => {
+  assert.equal(CASE_004_GAME.id, 'case004');
+  assert.equal(CASE_004_GAME.clues.length, 4);
+  assert.equal(new Set(CASE_004_GAME.clues.map((clue) => clue.id)).size, 4);
+  assert.equal(CASE_004_GAME.witnesses.length, 3);
+  assert.ok(CASE_004_GAME.witnesses.every((witness) => witness.questions.length === 2));
+  assert.equal(CASE_004_GAME.timelineEvents.length, 4);
+  assert.ok(CASE_004_GAME.truth.length > 80);
+  assert.ok(CASE_004_GAME.proof.length > 100);
+  assert.deepEqual(EMPTY_CASE004_PROGRESS.cluesFound, []);
+});
+
+test('Case 004 timeline and deduction require the complete correct solution', () => {
+  assert.equal(isCase004TimelineCorrect(['key', 'seal', 'override', 'pickup']), true);
+  assert.equal(isCase004TimelineCorrect(['seal', 'key', 'override', 'pickup']), false);
+  assert.equal(isCase004TimelineCorrect(['key', 'override']), false);
+  assert.equal(isCase004DeductionCorrect('holt', 'silence'), true);
+  assert.equal(isCase004DeductionCorrect('holt', 'profit'), false);
+  assert.equal(isCase004DeductionCorrect('senn', 'silence'), false);
+});
+
+test('Case 004 carries the first three case conclusions and open questions forward', () => {
+  const archive = ['case001', 'case002', 'case003'].reduce((current, id, index) =>
+    archiveCompletedCase(current, {
+      caseId: id,
+      caseTitle: ['The Last Train Home', 'The Unlit Room', 'The Black Square'][index],
+      closedAt: '2026-11-01T12:00:00.000Z',
+      selectedSuspectId: ['miles', 'june', 'arden'][index],
+      selectedMotiveId: ['protect', 'protect', 'control'][index],
+      inspectedClues: ['Clue ' + id],
+      askedQuestions: [],
+      unansweredQuestions: index === 2 ? ['Owen Pike: Who signed the annex access form?'] : [],
+    }), EMPTY_INVESTIGATION_ARCHIVE);
+  const carryover = getCase004Carryover(archive);
+  assert.equal(carryover.hasCase003, true);
+  assert.equal(carryover.inspectedAcrossCampaign, 3);
+  assert.equal(carryover.priorConclusions.length, 3);
+  assert.equal(carryover.unansweredLeads.length, 1);
+  assert.match(carryover.lastFinding, /Silas Arden/);
+  assert.match(getCase004QuestionReply('marr', 'override', archive), /After the Black Square file/);
+  assert.match(getCase004QuestionReply('holt', 'key', archive), /earlier files left questions open/i);
+});
