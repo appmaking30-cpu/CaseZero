@@ -196,6 +196,49 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('The Detective Who Disappeared', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Review Case 002' }).waitFor();
 
+
+    // Case 004 follows the completed Black Square investigation.
+    await page.getByRole('button', { name: 'Open Case 004' }).click();
+    await page.getByText('The Last Signal', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Begin evidence review' }).click();
+    for (const clue of [
+      'The recorder locker seal',
+      'The relay diagnostic printout',
+      'The signal lamp log',
+      'The courier transfer docket',
+    ]) {
+      await page.getByText(clue, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: 'Question the witnesses' }).click();
+    await page.getByText('Who initiated the relay override?', { exact: true }).click();
+    await page.getByText(/After the Black Square file, the Bureau checks the authority/).waitFor();
+    await page.getByText('Was a train due during the signal interruption?', { exact: true }).click();
+    await page.getByText('Who signed out the duplicate M-2 key?', { exact: true }).click();
+    await page.getByText(/The earlier files left questions open/).waitFor();
+    await page.getByText('Why was the recorder listed as a relay test unit?', { exact: true }).click();
+    await page.getByText('What did you collect at 20:22?', { exact: true }).click();
+    await page.getByText('Who authorized the collection?', { exact: true }).click();
+    await page.getByRole('button', { name: 'Reconstruct the timeline' }).click();
+    for (const event of [
+      'The duplicate M-2 key is signed out',
+      'Rowan’s recorder locker is sealed',
+      'The relay receives a local override',
+      'The courier collects the relabelled case',
+    ]) {
+      await page.getByText(event, { exact: true }).click();
+    }
+    await page.getByText(/Timeline confirmed. The maintenance override came before the courier transfer/).waitFor();
+    await page.getByRole('button', { name: 'Make your deduction' }).click();
+    await page.getByText('Bram Holt', { exact: true }).click();
+    await page.getByText('To suppress Rowan’s recording of the relay network', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The recording is still out there.', { exact: true }).waitFor();
+    await page.getByText(/Bram Holt used the duplicate M-2 maintenance key/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case004-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+    await page.getByText(/CASE004 · The Last Signal/).waitFor();
+    await page.getByText(/Conclusion: Bram Holt · To suppress Rowan’s recording of the relay network/).waitFor();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001, Case 002 and Case 003 investigations, cross-case memory, timelines, deductions, reviews and persisted archive');
   } finally {
