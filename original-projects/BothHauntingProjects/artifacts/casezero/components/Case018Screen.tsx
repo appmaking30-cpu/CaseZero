@@ -96,14 +96,14 @@ export default function Case018Screen({ archive, onArchive, onReturn }: Props) {
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase018TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the assignment sheet, token issue, handoff register and sign-out receipt.'
+      ? 'That sequence conflicts with the time stamps. Compare the camera maintenance window, key issue entry, duplicate-seal check and return register.'
       : '');
   };
   const submit = () => {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase018DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage('The records establish team-level assignment and an incomplete personal handoff. They do not identify the packet recipient or session operator.');
+      setMessage('The records establish pool-level key access and an incomplete individual custody trail. They do not identify the key carrier or H-9 recipient.');
       return;
     }
     archiveLock.current = true;
@@ -132,7 +132,7 @@ export default function Case018Screen({ archive, onArchive, onReturn }: Props) {
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_018_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_018_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files establish the shared C-4 session. This file traces team assignment, token issue, packet handoff and sign-out.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files establish the missing H-9 recipient. This file traces key issue, duplicate-seal status, camera maintenance and key return.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>SHARED ACCOUNT CUSTODY RECORDS</Text>
@@ -145,7 +145,7 @@ export default function Case018Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 018 · EVIDENCE REVIEW</Text>
       <Text style={[styles.hero, text]}>Trace the key cabinet's custody without assuming team assignment identifies an operator.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: team assignment, token issue, packet handoff and session sign-out.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: camera maintenance, key issue, duplicate-seal check and key return.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_018_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -208,7 +208,7 @@ export default function Case018Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 018 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>Where does the key-cabinet access trail break?</Text>
-      <Text style={[styles.subtitle, muted]}>Identify the shared team assignment, then choose the missing link the records cannot establish.</Text>
+      <Text style={[styles.subtitle, muted]}>Identify the recorded pool credential, then choose the individual custody link the records cannot establish.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>SHARED ACCOUNT CUSTODY UNDER REVIEW</Text>
         {CASE_018_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
