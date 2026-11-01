@@ -239,6 +239,22 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText(/CASE004 · The Last Signal/).waitFor();
     await page.getByText(/Conclusion: Bram Holt · To suppress Rowan’s recording of the relay network/).waitFor();
 
+
+    // The Daily Case Bulletin is a separate short investigation and does not change the campaign archive.
+    await page.getByRole('button', { name: 'Open Daily Case Bulletin' }).click();
+    await page.getByText(/DAILY CASE BULLETIN · \d{4}-\d{2}-\d{2}/).waitFor();
+    const dailyClues = page.getByRole('button', { name: /Evidence clue:/ });
+    await dailyClues.first().waitFor();
+    assert.equal(await dailyClues.count(), 3, 'the daily case should contain three inspectable records');
+    for (let i = 0; i < 3; i += 1) {
+      await dailyClues.nth(i).click();
+    }
+    await page.getByText('3 of 3 clues logged', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Make your deduction' }).click();
+    await page.getByText('WHO IS RESPONSIBLE?', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Review evidence again' }).click();
+    await page.getByRole('button', { name: 'Back to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001, Case 002 and Case 003 investigations, cross-case memory, timelines, deductions, reviews and persisted archive');
   } finally {
