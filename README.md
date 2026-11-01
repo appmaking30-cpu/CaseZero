@@ -37,11 +37,12 @@ The canonical app uses Expo Router, React Native, TypeScript, and AsyncStorage f
 - Cases 002–004 preserve separate local progress and feed completed findings into the shared investigation archive. Later case dialogue can change based on earlier recorded conclusions and unanswered questions.
 - The Bureau archive displays each completed investigation and its recorded conclusion.
 - **Daily Case Bulletin:** seven short standalone investigations rotate deterministically by the device's local calendar date. Each has three inspectable records, a suspect-and-motive deduction, retryable wrong answers, and separate on-device progress. Daily files do not alter the main campaign archive.
+- **Bureau Team:** three specialists unlock at campaign milestones. The assignment board lets the player assign one recruited specialist to each active file or the next incoming case, with assignments saved on-device. Specialist abilities and training upgrades are not yet connected to investigation gameplay.
 - Automated checks currently pass for TypeScript, unit tests, Expo web export, and the Playwright mobile-viewport walkthrough through the four campaign cases and the daily bulletin.
 
 **Not yet implemented**
 
-- Specialist/team recruitment, assignments, or upgrade systems.
+- Specialist abilities, training upgrades, and gameplay bonuses.
 - Cloud accounts or cross-device saves.
 - Multiplayer or online services.
 - Monetization or paid features.
