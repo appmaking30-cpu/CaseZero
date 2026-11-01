@@ -61,6 +61,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case029', label: 'Case 029 · The Escort Sheet' },
   { id: 'case030', label: 'Case 030 · The Room That Didn’t Register' },
   { id: 'case031', label: 'Case 031 · The Session Without a Name' },
+  { id: 'case032', label: 'Case 032 · The Signed Handover' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
@@ -398,6 +399,31 @@ export function getBureauSpecialistInsight(
     return {
       title: 'Rhea Voss · Terminal activity reconstruction',
       detail: 'The corrected occupancy interval and terminal audit place the shared profile on D-3 during the same short window. That establishes a session at the terminal, but the profile and export do not identify who was there.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'inez' && caseId === 'case032' && hasClues('roster', 'ledger', 'handover', 'variance')) {
+    return {
+      title: 'Inez Shaw · Handover document audit',
+      detail: 'The roster and desk ledger establish Blue Team responsibility, while the signed handover confirms the transfer time. The blank operator field remains an explicit gap; none of these records names the person at D-3.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'tomas' && caseId === 'case032' &&
+      askedQuestions.includes('eli:sign') && askedQuestions.includes('sana:limit')) {
+    return {
+      title: 'Tomas Reed · Responsibility statement comparison',
+      detail: 'Eli describes the signature as a team-level transfer, and Sana confirms that the roster cannot identify an individual terminal user. Their accounts support responsibility for the desk, not personal operation of D-3.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'rhea' && caseId === 'case032' && hasClues('roster', 'handover', 'variance')) {
+    return {
+      title: 'Rhea Voss · Shift sequence reconstruction',
+      detail: 'The roster precedes the signed transfer, which in turn precedes the D-3 session. The sequence establishes that Blue Team held desk responsibility when the session opened, but does not establish which team member used the terminal.',
       rankPerk,
     };
   }
