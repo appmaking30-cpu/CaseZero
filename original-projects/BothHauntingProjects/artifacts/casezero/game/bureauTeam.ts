@@ -151,6 +151,21 @@ export function awardBureauCaseExperience(board: BureauTeamBoard, caseId: string
   };
 }
 
+/** Awards one daily-file XP per local date to the specialist assigned to the bulletin. */
+export function awardBureauDailyExperience(board: BureauTeamBoard, dateKey: string): BureauTeamBoard {
+  const rewardId = `daily:${dateKey}`;
+  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(dateKey) || board.rewardedCaseIds?.includes(rewardId)) return board;
+  const assignment = board.assignments.find((item) => item.targetId === 'daily');
+  if (!assignment) return board;
+  const experienceBySpecialist = { ...(board.experienceBySpecialist ?? {}) };
+  experienceBySpecialist[assignment.specialistId] = (experienceBySpecialist[assignment.specialistId] ?? 0) + 1;
+  return {
+    ...board,
+    experienceBySpecialist,
+    rewardedCaseIds: [...(board.rewardedCaseIds ?? []), rewardId],
+  };
+}
+
 export function parseStoredJson(raw: string | null): unknown {
   if (!raw) return null;
   try {
