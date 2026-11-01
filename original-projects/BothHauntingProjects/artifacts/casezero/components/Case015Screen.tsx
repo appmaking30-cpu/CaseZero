@@ -96,14 +96,14 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase015TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the controller health report with the event-specific fallback decision and reconciliation receipt.'
+      ? 'That sequence conflicts with the time stamps. Compare the map, lift export, checkpoint ledger and service slip.'
       : '');
   };
   const submit = () => {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase015DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage('The event packet identifies the local fallback path. It does not identify who physically presented the badge.');
+      setMessage('The ledger identifies the recorded staff-pass credential at the checkpoint. It does not prove who carried it or entered C-4.');
       return;
     }
     archiveLock.current = true;
@@ -122,7 +122,7 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
     setPhase('review');
   };
 
-  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING SOUTH VESTIBULE S-04 FILE…</Text></View>;
+  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING SECURE-FLOOR MOVEMENT FILE…</Text></View>;
 
   return <>
     {phase === 'briefing' && <>
@@ -132,20 +132,20 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_015_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_015_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier files establish the B-17 custody trail and the south vestibule access event. This file checks how S-04 processed the credential without treating a normal reader event as personal identification.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files establish the badge-custody trail and S-04 reader event. This file checks what the secure-floor movement ledger records beside C-4.</Text>
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>CREDENTIAL READER DECISION UNDER REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>SECURE-FLOOR MOVEMENT RECORDS</Text>
         {CASE_015_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
-      <Action title="Enter South Vestibule S-04" colors={colors} onPress={() => setPhase('evidence')} />
+      <Action title="Enter the Secure Floor" colors={colors} onPress={() => setPhase('evidence')} />
       <Action title="Back to Bureau" colors={colors} onPress={onReturn} ghost />
     </>}
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Separate the reader's system path from the identity of the person using the badge.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records. They separate four functions: the configuration snapshot, controller health report, fallback event and reconciliation receipt.</Text>
+      <Text style={[styles.hero, text]}>Separate a checkpoint credential record from proof of who entered the room.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: the floor map, lift export, movement checkpoint and signed service closeout.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_015_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -154,13 +154,13 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
         <Text style={[styles.note, muted]}>{clue.label}</Text>
         {activeClue === clue.id && <Text style={[styles.body, text, styles.divider]}>{clue.detail}</Text>}
       </Pressable>)}
-      <Action title="Interview the security desk staff" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
+      <Action title="Interview the floor staff" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
       <Action title="Back to briefing" colors={colors} onPress={() => setPhase('briefing')} ghost />
     </>}
 
     {phase === 'interviews' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · WITNESS INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>Which access path did S-04 record?</Text>
+      <Text style={[styles.hero, text]}>What does the movement ledger actually establish?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and are preserved in the archived report.</Text>
       {CASE_015_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -183,7 +183,7 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · EVENT SEQUENCE</Text>
-      <Text style={[styles.hero, text]}>Put the access events in order.</Text>
+      <Text style={[styles.hero, text]}>Put the facilities and movement records in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four records from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -208,9 +208,9 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>Which access path did S-04 record?</Text>
-      <Text style={[styles.subtitle, muted]}>Identify the reader decision supported by the controller event and reconciliation receipt. Then choose what the evidence actually establishes.</Text>
+      <Text style={[styles.subtitle, muted]}>Identify the credential recorded at the checkpoint, then choose the narrow conclusion supported by the records.</Text>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>READER DECISION UNDER REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>CHECKPOINT CREDENTIAL UNDER REVIEW</Text>
         {CASE_015_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
@@ -224,8 +224,8 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 015</Text></View>
-      <Text style={[styles.hero, text]}>A system exception is not a person.</Text>
-      <Text style={[styles.subtitle, muted]}>S-04 accepted B-17 through local fallback while central verification was unavailable. The badge carrier and terminal operator remain unidentified.</Text>
+      <Text style={[styles.hero, text]}>A credential entry is not a person.</Text>
+      <Text style={[styles.subtitle, muted]}>The 01:26 movement ledger records Ivo Dane’s staff pass beside the C-4 inner door. It does not prove who carried the pass, entered the room, or operated the terminal.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_015_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_015_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_015_GAME.outcome}</Text></View>
