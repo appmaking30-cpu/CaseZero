@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
-import { CASE_015_GAME, CASE_015_EMPTY_PROGRESS, getCase014Carryover, isCase014DeductionCorrect, isCase014TimelineCorrect } from '@/game/case015Game';
+import { CASE_015_GAME, CASE_015_EMPTY_PROGRESS, getCase015Carryover, isCase015DeductionCorrect, isCase015TimelineCorrect } from '@/game/case015Game';
 
 const SAVE_KEY = 'casezero.case015.progress.v1';
 type Progress = typeof CASE_015_EMPTY_PROGRESS;
@@ -23,7 +23,7 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
   const [activeReply, setActiveReply] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const archiveLock = useRef(false);
-  const carryover = getCase014Carryover(archive);
+  const carryover = getCase015Carryover(archive);
 
   useEffect(() => {
     let active = true;
@@ -44,8 +44,8 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
       const completed = saved.completed === true &&
         clues.length === CASE_015_GAME.clues.length &&
         CASE_015_GAME.witnesses.every((witness) => witness.questions.some((question) => heard.includes(witness.id + ':' + question.id))) &&
-        isCase014TimelineCorrect(timeline) &&
-        isCase014DeductionCorrect(
+        isCase015TimelineCorrect(timeline) &&
+        isCase015DeductionCorrect(
           typeof saved.selectedSuspect === 'string' ? saved.selectedSuspect : null,
           typeof saved.selectedMotive === 'string' ? saved.selectedMotive : null,
         );
@@ -77,7 +77,7 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
     witness.questions.filter((question) => !progress.askedQuestions.includes(witness.id + ':' + question.id))
       .map((question) => witness.name + ': ' + question.prompt),
   );
-  const timelineSolved = isCase014TimelineCorrect(progress.timelineOrder);
+  const timelineSolved = isCase015TimelineCorrect(progress.timelineOrder);
   const card = { backgroundColor: colors.card, borderColor: colors.border };
   const text = { color: colors.foreground };
   const muted = { color: colors.mutedForeground };
@@ -95,14 +95,14 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
     if (progress.timelineOrder.includes(id) || progress.timelineOrder.length >= 4) return;
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
-    setMessage(next.length === 4 && !isCase014TimelineCorrect(next)
+    setMessage(next.length === 4 && !isCase015TimelineCorrect(next)
       ? 'That sequence conflicts with the time stamps. Compare the controller health report with the event-specific fallback decision and reconciliation receipt.'
       : '');
   };
   const submit = () => {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
-    if (!isCase014DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
+    if (!isCase015DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
       setMessage('The event packet identifies the local fallback path. It does not identify who physically presented the badge.');
       return;
     }
@@ -126,7 +126,7 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 014 · MISSING DETECTIVE TRAIL</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · MISSING DETECTIVE TRAIL</Text>
       <Text style={[styles.hero, text]}>{CASE_015_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_015_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
@@ -143,7 +143,7 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'evidence' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 014 · EVIDENCE REVIEW</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · EVIDENCE REVIEW</Text>
       <Text style={[styles.hero, text]}>Separate the reader's system path from the identity of the person using the badge.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all four records. They separate four functions: the configuration snapshot, controller health report, fallback event and reconciliation receipt.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
@@ -159,7 +159,7 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'interviews' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 014 · WITNESS INTERVIEWS</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · WITNESS INTERVIEWS</Text>
       <Text style={[styles.hero, text]}>Which access path did S-04 record?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and are preserved in the archived report.</Text>
       {CASE_015_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
@@ -182,7 +182,7 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 014 · EVENT SEQUENCE</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · EVENT SEQUENCE</Text>
       <Text style={[styles.hero, text]}>Put the access events in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four records from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
@@ -206,7 +206,7 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'deduction' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 014 · FINAL DEDUCTION</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>Which access path did S-04 record?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the reader decision supported by the controller event and reconciliation receipt. Then choose what the evidence actually establishes.</Text>
       <View style={[styles.card, card]}>
@@ -223,7 +223,7 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
     </>}
 
     {phase === 'review' && <>
-      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 014</Text></View>
+      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 015</Text></View>
       <Text style={[styles.hero, text]}>A system exception is not a person.</Text>
       <Text style={[styles.subtitle, muted]}>S-04 accepted B-17 through local fallback while central verification was unavailable. The badge carrier and terminal operator remain unidentified.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_015_GAME.truth}</Text></View>
