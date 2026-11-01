@@ -39,7 +39,7 @@ import {
   parseStoredJson,
   type BureauTeamBoard,
 } from '@/game/bureauTeam';
-import { getMissingDetectiveArcStatus, MISSING_DETECTIVE_DOSSIER } from '@/game/missingDetectiveArc';
+import { getMissingDetectiveArcStatus, getMissingDetectiveConvergence, MISSING_DETECTIVE_DOSSIER } from '@/game/missingDetectiveArc';
 import {
   CASE_003_GAME,
   EMPTY_CASE003_PROGRESS,
@@ -339,6 +339,10 @@ export default function HomeScreen() {
   );
   const missingDetectiveArc = useMemo(
     () => getMissingDetectiveArcStatus(investigationArchive),
+    [investigationArchive],
+  );
+  const missingDetectiveConvergence = useMemo(
+    () => getMissingDetectiveConvergence(investigationArchive),
     [investigationArchive],
   );
   const case003Carryover = useMemo(() => getCase003Carryover(investigationArchive), [investigationArchive]);
@@ -772,6 +776,20 @@ export default function HomeScreen() {
                   onPress={() => setPhase(case003Progress.completed ? 'case003Review' : 'case003Briefing')}
                   colors={colors}
                 />
+              </View>
+            )}
+            {missingDetectiveConvergence.unlocked && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Classified · Cross-case review</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{missingDetectiveConvergence.reportTitle}</Text>
+                <Text style={[styles.small, { color: colors.primary }]}>Rowan Vale investigation · Four files connected</Text>
+                <Text style={[styles.body, mutedStyle]}>{missingDetectiveConvergence.reportSummary}</Text>
+                {missingDetectiveConvergence.evidenceLinks.map((entry) => (
+                  <View key={entry} style={[styles.detail, { borderTopColor: colors.border }]}>
+                    <Text style={[styles.small, textStyle]}>{entry}</Text>
+                  </View>
+                ))}
+                <Text style={[styles.memoryNote, mutedStyle]}>Next lead: trace who received the M-2 transfer after the North Quay collection.</Text>
               </View>
             )}
             <View style={[styles.card, cardStyle]}>
