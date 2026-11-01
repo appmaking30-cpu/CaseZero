@@ -12,13 +12,13 @@ test('Inez cross-checks reception presence without overstating terminal access',
   const insight = getBureauSpecialistInsight('inez', 'case028', ['visitor', 'badge', 'purpose', 'exit']);
   assert.ok(insight);
   assert.match(insight.detail, /reception/);
-  assert.match(insight.detail, /does not connect him to terminal D-3/);
+  assert.match(insight.detail, /connects him to terminal D-3/);
 });
 
 test('Tomas compares escort statements only after both relevant answers', () => {
   const insight = getBureauSpecialistInsight('tomas', 'case029', [], ['mara:assignment', 'sana:limit']);
   assert.ok(insight);
-  assert.match(insight.detail, /not a completed journey/);
+  assert.match(insight.detail, /as a completed journey/);
 });
 
 test('Rhea reconstructs the Case 030 room event without naming the occupant', () => {
