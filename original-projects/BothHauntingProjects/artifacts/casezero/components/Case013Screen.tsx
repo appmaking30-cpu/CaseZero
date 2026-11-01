@@ -96,7 +96,7 @@ export default function Case013Screen({ archive, onArchive, onReturn }: Props) {
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase013TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the floor plan with the reader events and terminal session.'
+      ? 'That sequence conflicts with the time stamps. Compare the assignment card with the paired loan counterfoils and return entry.'
       : '');
   };
   const submit = () => {
@@ -154,7 +154,7 @@ export default function Case013Screen({ archive, onArchive, onReturn }: Props) {
         <Text style={[styles.note, muted]}>{clue.label}</Text>
         {activeClue === clue.id && <Text style={[styles.body, text, styles.divider]}>{clue.detail}</Text>}
       </Pressable>)}
-      <Action title="Interview the access-control staff" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
+      <Action title="Interview the security desk staff" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
       <Action title="Back to briefing" colors={colors} onPress={() => setPhase('briefing')} ghost />
     </>}
 
