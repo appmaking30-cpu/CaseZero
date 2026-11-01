@@ -16,6 +16,7 @@ import Case006Screen from '@/components/Case006Screen';
 import Case007Screen from '@/components/Case007Screen';
 import Case008Screen from '@/components/Case008Screen';
 import Case009Screen from '@/components/Case009Screen';
+import Case010Screen from '@/components/Case010Screen';
 import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
 import BureauTeamScreen from '@/components/BureauTeamScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
@@ -24,6 +25,7 @@ import { CASE_006_GAME } from '@/game/case006Game';
 import { CASE_007_GAME } from '@/game/case007Game';
 import { CASE_008_GAME } from '@/game/case008Game';
 import { CASE_009_GAME } from '@/game/case009Game';
+import { CASE_010_GAME } from '@/game/case010Game';
 import {
   CASE_001,
   getInvestigationMemory,
@@ -74,7 +76,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'daily' | 'team';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -635,7 +637,7 @@ export default function HomeScreen() {
             <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
           </View>
           <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
-            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : 'FILE 001'}</Text>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : 'FILE 001'}</Text>
           </View>
         </View>
 
@@ -845,6 +847,22 @@ export default function HomeScreen() {
                 <SectionLabel colors={colors}>Next lead · Restricted personnel index</SectionLabel>
                 <Text style={[styles.caseTitle, textStyle]}>The approver field is still sealed.</Text>
                 <Text style={[styles.body, mutedStyle]}>Schedule D-4 identifies the record series, not the person who authorized the M-2 renewal. A marginal note points to a sealed personnel index.</Text>
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case009') && !investigationArchive.completedCases.some((record) => record.caseId === 'case010') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Incoming file · 010</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_010_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_010_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>The P-1 personnel index can identify which office held conditional M-2 authority during the Route Governance outage. The sealed C-4 rotation ledger may identify the individual holder.</Text>
+                <ActionButton title="Open Case 010" onPress={() => setPhase('case010')} colors={colors} />
+              </View>
+            )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case010') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Next lead · Sealed rotation ledger</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>C-4 has a holder. The copy hides the name.</Text>
+                <Text style={[styles.body, mutedStyle]}>Emergency Continuity held conditional M-2 authority during the outage. The pooled duty code still needs to be matched to the sealed rotation ledger.</Text>
               </View>
             )}
             {missingDetectiveConvergence.unlocked && (
@@ -1549,6 +1567,17 @@ export default function HomeScreen() {
         {phase === 'team' && <BureauTeamScreen archive={investigationArchive} onBoardChange={setBureauTeamBoard} onReturn={() => setPhase('hq')} />}
 
         {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} assignedSpecialistName={BUREAU_SPECIALISTS.find((specialist) => specialist.id === bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'daily')?.specialistId)?.name ?? null} onComplete={(dateKey) => setBureauTeamBoard((current) => awardBureauDailyExperience(current, dateKey))} />}
+
+        {phase === 'case010' && (
+          <Case010Screen
+            archive={investigationArchive}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_010_GAME.id));
+            }}
+            onReturn={() => setPhase('hq')}
+          />
+        )}
 
         {phase === 'case009' && (
           <Case009Screen
