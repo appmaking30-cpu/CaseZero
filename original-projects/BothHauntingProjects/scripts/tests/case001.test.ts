@@ -12,6 +12,7 @@ import {
   isTimelineCorrect,
 } from '../../artifacts/casezero/game/case001';
 import { CASE_002, getCase002Carryover } from '../../artifacts/casezero/game/case002';
+import { getMissingDetectiveArcStatus, MISSING_DETECTIVE_DOSSIER } from '../../artifacts/casezero/game/missingDetectiveArc';
 
 test('Case 001 has a complete, distinct evidence and witness set', () => {
   assert.equal(CASE_001.clues.length, 5);
@@ -181,4 +182,42 @@ test('Case 001 history changes Case 002 interview dialogue', () => {
   assert.notEqual(rememberedReply, emptyReply);
   assert.match(rememberedReply, /last file/i);
   assert.match(getCase002QuestionReply('mara', 'key', withPrior), /left a question unanswered/i);
+});
+
+
+test('Missing Detective campaign arc unlocks only after both opening cases close', () => {
+  const locked = getMissingDetectiveArcStatus(EMPTY_INVESTIGATION_ARCHIVE);
+  assert.equal(locked.unlocked, false);
+  assert.equal(locked.completedCaseCount, 0);
+  assert.deepEqual(locked.missingCaseIds, ['case001', 'case002']);
+
+  const caseOne = archiveCompletedCase(EMPTY_INVESTIGATION_ARCHIVE, {
+    caseId: 'case001',
+    caseTitle: CASE_001.title,
+    closedAt: '2026-11-01T12:00:00.000Z',
+    selectedSuspectId: 'miles',
+    selectedMotiveId: 'protect',
+    inspectedClues: [],
+    askedQuestions: [],
+    unansweredQuestions: [],
+  });
+  const oneClosed = getMissingDetectiveArcStatus(caseOne);
+  assert.equal(oneClosed.unlocked, false);
+  assert.deepEqual(oneClosed.missingCaseIds, ['case002']);
+
+  const bothClosed = archiveCompletedCase(caseOne, {
+    caseId: 'case002',
+    caseTitle: 'The Unlit Room',
+    closedAt: '2026-11-01T12:30:00.000Z',
+    selectedSuspectId: 'june',
+    selectedMotiveId: 'protect',
+    inspectedClues: [],
+    askedQuestions: [],
+    unansweredQuestions: [],
+  });
+  const unlocked = getMissingDetectiveArcStatus(bothClosed);
+  assert.equal(unlocked.unlocked, true);
+  assert.equal(unlocked.completedCaseCount, 2);
+  assert.deepEqual(unlocked.missingCaseIds, []);
+  assert.match(MISSING_DETECTIVE_DOSSIER.recoveredNote, /changed after they were closed/i);
 });
