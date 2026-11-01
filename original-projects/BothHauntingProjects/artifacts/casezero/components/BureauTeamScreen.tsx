@@ -11,10 +11,9 @@ import {
   getUnlockedBureauSpecialists,
   removeBureauAssignment,
   normalizeBureauTeamBoard,
+  BUREAU_TEAM_BUREAU_TEAM_SAVE_KEY,
   type BureauTeamBoard,
 } from '@/game/bureauTeam';
-
-const SAVE_KEY = 'casezero.bureau-team.v1';
 
 export default function BureauTeamScreen({ archive, onReturn }: {
   archive: InvestigationArchive;
@@ -37,7 +36,7 @@ export default function BureauTeamScreen({ archive, onReturn }: {
 
   useEffect(() => {
     let active = true;
-    AsyncStorage.getItem(SAVE_KEY).then((raw) => {
+    AsyncStorage.getItem(BUREAU_TEAM_SAVE_KEY).then((raw) => {
       if (!active) return;
       if (raw) {
         const saved = JSON.parse(raw) as Partial<BureauTeamBoard>;
@@ -51,7 +50,7 @@ export default function BureauTeamScreen({ archive, onReturn }: {
 
   useEffect(() => {
     if (!loaded) return;
-    AsyncStorage.setItem(SAVE_KEY, JSON.stringify(board)).catch(() => undefined);
+    AsyncStorage.setItem(BUREAU_TEAM_SAVE_KEY, JSON.stringify(board)).catch(() => undefined);
   }, [loaded, board]);
 
   const card = { backgroundColor: colors.card, borderColor: colors.border };
