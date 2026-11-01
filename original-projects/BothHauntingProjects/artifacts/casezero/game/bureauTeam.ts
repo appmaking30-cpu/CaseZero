@@ -47,11 +47,15 @@ export type BureauAssignment = {
 export type BureauTeamBoard = {
   version: 1;
   assignments: BureauAssignment[];
+  experienceBySpecialist?: Record<string, number>;
+  rewardedCaseIds?: string[];
 };
 
 export const EMPTY_BUREAU_TEAM_BOARD: BureauTeamBoard = {
   version: 1,
   assignments: [],
+  experienceBySpecialist: {},
+  rewardedCaseIds: [],
 };
 
 export function getUnlockedBureauSpecialists(archive: InvestigationArchive) {
@@ -98,7 +102,52 @@ export function normalizeBureauTeamBoard(input: unknown, archive: InvestigationA
     ) continue;
     board = assignBureauSpecialist(board, item.specialistId, item.targetId, item.assignedAt);
   }
-  return board;
+  return {
+    ...board,
+    experienceBySpecialist: normalizeExperience(saved.experienceBySpecialist),
+    rewardedCaseIds: Array.isArray(saved.rewardedCaseIds)
+      ? [...new Set(saved.rewardedCaseIds.filter((id): id is string => typeof id === 'string'))]
+      : [],
+  };
+}
+
+function normalizeExperience(input: unknown): Record<string, number> {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return {};
+  const result: Record<string, number> = {};
+  for (const specialist of BUREAU_SPECIALISTS) {
+    const value = (input as Record<string, unknown>)[specialist.id];
+    if (typeof value === 'number' && Number.isFinite(value) && value >= 0) {
+      result[specialist.id] = Math.floor(value);
+    }
+  }
+  return result;
+}
+
+export function getBureauSpecialistProgress(board: BureauTeamBoard, specialistId: string) {
+  const experience = board.experienceBySpecialist?.[specialistId] ?? 0;
+  const rank = Math.min(2, Math.floor(experience / 2));
+  return {
+    experience,
+    rank,
+    rankLabel: rank === 0 ? 'FIELD TRAINEE' : rank === 1 ? 'CASE SPECIALIST' : 'SENIOR SPECIALIST',
+    progressToNextRank: rank >= 2 ? 2 : experience % 2,
+    experienceForNextRank: rank >= 2 ? 0 : 2 - (experience % 2),
+  };
+}
+
+/** Awards one experience point when the specialist assigned to a file sees it closed. */
+export function awardBureauCaseExperience(board: BureauTeamBoard, caseId: string): BureauTeamBoard {
+  if (board.rewardedCaseIds?.includes(caseId)) return board;
+  const assignment = board.assignments.find((item) => item.targetId === caseId);
+  if (!assignment) return board;
+  const experienceBySpecialist = { ...(board.experienceBySpecialist ?? {}) };
+  experienceBySpecialist[assignment.specialistId] = (experienceBySpecialist[assignment.specialistId] ?? 0) + 1;
+  return {
+    ...board,
+    assignments: board.assignments.filter((item) => item.targetId !== caseId),
+    experienceBySpecialist,
+    rewardedCaseIds: [...(board.rewardedCaseIds ?? []), caseId],
+  };
 }
 
 export function parseStoredJson(raw: string | null): unknown {
