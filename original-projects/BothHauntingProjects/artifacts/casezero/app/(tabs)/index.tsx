@@ -32,6 +32,7 @@ import {
   EMPTY_BUREAU_TEAM_BOARD,
   getBureauSpecialistInsight,
   restoreBureauTeamBoard,
+  parseStoredJson,
   type BureauTeamBoard,
 } from '@/game/bureauTeam';
 import { getMissingDetectiveArcStatus, MISSING_DETECTIVE_DOSSIER } from '@/game/missingDetectiveArc';
@@ -173,15 +174,15 @@ export default function HomeScreen() {
         if (!active) return;
         let restoredArchive = EMPTY_INVESTIGATION_ARCHIVE;
         if (archiveRaw) {
-          const parsedArchive = JSON.parse(archiveRaw) as InvestigationArchive;
-          if (parsedArchive.version === 1 && Array.isArray(parsedArchive.completedCases)) {
+          const parsedArchive = parseStoredJson(archiveRaw) as InvestigationArchive | null;
+          if (parsedArchive && typeof parsedArchive === 'object' && parsedArchive.version === 1 && Array.isArray(parsedArchive.completedCases)) {
             restoredArchive = parsedArchive;
             setInvestigationArchive(parsedArchive);
           }
         }
         setBureauTeamBoard(restoreBureauTeamBoard(teamRaw, restoredArchive));
         if (case003Raw) {
-          const parsed = JSON.parse(case003Raw) as Partial<Case003Progress> | null;
+          const parsed = parseStoredJson(case003Raw) as Partial<Case003Progress> | null;
           if (parsed && typeof parsed === 'object') {
             setCase003Progress({
               cluesFound: Array.isArray(parsed.cluesFound) ? parsed.cluesFound.filter((id): id is string => typeof id === 'string') : [],
@@ -195,7 +196,7 @@ export default function HomeScreen() {
           }
         }
         if (case002Raw) {
-          const parsedCase002 = JSON.parse(case002Raw) as Partial<Case002Progress> | null;
+          const parsedCase002 = parseStoredJson(case002Raw) as Partial<Case002Progress> | null;
           if (parsedCase002 && typeof parsedCase002 === 'object') {
             setCase002Progress({
               cluesFound: Array.isArray(parsedCase002.cluesFound)
@@ -223,8 +224,8 @@ export default function HomeScreen() {
           }
         }
         if (!active) return;
-        if (raw) {
-          const saved = JSON.parse(raw) as Partial<SavedState>;
+        const saved = parseStoredJson(raw) as Partial<SavedState> | null;
+        if (saved && typeof saved === 'object') {
           if (Array.isArray(saved.cluesFound)) setCluesFound(saved.cluesFound);
           if (Array.isArray(saved.askedQuestions)) setAskedQuestions(saved.askedQuestions);
           if (Array.isArray(saved.timelineOrder)) setTimelineOrder(saved.timelineOrder);
