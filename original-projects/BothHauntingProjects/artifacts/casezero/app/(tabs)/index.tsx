@@ -31,6 +31,7 @@ import {
   BUREAU_TEAM_SAVE_KEY,
   EMPTY_BUREAU_TEAM_BOARD,
   getBureauSpecialistInsight,
+  getBureauSpecialistProgress,
   awardBureauCaseExperience,
   restoreBureauTeamBoard,
   parseStoredJson,
@@ -429,7 +430,8 @@ export default function HomeScreen() {
   };
   const case002AllCluesFound = case002Progress.cluesFound.length === CASE_002_GAME.clues.length;
   const case002SpecialistId = bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'case002')?.specialistId ?? null;
-  const case002SpecialistInsight = getBureauSpecialistInsight(case002SpecialistId, 'case002', case002Progress.cluesFound);
+  const case002SpecialistRank = case002SpecialistId ? getBureauSpecialistProgress(bureauTeamBoard, case002SpecialistId).rank : 0;
+  const case002SpecialistInsight = getBureauSpecialistInsight(case002SpecialistId, 'case002', case002Progress.cluesFound, [], case002SpecialistRank);
   const case002WitnessCount = CASE_002_GAME.witnesses.filter((witness) =>
     witness.questions.some((question) => case002Progress.askedQuestions.includes(`${witness.id}:${question.id}`)),
   ).length;
@@ -504,7 +506,8 @@ export default function HomeScreen() {
 
   const case003AllCluesFound = case003Progress.cluesFound.length === CASE_003_GAME.clues.length;
   const case003SpecialistId = bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'case003')?.specialistId ?? null;
-  const case003SpecialistInsight = getBureauSpecialistInsight(case003SpecialistId, 'case003', case003Progress.cluesFound, case003Progress.askedQuestions);
+  const case003SpecialistRank = case003SpecialistId ? getBureauSpecialistProgress(bureauTeamBoard, case003SpecialistId).rank : 0;
+  const case003SpecialistInsight = getBureauSpecialistInsight(case003SpecialistId, 'case003', case003Progress.cluesFound, case003Progress.askedQuestions, case003SpecialistRank);
   const case003WitnessCount = CASE_003_GAME.witnesses.filter((witness) =>
     witness.questions.some((question) => case003Progress.askedQuestions.includes(`${witness.id}:${question.id}`)),
   ).length;
@@ -862,6 +865,7 @@ export default function HomeScreen() {
               <View style={[styles.card, cardStyle]}>
                 <SectionLabel colors={colors}>{case002SpecialistInsight.title}</SectionLabel>
                 <Text style={[styles.body, textStyle]}>{case002SpecialistInsight.detail}</Text>
+                {case002SpecialistInsight.rankPerk && <Text style={[styles.body, mutedStyle]}>{case002SpecialistInsight.rankPerk}</Text>}
               </View>
             )}
             <ActionButton title="Question the witnesses" onPress={() => setPhase('case002Interviews')} colors={colors} disabled={!case002AllCluesFound} />
@@ -1379,6 +1383,7 @@ export default function HomeScreen() {
               <View style={[styles.card, cardStyle]}>
                 <SectionLabel colors={colors}>{case003SpecialistInsight.title}</SectionLabel>
                 <Text style={[styles.body, textStyle]}>{case003SpecialistInsight.detail}</Text>
+                {case003SpecialistInsight.rankPerk && <Text style={[styles.body, mutedStyle]}>{case003SpecialistInsight.rankPerk}</Text>}
               </View>
             )}
             <Text style={[styles.progressText, mutedStyle]}>{case003WitnessCount}/3 witnesses heard · {case003Unanswered.length} questions left unasked</Text>
@@ -1460,6 +1465,7 @@ export default function HomeScreen() {
           <Case004Screen
             archive={investigationArchive}
             assignedSpecialistId={bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'case004')?.specialistId ?? null}
+            assignedSpecialistRank={(() => { const id = bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'case004')?.specialistId; return id ? getBureauSpecialistProgress(bureauTeamBoard, id).rank : 0; })()}
             onArchive={(record) => {
               setInvestigationArchive((current) => archiveCompletedCase(current, record));
               setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_004_GAME.id));
