@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
+import { getBureauSpecialistInsight, getBureauSpecialistProgress, type BureauTeamBoard } from '@/game/bureauTeam';
 import { CASE_031_GAME, CASE_031_EMPTY_PROGRESS, getCase031Carryover, isCase031DeductionCorrect, isCase031TimelineCorrect } from '@/game/case031Game';
 
 const SAVE_KEY = 'casezero.case031.progress.v1';
@@ -10,11 +11,12 @@ type Progress = typeof CASE_031_EMPTY_PROGRESS;
 type Phase = 'briefing' | 'evidence' | 'interviews' | 'timeline' | 'deduction' | 'review';
 type Props = {
   archive: InvestigationArchive;
+  bureauTeamBoard: BureauTeamBoard;
   onArchive: (record: Parameters<typeof archiveCompletedCase>[1]) => void;
   onReturn: () => void;
 };
 
-export default function Case031Screen({ archive, onArchive, onReturn }: Props) {
+export default function Case031Screen({ archive, bureauTeamBoard, onArchive, onReturn }: Props) {
   const colors = useColors();
   const [loaded, setLoaded] = useState(false);
   const [phase, setPhase] = useState<Phase>('briefing');
@@ -24,6 +26,15 @@ export default function Case031Screen({ archive, onArchive, onReturn }: Props) {
   const [message, setMessage] = useState('');
   const archiveLock = useRef(false);
   const carryover = getCase031Carryover(archive);
+  const caseAssignment = bureauTeamBoard.assignments.find((item) => item.targetId === CASE_031_GAME.id);
+  const specialistRank = caseAssignment ? getBureauSpecialistProgress(bureauTeamBoard, caseAssignment.specialistId).rank : 0;
+  const specialistInsight = getBureauSpecialistInsight(
+    caseAssignment?.specialistId ?? null,
+    CASE_031_GAME.id,
+    progress.cluesFound,
+    progress.askedQuestions,
+    specialistRank,
+  );
 
   useEffect(() => {
     let active = true;
@@ -232,6 +243,14 @@ export default function Case031Screen({ archive, onArchive, onReturn }: Props) {
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>ARCHIVED INTERVIEW MEMORY</Text><Text style={[styles.body, text]}>Clues inspected: {progress.cluesFound.length}/4</Text><Text style={[styles.body, text]}>Questions asked: {progress.askedQuestions.length}/6</Text><Text style={[styles.body, text]}>Optional questions left unasked: {unanswered.length}</Text></View>
       <Action title="Return to Detective Bureau" colors={colors} onPress={onReturn} />
     </>}
+    {specialistInsight && (
+      <View style={[styles.card, card]}>
+        <Text style={[styles.label, { color: colors.primary }]}>BUREAU SPECIALIST REVIEW</Text>
+        <Text style={[styles.cardTitle, text]}>{specialistInsight.title}</Text>
+        <Text style={[styles.body, text]}>{specialistInsight.detail}</Text>
+        {!!specialistInsight.rankPerk && <Text style={[styles.note, { color: colors.primary }]}>{specialistInsight.rankPerk}</Text>}
+      </View>
+    )}
   </>;
 }
 
