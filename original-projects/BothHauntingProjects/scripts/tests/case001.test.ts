@@ -348,3 +348,46 @@ test('daily bulletin deduction requires the correct person and motive', () => {
   assert.equal(isDailyCaseSolutionCorrect(dailyCase, null, dailyCase.correctMotiveId), false);
   assert.equal(isDailyCaseSolutionCorrect(dailyCase, dailyCase.correctSuspectId, 'not-the-motive'), false);
 });
+
+
+import {
+  BUREAU_SPECIALISTS,
+  EMPTY_BUREAU_TEAM_BOARD,
+  assignBureauSpecialist,
+  getUnlockedBureauSpecialists,
+  removeBureauAssignment,
+} from '../../artifacts/casezero/game/bureauTeam';
+
+test('Bureau specialists unlock only after their campaign milestones', () => {
+  assert.equal(getUnlockedBureauSpecialists(EMPTY_INVESTIGATION_ARCHIVE).length, 0);
+  const first = archiveCompletedCase(EMPTY_INVESTIGATION_ARCHIVE, {
+    caseId: 'case001', caseTitle: CASE_001.title, closedAt: '2026-11-01T12:00:00.000Z',
+    selectedSuspectId: 'miles', selectedMotiveId: 'protect',
+    inspectedClues: [], askedQuestions: [], unansweredQuestions: [],
+  });
+  assert.deepEqual(getUnlockedBureauSpecialists(first).map((member) => member.id), ['inez']);
+  const second = archiveCompletedCase(first, {
+    caseId: 'case002', caseTitle: 'The Unlit Room', closedAt: '2026-11-01T12:30:00.000Z',
+    selectedSuspectId: 'june', selectedMotiveId: 'protect',
+    inspectedClues: [], askedQuestions: [], unansweredQuestions: [],
+  });
+  assert.deepEqual(getUnlockedBureauSpecialists(second).map((member) => member.id), ['inez', 'tomas']);
+  const third = archiveCompletedCase(second, {
+    caseId: 'case003', caseTitle: 'The Black Square', closedAt: '2026-11-01T13:00:00.000Z',
+    selectedSuspectId: 'arden', selectedMotiveId: 'control',
+    inspectedClues: [], askedQuestions: [], unansweredQuestions: [],
+  });
+  assert.equal(getUnlockedBureauSpecialists(third).length, BUREAU_SPECIALISTS.length);
+});
+
+test('Bureau assignments keep one specialist per file and one file per specialist', () => {
+  const first = assignBureauSpecialist(EMPTY_BUREAU_TEAM_BOARD, 'inez', 'case004', '2026-11-01T12:00:00.000Z');
+  assert.equal(first.assignments.length, 1);
+  const replacement = assignBureauSpecialist(first, 'tomas', 'case004', '2026-11-01T12:05:00.000Z');
+  assert.equal(replacement.assignments.length, 1);
+  assert.equal(replacement.assignments[0].specialistId, 'tomas');
+  const moved = assignBureauSpecialist(replacement, 'tomas', 'next-case', '2026-11-01T12:10:00.000Z');
+  assert.equal(moved.assignments.length, 1);
+  assert.equal(moved.assignments[0].targetId, 'next-case');
+  assert.equal(removeBureauAssignment(moved, 'next-case').assignments.length, 0);
+});
