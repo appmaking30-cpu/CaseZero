@@ -31,7 +31,7 @@ import {
   BUREAU_TEAM_SAVE_KEY,
   EMPTY_BUREAU_TEAM_BOARD,
   getBureauSpecialistInsight,
-  normalizeBureauTeamBoard,
+  restoreBureauTeamBoard,
   type BureauTeamBoard,
 } from '@/game/bureauTeam';
 import { getMissingDetectiveArcStatus, MISSING_DETECTIVE_DOSSIER } from '@/game/missingDetectiveArc';
@@ -179,10 +179,7 @@ export default function HomeScreen() {
             setInvestigationArchive(parsedArchive);
           }
         }
-        if (teamRaw) {
-          const parsedTeam = JSON.parse(teamRaw) as unknown;
-          setBureauTeamBoard(normalizeBureauTeamBoard(parsedTeam, restoredArchive));
-        }
+        setBureauTeamBoard(restoreBureauTeamBoard(teamRaw, restoredArchive));
         if (case003Raw) {
           const parsed = JSON.parse(case003Raw) as Partial<Case003Progress> | null;
           if (parsed && typeof parsed === 'object') {
