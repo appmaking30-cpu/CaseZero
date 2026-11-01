@@ -103,7 +103,7 @@ export default function Case014Screen({ archive, onArchive, onReturn }: Props) {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase014DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage('The loan counterfoils identify the recorded borrower across the access window. They do not prove who physically presented the badge.');
+      setMessage('The event packet identifies the local fallback path. It does not identify who physically presented the badge.');
       return;
     }
     archiveLock.current = true;
@@ -208,7 +208,7 @@ export default function Case014Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 014 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>Which access path did S-04 record?</Text>
-      <Text style={[styles.subtitle, muted]}>Identify the route supported by the paired loan counterfoils and return entry. Then choose what the evidence actually establishes.</Text>
+      <Text style={[styles.subtitle, muted]}>Identify the reader decision supported by the controller event and reconciliation receipt. Then choose what the evidence actually establishes.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>READER DECISION UNDER REVIEW</Text>
         {CASE_014_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
