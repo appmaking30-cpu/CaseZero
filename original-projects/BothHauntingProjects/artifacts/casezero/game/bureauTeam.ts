@@ -234,6 +234,35 @@ export function getBureauSpecialistInsight(
     };
   }
 
+  if (specialistId === 'inez' && caseId === 'case005' && hasClues('carbon', 'ledger')) {
+    return {
+      title: 'Inez Shaw · Chain-of-custody review',
+      detail: 'The carbon receipt names Locker 14, while the receiving ledger records SQ-7 opening it. Treat the signature and credential as two separate records that corroborate the same receiving desk; neither alone explains the later audit correction.',
+      rankPerk,
+    };
+  }
+
+  if (
+    specialistId === 'tomas' &&
+    caseId === 'case005' &&
+    askedQuestions.includes('dane:signature') &&
+    askedQuestions.includes('quill:copy')
+  ) {
+    return {
+      title: 'Tomas Reed · Interview comparison',
+      detail: 'Dane places S.Q. at the receiving hatch and says the courier left before the locker opened. Quill’s explanation about an incomplete carbon does not account for the matching SQ-7 access record. Compare each statement with the time-stamped documents.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'rhea' && caseId === 'case005' && hasClues('ledger', 'gate', 'audit')) {
+    return {
+      title: 'Rhea Voss · Transfer sequence review',
+      detail: 'The gate sheet places Dane away from the registry before SQ-7 opens Locker 14. The later audit only reports the count as cleared. The sequence distinguishes the courier’s delivery from the registrar’s control of the locker.',
+      rankPerk,
+    };
+  }
+
   if (specialistId === 'rhea' && caseId === 'case004' && hasClues('seal', 'relay', 'docket')) {
     return {
       title: 'Rhea Voss · Transfer reconstruction',
