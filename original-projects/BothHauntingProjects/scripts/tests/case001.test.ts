@@ -357,6 +357,7 @@ import {
   getUnlockedBureauSpecialists,
   normalizeBureauTeamBoard,
   removeBureauAssignment,
+  getBureauSpecialistInsight,
 } from '../../artifacts/casezero/game/bureauTeam';
 
 test('Bureau specialists unlock only after their campaign milestones', () => {
@@ -420,4 +421,18 @@ test('saved Bureau assignments discard locked specialists, completed files and m
 test('Bureau board normalization safely handles malformed saved data', () => {
   assert.deepEqual(normalizeBureauTeamBoard(null, EMPTY_INVESTIGATION_ARCHIVE), EMPTY_BUREAU_TEAM_BOARD);
   assert.deepEqual(normalizeBureauTeamBoard({ version: 9, assignments: 'broken' }, EMPTY_INVESTIGATION_ARCHIVE), EMPTY_BUREAU_TEAM_BOARD);
+});
+
+
+test('specialist insights require the player to inspect their supporting records', () => {
+  assert.equal(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf']), null);
+  assert.ok(getBureauSpecialistInsight('inez', 'case002', ['access', 'shelf', 'transfer']));
+
+  assert.equal(getBureauSpecialistInsight('tomas', 'case003', ['printer', 'ledger'], []), null);
+  assert.ok(getBureauSpecialistInsight('tomas', 'case003', ['printer', 'ledger'], ['arden:terminal']));
+
+  assert.equal(getBureauSpecialistInsight('rhea', 'case004', ['seal', 'relay']), null);
+  assert.ok(getBureauSpecialistInsight('rhea', 'case004', ['seal', 'relay', 'docket']));
+
+  assert.equal(getBureauSpecialistInsight('inez', 'case004', ['seal', 'relay', 'docket']), null);
 });
