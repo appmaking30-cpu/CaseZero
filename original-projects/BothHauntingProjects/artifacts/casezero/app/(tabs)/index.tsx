@@ -818,7 +818,7 @@ export default function HomeScreen() {
                     <Text style={[styles.small, textStyle]}>{entry}</Text>
                   </View>
                 ))}
-                <Text style={[styles.memoryNote, mutedStyle]}>Next lead: trace who received the M-2 transfer after the North Quay collection.</Text>
+                <Text style={[styles.memoryNote, mutedStyle]}>{investigationArchive.completedCases.some((record) => record.caseId === 'case006') ? 'Next lead: trace the relay desk named in the recovered instruction.' : investigationArchive.completedCases.some((record) => record.caseId === 'case005') ? 'Next lead: review the recorder and establish who issued the M-2 instruction.' : 'Next lead: trace who received the M-2 transfer after the North Quay collection.'}</Text>
               </View>
             )}
             <View style={[styles.card, cardStyle]}>
