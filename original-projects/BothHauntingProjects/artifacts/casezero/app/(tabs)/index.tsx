@@ -556,10 +556,205 @@ export default function HomeScreen() {
                   ? 'Your previous investigation has shaped this briefing.'
                   : 'Close Case 001 to carry your investigation history into this file.'}
               </Text>
+              <ActionButton
+                title={case002Progress.completed ? 'Review Case 002' : 'Open Case 002'}
+                onPress={() => setPhase(case002Progress.completed ? 'case002Review' : 'case002Briefing')}
+                colors={colors}
+              />
             </View>
             <Text style={[styles.footerNote, mutedStyle]}>
               A quiet city. A long night. Nothing is forgotten.
             </Text>
+          </>
+        )}
+
+
+        {phase === 'case002Briefing' && (
+          <>
+            <SectionLabel colors={colors}>Case 002 · Incoming file</SectionLabel>
+            <Text style={[styles.heroTitle, textStyle]}>{CASE_002_GAME.title}</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>{CASE_002_GAME.subtitle}</Text>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>The incident</SectionLabel>
+              <Text style={[styles.body, textStyle]}>{CASE_002_GAME.briefing}</Text>
+              <View style={[styles.detail, { borderTopColor: colors.border }]}>
+                <SectionLabel colors={colors}>THE MEMORY · Carried from your last file</SectionLabel>
+                <Text style={[styles.body, mutedStyle]}>{case002Carryover.fieldLesson}</Text>
+                {case002Carryover.priorConclusion && <Text style={[styles.memoryNote, textStyle]}>{case002Carryover.priorConclusion}</Text>}
+                {case002Carryover.unansweredLead && <Text style={[styles.memoryNote, { color: colors.primary }]}>Unanswered lead: {case002Carryover.unansweredLead}</Text>}
+                {case002Carryover.inspectedEvidence.length > 0 && <Text style={[styles.memoryNote, mutedStyle]}>Evidence you noticed before: {case002Carryover.inspectedEvidence.join(' · ')}</Text>}
+              </View>
+            </View>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Persons of interest</SectionLabel>
+              {CASE_002_GAME.suspects.map((suspect) => (
+                <View key={suspect.id} style={styles.personRow}>
+                  <View style={styles.personInitial}><Text style={[styles.personInitialText, { color: colors.primary }]}>{suspect.name.split(' ').map((part) => part[0]).join('')}</Text></View>
+                  <View style={styles.personCopy}>
+                    <Text style={[styles.cardTitle, textStyle]}>{suspect.name}</Text>
+                    <Text style={[styles.small, { color: colors.primary }]}>{suspect.role}</Text>
+                    <Text style={[styles.small, mutedStyle]}>{suspect.note}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+            <ActionButton title="Begin evidence review" onPress={() => setPhase('case002Evidence')} colors={colors} />
+            <ActionButton title="Back to Bureau" onPress={() => setPhase('hq')} colors={colors} variant="ghost" />
+          </>
+        )}
+
+        {phase === 'case002Evidence' && (
+          <>
+            <SectionLabel colors={colors}>Case 002 · Evidence</SectionLabel>
+            <Text style={[styles.heroTitle, textStyle]}>A locked room. An empty shelf.</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>Inspect all four records. The sequence matters more than the blackout itself.</Text>
+            <View style={[styles.progressTrack, { backgroundColor: colors.secondary }]}>
+              <View style={[styles.progressFill, { backgroundColor: colors.primary, width: `${(case002Progress.cluesFound.length / CASE_002_GAME.clues.length) * 100}%` }]} />
+            </View>
+            <Text style={[styles.progressText, mutedStyle]}>{case002Progress.cluesFound.length} of 4 records logged</Text>
+            {CASE_002_GAME.clues.map((clue, index) => {
+              const found = case002Progress.cluesFound.includes(clue.id);
+              const expanded = case002ActiveClue === clue.id;
+              return (
+                <Pressable key={clue.id} accessibilityRole="button" onPress={() => inspectCase002Clue(clue.id)}
+                  style={({ pressed }) => [styles.card, cardStyle, styles.inspectCard, { opacity: pressed ? 0.82 : 1, borderColor: found ? colors.primary : colors.border }]}>
+                  <View style={styles.row}>
+                    <Text style={[styles.index, { color: colors.primary }]}>0{index + 1}</Text>
+                    <View style={styles.flexCopy}>
+                      <Text style={[styles.cardTitle, textStyle]}>{clue.title}</Text>
+                      <Text style={[styles.small, mutedStyle]}>{clue.label}</Text>
+                    </View>
+                    <Text style={[styles.statusText, { color: found ? colors.primary : colors.mutedForeground }]}>{found ? 'LOGGED' : 'INSPECT'}</Text>
+                  </View>
+                  {expanded && <Text style={[styles.body, mutedStyle, styles.detail]}>{clue.detail}</Text>}
+                </Pressable>
+              );
+            })}
+            <ActionButton title="Question the witnesses" onPress={() => setPhase('case002Interviews')} colors={colors} disabled={!case002AllCluesFound} />
+            <ActionButton title="Back to briefing" onPress={() => setPhase('case002Briefing')} colors={colors} variant="ghost" />
+          </>
+        )}
+
+        {phase === 'case002Interviews' && (
+          <>
+            <SectionLabel colors={colors}>Case 002 · Interviews</SectionLabel>
+            <Text style={[styles.heroTitle, textStyle]}>Who moved the ledger?</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>Hear from each witness. Previous case notes can change what the Bureau asks you to notice.</Text>
+            {CASE_002_GAME.witnesses.map((witness, index) => (
+              <View key={witness.id} style={[styles.card, cardStyle]}>
+                <View style={styles.row}>
+                  <View style={styles.flexCopy}>
+                    <Text style={[styles.cardTitle, textStyle]}>{witness.name}</Text>
+                    <Text style={[styles.small, mutedStyle]}>{witness.role}</Text>
+                  </View>
+                  <Text style={[styles.statusText, { color: witness.questions.some((q) => case002Progress.askedQuestions.includes(`${witness.id}:${q.id}`)) ? colors.primary : colors.mutedForeground }]}>
+                    {witness.questions.some((q) => case002Progress.askedQuestions.includes(`${witness.id}:${q.id}`)) ? 'HEARD' : `WITNESS 0${index + 1}`}
+                  </Text>
+                </View>
+                {witness.questions.map((question) => {
+                  const key = `${witness.id}:${question.id}`;
+                  const asked = case002Progress.askedQuestions.includes(key);
+                  const active = case002ActiveReply === key;
+                  return (
+                    <View key={key} style={styles.questionBlock}>
+                      <Pressable accessibilityRole="button" onPress={() => askCase002Question(witness.id, question.id)}
+                        style={({ pressed }) => [styles.questionButton, { borderColor: asked ? colors.primary : colors.border, opacity: pressed ? 0.78 : 1 }]}>
+                        <Text style={[styles.questionText, textStyle]}>{question.prompt}</Text>
+                        <Text style={[styles.small, { color: colors.primary }]}>{asked ? 'ASKED' : 'ASK QUESTION'}</Text>
+                      </Pressable>
+                      {active && <Text style={[styles.reply, mutedStyle]}>{getCase002QuestionReply(witness.id, question.id, investigationArchive)}</Text>}
+                    </View>
+                  );
+                })}
+              </View>
+            ))}
+            <Text style={[styles.progressText, mutedStyle]}>{case002WitnessCount}/3 witnesses heard · {case002Unanswered.length} questions left unasked</Text>
+            <ActionButton title="Reconstruct the timeline" onPress={() => setPhase('case002Timeline')} colors={colors} disabled={!case002AllWitnessesHeard} />
+            <ActionButton title="Back to evidence" onPress={() => setPhase('case002Evidence')} colors={colors} variant="ghost" />
+          </>
+        )}
+
+        {phase === 'case002Timeline' && (
+          <>
+            <SectionLabel colors={colors}>Case 002 · Timeline</SectionLabel>
+            <Text style={[styles.heroTitle, textStyle]}>Did the blackout hide the move?</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>Put the four records in chronological order. Watch when the door actually closed.</Text>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Your sequence</SectionLabel>
+              {case002Progress.timelineOrder.length === 0 ? <Text style={[styles.body, mutedStyle]}>No events selected yet.</Text> : case002Progress.timelineOrder.map((id, index) => {
+                const event = CASE_002_GAME.timelineEvents.find((item) => item.id === id);
+                return <Text key={id} style={[styles.sequenceItem, textStyle]}>{index + 1}. {event?.time} — {event?.title}</Text>;
+              })}
+            </View>
+            {CASE_002_GAME.timelineEvents.map((event) => {
+              const selected = case002Progress.timelineOrder.includes(event.id);
+              return (
+                <Pressable key={event.id} accessibilityRole="button" disabled={selected || case002Progress.timelineSolved} onPress={() => selectCase002TimelineEvent(event.id)}
+                  style={({ pressed }) => [styles.optionCard, { backgroundColor: colors.card, borderColor: selected ? colors.primary : colors.border, opacity: selected ? 0.48 : pressed ? 0.8 : 1 }]}>
+                  <Text style={[styles.small, { color: colors.primary }]}>{event.time}</Text>
+                  <Text style={[styles.cardTitle, textStyle]}>{event.title}</Text>
+                  <Text style={[styles.small, mutedStyle]}>{event.detail}</Text>
+                </Pressable>
+              );
+            })}
+            {!!case002TimelineMessage && <Text style={[styles.notice, { color: case002Progress.timelineSolved ? colors.primary : colors.destructive }]}>{case002TimelineMessage}</Text>}
+            {case002Progress.timelineSolved
+              ? <ActionButton title="Make your deduction" onPress={() => setPhase('case002Deduction')} colors={colors} />
+              : case002Progress.timelineOrder.length === 4
+                ? <ActionButton title="Reset sequence and retry" onPress={resetCase002Timeline} colors={colors} variant="secondary" />
+                : <Text style={[styles.progressText, mutedStyle]}>{case002Progress.timelineOrder.length}/4 events selected</Text>}
+            <ActionButton title="Back to interviews" onPress={() => setPhase('case002Interviews')} colors={colors} variant="ghost" />
+          </>
+        )}
+
+        {phase === 'case002Deduction' && (
+          <>
+            <SectionLabel colors={colors}>Case 002 · Final deduction</SectionLabel>
+            <Text style={[styles.heroTitle, textStyle]}>The room was locked. Was it a theft?</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>Choose who moved the ledger and why. Your theory must fit the entry log, the water evidence and the timeline.</Text>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Who moved it?</SectionLabel>
+              {CASE_002_GAME.suspects.map((suspect) => {
+                const selected = case002Progress.selectedSuspect === suspect.id;
+                return <Pressable key={suspect.id} accessibilityRole="button" onPress={() => setCase002Progress((current) => ({ ...current, selectedSuspect: suspect.id }))}
+                  style={[styles.choice, { borderColor: selected ? colors.primary : colors.border, backgroundColor: selected ? colors.secondary : 'transparent' }]}>
+                  <Text style={[styles.cardTitle, textStyle]}>{suspect.name}</Text><Text style={[styles.small, mutedStyle]}>{suspect.role}</Text>
+                </Pressable>;
+              })}
+            </View>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>Why?</SectionLabel>
+              {CASE_002_GAME.motives.map((motive) => {
+                const selected = case002Progress.selectedMotive === motive.id;
+                return <Pressable key={motive.id} accessibilityRole="button" onPress={() => setCase002Progress((current) => ({ ...current, selectedMotive: motive.id }))}
+                  style={[styles.choice, { borderColor: selected ? colors.primary : colors.border, backgroundColor: selected ? colors.secondary : 'transparent' }]}>
+                  <Text style={[styles.cardTitle, textStyle]}>{motive.label}</Text><Text style={[styles.small, mutedStyle]}>{motive.note}</Text>
+                </Pressable>;
+              })}
+            </View>
+            {!!case002DeductionMessage && <Text style={[styles.notice, { color: colors.destructive }]}>{case002DeductionMessage}</Text>}
+            <ActionButton title="Submit evidence-based conclusion" onPress={submitCase002Deduction} colors={colors}
+              disabled={!case002Progress.selectedSuspect || !case002Progress.selectedMotive || !case002AllCluesFound || !case002AllWitnessesHeard || !case002Progress.timelineSolved} />
+            <ActionButton title="Back to timeline" onPress={() => setPhase('case002Timeline')} colors={colors} variant="ghost" />
+          </>
+        )}
+
+        {phase === 'case002Review' && (
+          <>
+            <View style={styles.closedStamp}><Text style={[styles.closedStampText, { color: colors.primary }]}>CASE CLOSED · 002</Text></View>
+            <Text style={[styles.heroTitle, textStyle]}>The blackout was a distraction.</Text>
+            <Text style={[styles.subtitle, mutedStyle]}>The ledger had already moved before the lights went out.</Text>
+            <View style={[styles.card, cardStyle]}><SectionLabel colors={colors}>Truth</SectionLabel><Text style={[styles.body, textStyle]}>{CASE_002_GAME.truth}</Text></View>
+            <View style={[styles.card, cardStyle]}><SectionLabel colors={colors}>Proof</SectionLabel><Text style={[styles.body, textStyle]}>{CASE_002_GAME.proof}</Text></View>
+            <View style={[styles.card, cardStyle]}><SectionLabel colors={colors}>Outcome</SectionLabel><Text style={[styles.body, textStyle]}>{CASE_002_GAME.outcome}</Text></View>
+            <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>THE MEMORY · Case 002 archived</SectionLabel>
+              <Text style={[styles.memoryLine, textStyle]}>Clues inspected: {case002Progress.cluesFound.length}/4</Text>
+              <Text style={[styles.memoryLine, textStyle]}>Questions asked: {case002Progress.askedQuestions.length}/6</Text>
+              <Text style={[styles.memoryLine, textStyle]}>Questions left unasked: {case002Unanswered.length}</Text>
+              <Text style={[styles.memoryNote, mutedStyle]}>The next file can use this investigation alongside the memory of Case 001.</Text>
+            </View>
+            <ActionButton title="Return to Detective Bureau" onPress={() => setPhase('hq')} colors={colors} />
           </>
         )}
 
