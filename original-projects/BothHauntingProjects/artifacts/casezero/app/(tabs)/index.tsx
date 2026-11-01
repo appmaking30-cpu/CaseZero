@@ -41,6 +41,7 @@ import Case031Screen from '@/components/Case031Screen';
 import Case032Screen from '@/components/Case032Screen';
 import Case033Screen from '@/components/Case033Screen';
 import Case034Screen from '@/components/Case034Screen';
+import Case035Screen from '@/components/Case035Screen';
 import DailyCaseBulletinScreen from '@/components/DailyCaseBulletinScreen';
 import BureauTeamScreen from '@/components/BureauTeamScreen';
 import { CASE_004_GAME } from '@/game/case004Game';
@@ -74,6 +75,7 @@ import { CASE_031_GAME } from '@/game/case031Game';
 import { CASE_032_GAME } from '@/game/case032Game';
 import { CASE_033_GAME } from '@/game/case033Game';
 import { CASE_034_GAME } from '@/game/case034Game';
+import { CASE_035_GAME } from '@/game/case035Game';
 import {
   CASE_001,
   getInvestigationMemory,
@@ -124,7 +126,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'case034' | 'daily' | 'team';
+type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'case034' | 'case035' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -1130,6 +1132,15 @@ export default function HomeScreen() {
                 <ActionButton title="Open Case 031" onPress={() => setPhase('case031')} colors={colors} />
               </View>
             )}
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case034') && !investigationArchive.completedCases.some((record) => record.caseId === 'case035') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Incoming file · 035</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_035_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_035_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>The changed attachment has been traced to a numbered source page. Its checksum points to Annex K-17, where a black-square routing mark and handwritten initials appear in the custody records. Establish the source without guessing who made the mark.</Text>
+                <ActionButton title="Open Case 035" onPress={() => setPhase('case035')} colors={colors} />
+              </View>
+            )}
             {investigationArchive.completedCases.some((record) => record.caseId === 'case033') && !investigationArchive.completedCases.some((record) => record.caseId === 'case034') && (
               <View style={[styles.card, cardStyle]}>
                 <SectionLabel colors={colors}>Incoming file · 034</SectionLabel>
@@ -1976,6 +1987,16 @@ export default function HomeScreen() {
             onArchive={(record) => {
               setInvestigationArchive((current) => archiveCompletedCase(current, record));
               setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_031_GAME.id));
+            }}
+            onReturn={() => setPhase('hq')}
+          />
+        )}
+
+        {phase === 'case035' && (
+          <Case035Screen archive={investigationArchive} bureauTeamBoard={bureauTeamBoard}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_035_GAME.id));
             }}
             onReturn={() => setPhase('hq')}
           />
