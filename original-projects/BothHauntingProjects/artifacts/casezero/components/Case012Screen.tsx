@@ -96,7 +96,7 @@ export default function Case012Screen({ archive, onArchive, onReturn }: Props) {
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase012TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the access-control export with the renewal register and inventory record.'
+      ? 'That sequence conflicts with the time stamps. Compare the floor plan with the reader events and terminal session.'
       : '');
   };
   const submit = () => {
@@ -132,7 +132,7 @@ export default function Case012Screen({ archive, onArchive, onReturn }: Props) {
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_012_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_012_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier relay files identify a shared route and a third access record reference. This file investigates record access without assuming it reveals the approver.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier files establish the relay authority trail and the C-4 duty roster. This file tests which physical route matches the shared-terminal window without treating a badge assignment as personal identification.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>ACCESS ROUTES UNDER REVIEW</Text>
@@ -144,7 +144,7 @@ export default function Case012Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 012 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Separate access record access from authorization.</Text>
+      <Text style={[styles.hero, text]}>Separate the access route from the identity of the badge carrier.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all four records. They separate four functions: the floor plan, badge entry, terminal session and badge exit.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
@@ -154,7 +154,7 @@ export default function Case012Screen({ archive, onArchive, onReturn }: Props) {
         <Text style={[styles.note, muted]}>{clue.label}</Text>
         {activeClue === clue.id && <Text style={[styles.body, text, styles.divider]}>{clue.detail}</Text>}
       </Pressable>)}
-      <Action title="Interview the continuity access-control staff" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
+      <Action title="Interview the access-control staff" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
       <Action title="Back to briefing" colors={colors} onPress={() => setPhase('briefing')} ghost />
     </>}
 
