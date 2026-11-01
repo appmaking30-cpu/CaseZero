@@ -103,7 +103,7 @@ export default function Case021Screen({ archive, onArchive, onReturn }: Props) {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase021DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage('The records establish desk assignment and an incomplete individual custody trail. They do not identify the receiver or H-9 receiver.');
+      setMessage('The records establish Desk C assignment and staffing, but do not identify who accepted H-9.');
       return;
     }
     archiveLock.current = true;
@@ -132,7 +132,7 @@ export default function Case021Screen({ archive, onArchive, onReturn }: Props) {
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_021_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_021_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files establish the missing collection receipt. This file traces the manifest, desk allocation, assigned desk stamp and staffing reconciliation.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files establish destination processing without a named recipient. This file traces the roster, desk allocation, relief note and staffing reconciliation.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>INTAKE RECORDS</Text>
@@ -145,7 +145,7 @@ export default function Case021Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 021 · EVIDENCE REVIEW</Text>
       <Text style={[styles.hero, text]}>Trace the missing packet without assuming a staffing reconciliation identifies its receiver.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: intake roster, manifest entry, relief-change note and discrepancy report.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: intake roster, desk allocation, relief-change note and staffing reconciliation.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_021_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -160,7 +160,7 @@ export default function Case021Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'interviews' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 021 · WITNESS INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>Where does the dispatch receipt trail break?</Text>
+      <Text style={[styles.hero, text]}>What do the intake staffing records actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and are preserved in the archived report.</Text>
       {CASE_021_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -207,7 +207,7 @@ export default function Case021Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 021 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Where does the dispatch receipt trail break?</Text>
+      <Text style={[styles.hero, text]}>What do the intake staffing records actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the recorded East Archive intake, then choose the individual custody link the records cannot establish.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>INVENTORY DISCREPANCY UNDER REVIEW</Text>
@@ -225,7 +225,7 @@ export default function Case021Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 021</Text></View>
       <Text style={[styles.hero, text]}>A assigned desk stamp is not a person.</Text>
-      <Text style={[styles.subtitle, muted]}>The 07:05 manifest lists East Archive, the 07:18 docket records the route departure, and the 08:02 staffing reconciliation confirms processing. The receiver and receiving clerk remain unnamed.</Text>
+      <Text style={[styles.subtitle, muted]}>The 07:45 roster assigns Desk C, the 07:52 allocation records its intake duty, and the 08:35 reconciliation confirms staffing. No record names H-9’s individual receiver.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_021_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_021_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_021_GAME.outcome}</Text></View>
