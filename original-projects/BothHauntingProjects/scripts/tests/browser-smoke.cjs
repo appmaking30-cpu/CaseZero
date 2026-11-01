@@ -89,6 +89,49 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.reload({ waitUntil: 'networkidle' });
     await page.getByRole('button', { name: 'Review closed file' }).waitFor();
 
+    // Case 002 must use the archived Case 001 memory in its actual dialogue.
+    await page.getByRole('button', { name: 'Open Case 002' }).click();
+    await page.getByText('Case 002 · Incoming file').waitFor();
+    await page.getByRole('button', { name: 'Begin evidence review' }).click();
+    for (const clue of [
+      'The access-panel printout',
+      'The damp shelf',
+      'The generator log',
+      'The linen transfer tag',
+    ]) {
+      await page.getByText(clue, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: 'Question the witnesses' }).click();
+
+    await page.getByText('What did you hear in the archive wing?', { exact: true }).click();
+    await page.getByText('When did you last see the guest ledger?', { exact: true }).click();
+    await page.getByText('Was there a leak near the archive shelf?', { exact: true }).click();
+    await page.getByText(/Your last file taught the Bureau to check the room itself/).waitFor();
+    await page.getByText('Who had access before the power dip?', { exact: true }).click();
+    await page.getByText(/You left a question unanswered in The Last Train Home/).waitFor();
+
+    await page.getByRole('button', { name: 'Reconstruct the timeline' }).click();
+    for (const event of [
+      'June’s master key opens the archive',
+      'The archive door closes and locks',
+      'The generator voltage dips',
+      'The ledger is logged in the dry alcove',
+    ]) {
+      await page.getByText(event, { exact: true }).click();
+    }
+    await page.getByText(/Timeline confirmed. The outage happened after the ledger was moved/).waitFor();
+    await page.getByRole('button', { name: 'Make your deduction' }).click();
+    await page.getByText('June Bell', { exact: true }).click();
+    await page.getByText('To protect it from the leaking pipe', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The blackout was a distraction.', { exact: true }).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case002-review.png', fullPage: true });
+
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+    await page.getByRole('button', { name: 'Review Case 002' }).waitFor();
+    await page.getByText(/CASE002 · The Unlit Room/).waitFor();
+    await page.getByText(/Conclusion: June Bell · To protect it from the leaking pipe/).waitFor();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001 briefing, five clues, witness questions, wrong-order retry, correct timeline, deduction retry, truth/proof/outcome review, unanswered-question memory, and persisted completion');
   } finally {
