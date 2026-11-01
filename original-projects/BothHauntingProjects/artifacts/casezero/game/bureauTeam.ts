@@ -81,7 +81,7 @@ export function normalizeBureauTeamBoard(input: unknown, archive: InvestigationA
   if (!input || typeof input !== 'object') return EMPTY_BUREAU_TEAM_BOARD;
   const saved = input as Partial<BureauTeamBoard>;
   if (!Array.isArray(saved.assignments)) return EMPTY_BUREAU_TEAM_BOARD;
-  const unlocked = new Set(getUnlockedBureauSpecialists(archive).map((member) => member.id));
+  const unlocked = new Set<string>(getUnlockedBureauSpecialists(archive).map((member) => member.id));
   const completed = new Set(archive.completedCases.map((record) => record.caseId));
   let board = EMPTY_BUREAU_TEAM_BOARD;
   for (const value of saved.assignments) {
