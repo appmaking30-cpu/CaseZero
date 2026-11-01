@@ -25,6 +25,16 @@ import {
 import { CASE_002, getCase002Carryover } from '@/game/case002';
 import { getMissingDetectiveArcStatus, MISSING_DETECTIVE_DOSSIER } from '@/game/missingDetectiveArc';
 import {
+  CASE_003_GAME,
+  EMPTY_CASE003_PROGRESS,
+  getCase003Carryover,
+  getCase003QuestionReply,
+  isCase003DeductionCorrect,
+  isCase003TimelineCorrect,
+  type Case003Phase,
+  type Case003Progress,
+} from '@/game/case003Game';
+import {
   CASE_002_GAME,
   EMPTY_CASE002_PROGRESS,
   getCase002QuestionReply,
@@ -37,7 +47,8 @@ import {
 const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
-type AppPhase = CasePhase | Case002Phase;
+const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
+type AppPhase = CasePhase | Case002Phase | Case003Phase;
 
 type SavedState = {
   phase: AppPhase;
@@ -115,6 +126,11 @@ export default function HomeScreen() {
   const [investigationArchive, setInvestigationArchive] = useState<InvestigationArchive>(EMPTY_INVESTIGATION_ARCHIVE);
   const [phase, setPhase] = useState<AppPhase>('hq');
   const [case002Progress, setCase002Progress] = useState<Case002Progress>(EMPTY_CASE002_PROGRESS);
+  const [case003Progress, setCase003Progress] = useState<Case003Progress>(EMPTY_CASE003_PROGRESS);
+  const [case003ActiveClue, setCase003ActiveClue] = useState<string | null>(null);
+  const [case003ActiveReply, setCase003ActiveReply] = useState<string | null>(null);
+  const [case003TimelineMessage, setCase003TimelineMessage] = useState('');
+  const [case003DeductionMessage, setCase003DeductionMessage] = useState('');
   const [case002ActiveClue, setCase002ActiveClue] = useState<string | null>(null);
   const [case002ActiveReply, setCase002ActiveReply] = useState<string | null>(null);
   const [case002TimelineMessage, setCase002TimelineMessage] = useState('');
@@ -138,13 +154,28 @@ export default function HomeScreen() {
       AsyncStorage.getItem(SAVE_KEY),
       AsyncStorage.getItem(ARCHIVE_KEY),
       AsyncStorage.getItem(CASE002_SAVE_KEY),
+      AsyncStorage.getItem(CASE003_SAVE_KEY),
     ])
-      .then(([raw, archiveRaw, case002Raw]) => {
+      .then(([raw, archiveRaw, case002Raw, case003Raw]) => {
         if (!active) return;
         if (archiveRaw) {
           const parsedArchive = JSON.parse(archiveRaw) as InvestigationArchive;
           if (parsedArchive.version === 1 && Array.isArray(parsedArchive.completedCases)) {
             setInvestigationArchive(parsedArchive);
+          }
+        }
+        if (case003Raw) {
+          const parsed = JSON.parse(case003Raw) as Partial<Case003Progress> | null;
+          if (parsed && typeof parsed === 'object') {
+            setCase003Progress({
+              cluesFound: Array.isArray(parsed.cluesFound) ? parsed.cluesFound.filter((id): id is string => typeof id === 'string') : [],
+              askedQuestions: Array.isArray(parsed.askedQuestions) ? parsed.askedQuestions.filter((key): key is string => typeof key === 'string') : [],
+              timelineOrder: Array.isArray(parsed.timelineOrder) ? parsed.timelineOrder.filter((id): id is string => typeof id === 'string') : [],
+              timelineSolved: typeof parsed.timelineSolved === 'boolean' ? parsed.timelineSolved : false,
+              selectedSuspect: typeof parsed.selectedSuspect === 'string' ? parsed.selectedSuspect : null,
+              selectedMotive: typeof parsed.selectedMotive === 'string' ? parsed.selectedMotive : null,
+              completed: typeof parsed.completed === 'boolean' ? parsed.completed : false,
+            });
           }
         }
         if (case002Raw) {
@@ -242,6 +273,11 @@ export default function HomeScreen() {
     AsyncStorage.setItem(CASE002_SAVE_KEY, JSON.stringify(case002Progress)).catch(() => undefined);
   }, [loaded, case002Progress]);
 
+  useEffect(() => {
+    if (!loaded) return;
+    AsyncStorage.setItem(CASE003_SAVE_KEY, JSON.stringify(case003Progress)).catch(() => undefined);
+  }, [loaded, case003Progress]);
+
   const allCluesFound = cluesFound.length === CASE_001.clues.length;
   const witnessCount = useMemo(
     () =>
@@ -279,6 +315,7 @@ export default function HomeScreen() {
     () => getMissingDetectiveArcStatus(investigationArchive),
     [investigationArchive],
   );
+  const case003Carryover = useMemo(() => getCase003Carryover(investigationArchive), [investigationArchive]);
 
   const case001Archived = investigationArchive.completedCases.some(
     (record) => record.caseId === CASE_001.id,
@@ -483,7 +520,7 @@ export default function HomeScreen() {
             <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
           </View>
           <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
-            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase.startsWith('case002') ? 'FILE 002' : 'FILE 001'}</Text>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003' : 'FILE 001'}</Text>
           </View>
         </View>
 
@@ -561,8 +598,8 @@ export default function HomeScreen() {
                 <SectionLabel colors={colors}>Previous investigations</SectionLabel>
                 <Text style={[styles.cardTitle, textStyle]}>The Bureau remembers.</Text>
                 {investigationArchive.completedCases.map((record) => {
-                  const suspect = (record.caseId === CASE_002_GAME.id ? CASE_002_GAME.suspects : CASE_001.suspects).find((entry) => entry.id === record.selectedSuspectId);
-                  const motive = (record.caseId === CASE_002_GAME.id ? CASE_002_GAME.motives : CASE_001.motives).find((entry) => entry.id === record.selectedMotiveId);
+                  const suspect = (record.caseId === CASE_003_GAME.id ? CASE_003_GAME.suspects : record.caseId === CASE_002_GAME.id ? CASE_002_GAME.suspects : CASE_001.suspects).find((entry) => entry.id === record.selectedSuspectId);
+                  const motive = (record.caseId === CASE_003_GAME.id ? CASE_003_GAME.motives : record.caseId === CASE_002_GAME.id ? CASE_002_GAME.motives : CASE_001.motives).find((entry) => entry.id === record.selectedMotiveId);
                   return (
                     <View key={record.caseId} style={styles.questionBlock}>
                       <Text style={[styles.cardTitle, textStyle]}>{record.caseId.toUpperCase()} · {record.caseTitle}</Text>
