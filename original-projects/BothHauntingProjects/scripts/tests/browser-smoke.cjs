@@ -132,6 +132,12 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText(/CASE002 · The Unlit Room/).waitFor();
     await page.getByText(/Conclusion: June Bell · To protect it from the leaking pipe/).waitFor();
 
+    // The Missing Detective campaign hook appears only after both opening cases close.
+    await page.getByText('The Detective Who Disappeared', { exact: true }).waitFor();
+    await page.getByText(/same handwritten mark: a small black square/).waitFor();
+    await page.getByText(/Campaign arc unlocked · 2\/2 opening cases closed/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-missing-detective-unlocked.png', fullPage: true });
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001 briefing, five clues, witness questions, wrong-order retry, correct timeline, deduction retry, truth/proof/outcome review, unanswered-question memory, and persisted completion');
   } finally {
