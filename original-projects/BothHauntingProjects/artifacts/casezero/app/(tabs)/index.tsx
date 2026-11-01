@@ -1939,7 +1939,7 @@ export default function HomeScreen() {
         )}
 
         {phase === 'case031' && (
-          <Case031Screen archive={investigationArchive}
+          <Case031Screen archive={investigationArchive} bureauTeamBoard={bureauTeamBoard}
             onArchive={(record) => {
               setInvestigationArchive((current) => archiveCompletedCase(current, record));
               setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_031_GAME.id));
