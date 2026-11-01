@@ -96,7 +96,7 @@ export default function Case016Screen({ archive, onArchive, onReturn }: Props) {
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase016TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the map, lift export, checkpoint ledger and service slip.'
+      ? 'That sequence conflicts with the time stamps. Compare the latch event, occupancy interval, terminal session and reconciliation.'
       : '');
   };
   const submit = () => {
@@ -207,7 +207,7 @@ export default function Case016Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 016 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>What does the movement ledger actually establish?</Text>
+      <Text style={[styles.hero, text]}>What do the C-4 systems establish separately?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the system group recorded at the door, then choose the narrow conclusion supported by all three systems.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>DOOR ACCESS GROUP UNDER REVIEW</Text>
