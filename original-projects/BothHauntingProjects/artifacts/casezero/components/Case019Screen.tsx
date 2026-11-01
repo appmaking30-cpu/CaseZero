@@ -144,7 +144,7 @@ export default function Case019Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 019 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Trace the secure tray's custody without assuming team assignment identifies an operator.</Text>
+      <Text style={[styles.hero, text]}>Trace the missing packet without assuming a count signature identifies its collector.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all four records: inventory record, inventory count, seal condition check and discrepancy report.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
