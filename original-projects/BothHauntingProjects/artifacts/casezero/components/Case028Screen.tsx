@@ -96,7 +96,7 @@ export default function Case028Screen({ archive, onArchive, onReturn }: Props) {
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase028TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the handover, credential checkout, return and reconciliation.'
+      ? 'That sequence conflicts with the time stamps. Compare the visitor entry, badge event, purpose slip and departure record.'
       : '');
   };
   const submit = () => {
