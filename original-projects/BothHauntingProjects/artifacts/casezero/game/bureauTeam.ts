@@ -77,6 +77,30 @@ export function assignBureauSpecialist(
   };
 }
 
+export function normalizeBureauTeamBoard(input: unknown, archive: InvestigationArchive): BureauTeamBoard {
+  if (!input || typeof input !== 'object') return EMPTY_BUREAU_TEAM_BOARD;
+  const saved = input as Partial<BureauTeamBoard>;
+  if (!Array.isArray(saved.assignments)) return EMPTY_BUREAU_TEAM_BOARD;
+  const unlocked = new Set(getUnlockedBureauSpecialists(archive).map((member) => member.id));
+  const completed = new Set(archive.completedCases.map((record) => record.caseId));
+  let board = EMPTY_BUREAU_TEAM_BOARD;
+  for (const value of saved.assignments) {
+    if (!value || typeof value !== 'object') continue;
+    const item = value as Partial<BureauAssignment>;
+    if (
+      typeof item.specialistId !== 'string' ||
+      typeof item.targetId !== 'string' ||
+      typeof item.assignedAt !== 'string' ||
+      !Number.isFinite(Date.parse(item.assignedAt)) ||
+      !unlocked.has(item.specialistId) ||
+      !BUREAU_ASSIGNMENT_TARGETS.some((target) => target.id === item.targetId) ||
+      completed.has(item.targetId)
+    ) continue;
+    board = assignBureauSpecialist(board, item.specialistId, item.targetId, item.assignedAt);
+  }
+  return board;
+}
+
 export function removeBureauAssignment(board: BureauTeamBoard, targetId: string): BureauTeamBoard {
   return {
     version: 1,
