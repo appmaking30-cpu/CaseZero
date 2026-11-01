@@ -107,3 +107,52 @@ export function removeBureauAssignment(board: BureauTeamBoard, targetId: string)
     assignments: board.assignments.filter((assignment) => assignment.targetId !== targetId),
   };
 }
+
+export const BUREAU_TEAM_SAVE_KEY = 'casezero.bureau-team.v1';
+
+export type BureauSpecialistInsight = {
+  title: string;
+  detail: string;
+};
+
+/**
+ * Returns an optional, evidence-gated specialist insight.
+ * Specialists interpret only records the player has already inspected or heard.
+ */
+export function getBureauSpecialistInsight(
+  specialistId: string | null,
+  caseId: string,
+  cluesFound: readonly string[],
+  askedQuestions: readonly string[] = [],
+): BureauSpecialistInsight | null {
+  const hasClues = (...ids: string[]) => ids.every((id) => cluesFound.includes(id));
+
+  if (specialistId === 'inez' && caseId === 'case002' && hasClues('access', 'shelf', 'transfer')) {
+    return {
+      title: 'Inez Shaw · Evidence cross-check',
+      detail: 'The access panel places the entry before the power dip, while the transfer tag places the ledger in the dry alcove afterward. The damp shelf gives a reason for the move; the records do not support a removal during the blackout.',
+    };
+  }
+
+  if (
+    specialistId === 'tomas' &&
+    caseId === 'case003' &&
+    hasClues('printer', 'ledger') &&
+    askedQuestions.includes('arden:terminal')
+  ) {
+    return {
+      title: 'Tomas Reed · Statement comparison',
+      detail: 'Arden says the terminal log alone cannot identify who typed the job. Compare that statement with the printer record tying the only routing-slip job to the terminal assigned to his desk, then check the cabinet-access entry.',
+    };
+  }
+
+  if (specialistId === 'rhea' && caseId === 'case004' && hasClues('seal', 'relay', 'docket')) {
+    return {
+      title: 'Rhea Voss · Transfer reconstruction',
+      detail: 'The custody sequence is now visible in the records you inspected: the duplicate key was signed out, the locker was sealed, the maintenance override followed, and the courier collection came last. Separate the approving authority from the person who carried the case.',
+    };
+  }
+
+  return null;
+}
+
