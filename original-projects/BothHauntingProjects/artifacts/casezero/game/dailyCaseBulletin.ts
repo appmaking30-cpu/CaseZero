@@ -46,7 +46,7 @@ export const DAILY_BULLETIN_CASES: readonly DailyBulletinCase[] = [
     clues: [
       { id: 'panel', title: 'The alarm panel history', detail: 'The closing bell circuit was muted manually at 18:42. The alarm itself was armed at 19:00 as scheduled.' },
       { id: 'work', title: 'The maintenance sheet', detail: 'The maintenance sheet lists no bell repairs that evening. A note about “quiet testing” was added in a different pen.' },
-      { id: 'case', title: 'The display-case checklist', detail: 'The case was signed as locked at 18:50, eight minutes after the bell circuit was muted.' },
+      { id: 'case', title: 'The display-case checklist', detail: 'The case was signed as locked at 18:50 with Ruth Bell’s curator initials. A second curator-key access appears at 19:04, but it is missing from the closing checklist.' },
     ],
     suspects: [
       { id: 'lena', name: 'Lena Ward', role: 'Gallery guide' },
@@ -146,7 +146,7 @@ export const DAILY_BULLETIN_CASES: readonly DailyBulletinCase[] = [
     clues: [
       { id: 'receipt', title: 'The customer receipt', detail: 'The receipt lists a replacement spring, not a cleaning service. The customer paid for a part to be returned with the watch.' },
       { id: 'tray', title: 'The parts tray', detail: 'The original spring is still in the workshop tray, labelled with the customer’s initials and the repair date.' },
-      { id: 'ledger', title: 'The repair ledger', detail: 'The apprentice recorded fitting a new spring, but the workshop copy was overwritten to say “cleaned and returned.”' },
+      { id: 'ledger', title: 'The repair ledger', detail: 'The apprentice recorded fitting a new spring, but the workshop copy was overwritten in the owner’s hand to say “cleaned and returned.”' },
     ],
     suspects: [
       { id: 'milo', name: 'Milo Finch', role: 'Apprentice' },
