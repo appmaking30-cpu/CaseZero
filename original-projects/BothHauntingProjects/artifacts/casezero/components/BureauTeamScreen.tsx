@@ -47,7 +47,7 @@ export default function BureauTeamScreen({ archive, onReturn }: {
       }
     }).catch(() => undefined).finally(() => { if (active) setLoaded(true); });
     return () => { active = false; };
-  }, []);
+  }, [archive]);
 
   useEffect(() => {
     if (!loaded) return;
