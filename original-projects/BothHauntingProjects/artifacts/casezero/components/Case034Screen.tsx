@@ -107,7 +107,7 @@ export default function Case034Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase034TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the roster, signed transfer, terminal session and later variance note.'
+      ? 'That sequence conflicts with the time stamps. Compare the original manifest, revision comparison, ledger timestamp and receipt checksum.'
       : '');
   };
   const submit = () => {
@@ -143,7 +143,7 @@ export default function Case034Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_034_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_034_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the shared D-3 session and the receipt acknowledgement. This file traces the package revision and its limited attribution. This file traces the export queue, personal receipt signature and the scope of the acknowledgement.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the shared D-3 session and the receipt acknowledgement. This file traces the package revision and its limited attribution.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>INTAKE RECORDS</Text>
@@ -235,8 +235,8 @@ export default function Case034Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 034</Text></View>
-      <Text style={[styles.hero, text]}>Team responsibility does not identify the revision submitter.</Text>
-      <Text style={[styles.subtitle, muted]}>The duty roster and signed handover establish that Blue Team held desk responsibility when the D-3 session opened. The blank operator field prevents attribution to an individual.</Text>
+      <Text style={[styles.hero, text]}>The revision history is clear; its submitter is not.</Text>
+      <Text style={[styles.subtitle, muted]}>The manifest, revision comparison, ledger and checksum establish that R-15 replaced R-14 before acknowledgement. The shared profile does not identify the person who submitted the change.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_034_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_034_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_034_GAME.outcome}</Text></View>
