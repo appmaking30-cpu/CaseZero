@@ -30,11 +30,12 @@ export const CASE_005_GAME = {
       { id: 'access', prompt: 'Could the supervisor credential open Locker 14?', reply: 'Not that locker. It uses registrar credentials. The SQ-7 access record belongs to the receiving desk.' },
     ] },
   ],
+  // Deliberately presented out of chronological order so the player must reconstruct the sequence.
   timelineEvents: [
+    { id: 'audit', time: '21:04', title: 'The closing count is corrected', detail: 'The audit reports the sealed case as cleared.' },
+    { id: 'locker', time: '20:31', title: 'Locker 14 is opened', detail: 'Registrar credential SQ-7 is recorded.' },
     { id: 'receipt', time: '20:22', title: 'The M-2 case is signed in', detail: 'The carbon receipt carries S.Q. and a destination entry.' },
     { id: 'courier', time: '20:25', title: 'The courier leaves the loading bay', detail: 'The gate sheet records Milo Dane’s exit.' },
-    { id: 'locker', time: '20:31', title: 'Locker 14 is opened', detail: 'Registrar credential SQ-7 is recorded.' },
-    { id: 'audit', time: '21:04', title: 'The closing count is corrected', detail: 'The audit reports the sealed case as cleared.' },
   ],
   correctTimelineOrder: ['receipt', 'courier', 'locker', 'audit'],
   correctSuspect: 'quill',
