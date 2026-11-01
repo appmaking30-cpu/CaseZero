@@ -141,7 +141,6 @@ export default function DailyCaseBulletinScreen({ onReturn, onComplete, assigned
           <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>DAILY FILE · CLOSED</Text></View>
           <Text style={[styles.hero, text]}>{dailyCase.title}</Text>
           <Text style={[styles.subtitle, muted]}>Today’s investigation is complete. Your conclusion has been saved on this device.</Text>
-          {assignedSpecialistName && <Text style={[styles.note, { color: colors.primary }]}>{assignedSpecialistName} received the daily case experience reward.</Text>}
           <View style={[styles.card, card]}>
             <Text style={[styles.label, { color: colors.primary }]}>TRUTH</Text>
             <Text style={[styles.body, text]}>{dailyCase.truth}</Text>
