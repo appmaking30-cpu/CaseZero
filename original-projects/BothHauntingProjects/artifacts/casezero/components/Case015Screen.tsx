@@ -207,7 +207,7 @@ export default function Case015Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 015 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Which access path did S-04 record?</Text>
+      <Text style={[styles.hero, text]}>What does the movement ledger actually establish?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the credential recorded at the checkpoint, then choose the narrow conclusion supported by the records.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>CHECKPOINT CREDENTIAL UNDER REVIEW</Text>
