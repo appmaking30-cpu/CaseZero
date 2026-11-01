@@ -141,7 +141,7 @@ export default function BureauTeamScreen({ archive, onReturn, onBoardChange }: {
             </View>;
           })}
       </View>
-      <Text style={[styles.note, muted]}>This is the first roster-and-assignment layer. Specialist abilities and training upgrades will be connected to investigation gameplay in a later Bureau systems pass.</Text>
+      <Text style={[styles.note, muted]}>Assigned specialists now provide evidence-gated insights in their matching active investigations. They never reveal uninspected records or choose the culprit for you. Training upgrades are planned for a later Bureau systems pass.</Text>
       <Action title="Return to Detective Bureau" colors={colors} onPress={onReturn} />
     </>
   );
