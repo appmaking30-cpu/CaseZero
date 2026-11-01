@@ -1446,7 +1446,7 @@ export default function HomeScreen() {
           </>
         )}
 
-        {phase === 'team' && <BureauTeamScreen archive={investigationArchive} onReturn={() => setPhase('hq')} />}
+        {phase === 'team' && <BureauTeamScreen archive={investigationArchive} onBoardChange={setBureauTeamBoard} onReturn={() => setPhase('hq')} />}
 
         {phase === 'daily' && <DailyCaseBulletinScreen onReturn={() => setPhase('hq')} />}
 
