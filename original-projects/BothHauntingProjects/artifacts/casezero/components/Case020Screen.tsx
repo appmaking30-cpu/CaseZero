@@ -96,7 +96,7 @@ export default function Case020Screen({ archive, onArchive, onReturn }: Props) {
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase020TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the inventory and seal timestamps, dispatch manifest, receiving-station stamp and return register.'
+      ? 'That sequence conflicts with the time stamps. Compare the dispatch manifest, route docket, station stamp and reconciliation copy.'
       : '');
   };
   const submit = () => {
@@ -132,7 +132,7 @@ export default function Case020Screen({ archive, onArchive, onReturn }: Props) {
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_020_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_020_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files establish the missing H-9 courier. This file traces manifest entry, duplicate-seal status, dispatch record and discrepancy report.</Text>
+        <Text style={[styles.note, muted]}>Earlier files remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files establish the missing collection receipt. This file traces the manifest, route docket, destination stamp and reconciliation copy.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>DISPATCH RECORDS</Text>
@@ -225,7 +225,7 @@ export default function Case020Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 020</Text></View>
       <Text style={[styles.hero, text]}>A destination stamp is not a person.</Text>
-      <Text style={[styles.subtitle, muted]}>H-9 appears in the 02:08 inventory, its seal is recorded intact at 02:16, and the 06:10 recount finds it absent. The 06:42 notice reports the gap; the courier and removal time remain unknown.</Text>
+      <Text style={[styles.subtitle, muted]}>The 07:05 manifest lists East Archive, the 07:18 docket records the route departure, and the 08:02 station stamp confirms processing. The courier and receiving clerk remain unnamed.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_020_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_020_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_020_GAME.outcome}</Text></View>
