@@ -1460,7 +1460,10 @@ export default function HomeScreen() {
           <Case004Screen
             archive={investigationArchive}
             assignedSpecialistId={bureauTeamBoard.assignments.find((assignment) => assignment.targetId === 'case004')?.specialistId ?? null}
-            onArchive={(record) => setInvestigationArchive((current) => archiveCompletedCase(current, record))}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_004_GAME.id));
+            }}
             onReturn={() => setPhase('hq')}
           />
         )}
