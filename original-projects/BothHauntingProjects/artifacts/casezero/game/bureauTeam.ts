@@ -376,6 +376,32 @@ export function getBureauSpecialistInsight(
     };
   }
 
+
+  if (specialistId === 'inez' && caseId === 'case031' && hasClues('session', 'policy', 'export', 'request')) {
+    return {
+      title: 'Inez Shaw · Shared-profile evidence review',
+      detail: 'The audit confirms DISPATCH-OPS was active, while policy confirms it is a team profile. The export has no personal token and the credential cross-reference is still pending. The records establish session activity, not a named operator.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'tomas' && caseId === 'case031' &&
+      askedQuestions.includes('mara:handover') && askedQuestions.includes('sana:limit')) {
+    return {
+      title: 'Tomas Reed · Operator attribution review',
+      detail: 'Mara confirms there is no signed operator handover in the file, and Sana confirms the shared profile does not identify a person. Their statements agree on the missing link: no contemporaneous record names the operator.',
+      rankPerk,
+    };
+  }
+
+  if (specialistId === 'rhea' && caseId === 'case031' && hasClues('occupancy', 'session', 'export')) {
+    return {
+      title: 'Rhea Voss · Terminal activity reconstruction',
+      detail: 'The corrected occupancy interval and terminal audit place the shared profile on D-3 during the same short window. That establishes a session at the terminal, but the profile and export do not identify who was there.',
+      rankPerk,
+    };
+  }
+
   return null;
 }
 
