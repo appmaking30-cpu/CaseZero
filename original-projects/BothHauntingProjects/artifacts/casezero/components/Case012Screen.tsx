@@ -225,7 +225,7 @@ export default function Case012Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 012</Text></View>
       <Text style={[styles.hero, text]}>A badge is not its carrier.</Text>
-      <Text style={[styles.subtitle, muted]}>The access-control export confirms Sable Neri was scheduled as primary C-4 coordinator. The shared-terminal operator remains unidentified.</Text>
+      <Text style={[styles.subtitle, muted]}>The south vestibule is the route consistent with the C-4 session. The person carrying badge B-17 remains unidentified.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_012_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_012_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_012_GAME.outcome}</Text></View>
