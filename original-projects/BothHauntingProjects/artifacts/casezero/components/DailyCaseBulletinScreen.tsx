@@ -5,7 +5,6 @@ import { useColors } from '@/hooks/useColors';
 import {
   getDailyCaseForDate,
   isDailyCaseSolutionCorrect,
-  type DailyBulletinCase,
 } from '@/game/dailyCaseBulletin';
 
 const SAVE_PREFIX = 'casezero.daily-bulletin.v1.';
