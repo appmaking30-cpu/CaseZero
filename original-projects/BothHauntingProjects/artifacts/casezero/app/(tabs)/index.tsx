@@ -31,6 +31,7 @@ import {
   BUREAU_TEAM_SAVE_KEY,
   EMPTY_BUREAU_TEAM_BOARD,
   getBureauSpecialistInsight,
+  awardBureauCaseExperience,
   restoreBureauTeamBoard,
   parseStoredJson,
   type BureauTeamBoard,
