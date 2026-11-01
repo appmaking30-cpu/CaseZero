@@ -20,7 +20,7 @@ export const CASE_002_GAME = {
       { id: 'person', prompt: 'Did you see who was pushing it?', reply: 'Only the housekeeper’s green sleeve. I heard the cart wheel click twice over the threshold.' },
     ] },
     { id: 'mara', name: 'Mara Venn', role: 'Night auditor', questions: [
-      { id: 'ledger', prompt: 'When did you last see the guest ledger?', reply: 'Just after two. It was on the archive shelf. I did not open the room again after June signed the master key back in.' },
+      { id: 'ledger', prompt: 'When did you last see the guest ledger?', reply: 'Just after two. It was on the archive shelf. I did not open the room again after June used the master key.' },
       { id: 'key', prompt: 'Who had access before the power dip?', reply: 'June signed out the master key at 02:08. The panel should show her entry and the door closing.' },
     ] },
     { id: 'ellis', name: 'Ellis Ward', role: 'Hotel electrician', questions: [
