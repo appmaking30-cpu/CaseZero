@@ -515,7 +515,8 @@ export default function HomeScreen() {
                 <SectionLabel colors={colors}>Previous investigations</SectionLabel>
                 <Text style={[styles.cardTitle, textStyle]}>The Bureau remembers.</Text>
                 {investigationArchive.completedCases.map((record) => {
-                  const suspect = (record.caseId === CASE_002_GAME.id ? CASE_002_GAME.suspects : CASE_001.suspects).find((entry) => entry.id === record.selectedSuspectId);\n                  const motive = (record.caseId === CASE_002_GAME.id ? CASE_002_GAME.motives : CASE_001.motives).find((entry) => entry.id === record.selectedMotiveId);
+                  const suspect = (record.caseId === CASE_002_GAME.id ? CASE_002_GAME.suspects : CASE_001.suspects).find((entry) => entry.id === record.selectedSuspectId);
+                  const motive = (record.caseId === CASE_002_GAME.id ? CASE_002_GAME.motives : CASE_001.motives).find((entry) => entry.id === record.selectedMotiveId);
                   return (
                     <View key={record.caseId} style={styles.questionBlock}>
                       <Text style={[styles.cardTitle, textStyle]}>{record.caseId.toUpperCase()} · {record.caseTitle}</Text>
