@@ -145,7 +145,7 @@ export default function Case010Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 010 · EVIDENCE REVIEW</Text>
       <Text style={[styles.hero, text]}>Separate authority record access from authorization.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records. They document three different jobs: cataloguing the reference, retrieving the authority record and preserving the record.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records. They separate four functions: the record reference, certified-copy custody, system status and conditional authorization.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_010_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -207,7 +207,7 @@ export default function Case010Screen({ archive, onArchive, onReturn }: Props) {
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 010 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Who accessed personnel index P-1?</Text>
+      <Text style={[styles.hero, text]}>Which office held conditional M-2 authority?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the office supported by the outage notice and P-1 delegation entry. Then choose what the evidence actually establishes.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>ACTIVE AUTHORITY CHANNEL</Text>
