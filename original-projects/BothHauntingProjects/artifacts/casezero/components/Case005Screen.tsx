@@ -23,13 +23,24 @@ export default function Case005Screen({ archive, onArchive, onReturn }: Props) {
       if (!active) return;
       if (raw) {
         const saved = JSON.parse(raw) as Partial<Case005Progress>;
+        const validClueIds = new Set(CASE_005_GAME.clues.map((clue) => clue.id));
+        const validQuestionIds = new Set(CASE_005_GAME.witnesses.flatMap((witness) => witness.questions.map((question) => witness.id + ':' + question.id)));
+        const validEventIds = new Set(CASE_005_GAME.timelineEvents.map((event) => event.id));
+        const validSuspectIds = new Set(CASE_005_GAME.suspects.map((suspect) => suspect.id));
+        const validMotiveIds = new Set(CASE_005_GAME.motives.map((motive) => motive.id));
+        const uniqueValid = (items: unknown, allowed: Set<string>) =>
+          Array.isArray(items)
+            ? [...new Set(items.filter((item): item is string => typeof item === 'string' && allowed.has(item)))]
+            : [];
+        const restoredTimeline = uniqueValid(saved.timelineOrder, validEventIds);
+        const timelineSolved = saved.timelineSolved === true && isCase005TimelineCorrect(restoredTimeline);
         setProgress({
-          cluesFound: Array.isArray(saved.cluesFound) ? saved.cluesFound.filter((x): x is string => typeof x === 'string') : [],
-          askedQuestions: Array.isArray(saved.askedQuestions) ? saved.askedQuestions.filter((x): x is string => typeof x === 'string') : [],
-          timelineOrder: Array.isArray(saved.timelineOrder) ? saved.timelineOrder.filter((x): x is string => typeof x === 'string') : [],
-          timelineSolved: saved.timelineSolved === true,
-          selectedSuspect: typeof saved.selectedSuspect === 'string' ? saved.selectedSuspect : null,
-          selectedMotive: typeof saved.selectedMotive === 'string' ? saved.selectedMotive : null,
+          cluesFound: uniqueValid(saved.cluesFound, validClueIds),
+          askedQuestions: uniqueValid(saved.askedQuestions, validQuestionIds),
+          timelineOrder: timelineSolved ? [...restoredTimeline] : restoredTimeline.slice(0, 3),
+          timelineSolved,
+          selectedSuspect: typeof saved.selectedSuspect === 'string' && validSuspectIds.has(saved.selectedSuspect) ? saved.selectedSuspect : null,
+          selectedMotive: typeof saved.selectedMotive === 'string' && validMotiveIds.has(saved.selectedMotive) ? saved.selectedMotive : null,
           completed: saved.completed === true,
         });
         if (saved.completed) setPhase('review');
