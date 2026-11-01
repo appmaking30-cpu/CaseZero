@@ -35,6 +35,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case003', label: 'Case 003 · The Black Square' },
   { id: 'case004', label: 'Case 004 · The Last Signal' },
   { id: 'case005', label: 'Case 005 · The Empty Ledger' },
+  { id: 'case006', label: 'Case 006 · The Voice Between Stations' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
