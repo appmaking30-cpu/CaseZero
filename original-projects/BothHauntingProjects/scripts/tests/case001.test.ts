@@ -179,6 +179,6 @@ test('Case 001 history changes Case 002 interview dialogue', () => {
   });
   const rememberedReply = getCase002QuestionReply('ellis', 'water', withPrior);
   assert.notEqual(rememberedReply, emptyReply);
-  assert.match(rememberedReply, /previous file/i);
+  assert.match(rememberedReply, /last file/i);
   assert.match(getCase002QuestionReply('mara', 'key', withPrior), /left a question unanswered/i);
 });
