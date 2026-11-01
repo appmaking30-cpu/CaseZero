@@ -111,7 +111,7 @@ export default function Case005Screen({ archive, onArchive, onReturn }: Props) {
     {phase === 'interviews' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 005 · INTERVIEWS</Text>
       <Text style={[styles.hero, text]}>Who controlled the receiving desk?</Text>
-      <Text style={[styles.subtitle, muted]}>The person who carried the case may not be the person who placed it in the locker.</Text>
+      <Text style={[styles.subtitle, muted]}>Ask at least one question to each witness to unlock the timeline. Follow-up questions are optional, but every answer you collect is saved in the case record.</Text>
       {CASE_005_GAME.witnesses.map((w, i) => <View key={w.id} style={[styles.card, card]}><Text style={[styles.cardTitle, text]}>{w.name}</Text><Text style={[styles.note, muted]}>{w.role} · {w.questions.some((q) => progress.askedQuestions.includes(w.id + ':' + q.id)) ? 'HEARD' : 'WITNESS 0' + (i + 1)}</Text>{w.questions.map((q) => { const key = w.id + ':' + q.id; return <View key={key} style={styles.question}><Pressable onPress={() => ask(w.id, q.id)} style={[styles.questionButton, { borderColor: progress.askedQuestions.includes(key) ? colors.primary : colors.border }]}><Text style={[styles.body, text]}>{q.prompt}</Text><Text style={[styles.note, { color: colors.primary }]}>{progress.askedQuestions.includes(key) ? 'ASKED' : 'ASK QUESTION'}</Text></Pressable>{activeReply === key && <Text style={[styles.reply, muted]}>{q.reply}</Text>}</View>; })}</View>)}
       <Text style={[styles.note, muted]}>{heard}/3 witnesses heard · {unanswered.length} questions left unasked</Text>
       <Action title="Reconstruct the timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allHeard} />
