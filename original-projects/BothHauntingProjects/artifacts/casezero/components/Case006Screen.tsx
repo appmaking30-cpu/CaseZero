@@ -3,17 +3,16 @@ import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { CASE_006_GAME, CASE_006_EMPTY_PROGRESS, isCase006OrderCorrect } from '@/game/case006Game';
-import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
+import { archiveCompletedCase } from '@/game/investigationArchive';
 
 const SAVE_KEY = 'casezero.case006.progress.v1';
 type Progress = typeof CASE_006_EMPTY_PROGRESS;
 type Props = {
-  archive: InvestigationArchive;
   onArchive: (record: Parameters<typeof archiveCompletedCase>[1]) => void;
   onReturn: () => void;
 };
 
-export default function Case006Screen({ archive, onArchive, onReturn }: Props) {
+export default function Case006Screen({ onArchive, onReturn }: Props) {
   const colors = useColors();
   const [loaded, setLoaded] = useState(false);
   const [phase, setPhase] = useState<'briefing' | 'fragments' | 'sequence' | 'conclusion' | 'review'>('briefing');
