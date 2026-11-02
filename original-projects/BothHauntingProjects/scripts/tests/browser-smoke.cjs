@@ -462,6 +462,50 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('The duplicate changes the investigation: a recipient name was entered on one copy.', { exact: false }).waitFor({ timeout: 10000 }).catch(() => undefined);
     await page.screenshot({ path: '/tmp/casezero-case042-review.png', fullPage: true });
 
+    // Continue from the archived Case 042 result into the handwriting examination.
+    await page.evaluate(() => {
+      const raw = localStorage.getItem('casezero.investigation.archive.v1');
+      const archive = raw ? JSON.parse(raw) : { version: 1, completedCases: [] };
+      archive.completedCases = archive.completedCases.filter((record) => record.caseId !== 'case042');
+      archive.completedCases.push({
+        caseId: 'case042', caseTitle: 'The Name on the Carbon',
+        closedAt: '2026-11-02T00:00:00.000Z', selectedSuspectId: 'unknown',
+        selectedMotiveId: 'identity', inspectedClues: ['Carbon comparison sheet'],
+        askedQuestions: [], unansweredQuestions: [],
+      });
+      localStorage.setItem('casezero.investigation.archive.v1', JSON.stringify(archive));
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: 'Open Case 043' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 043' }).click();
+    await page.getByText('The Specimen Register', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the specimen file' }).click();
+    for (const clue of [
+      'Sealed specimen register',
+      'Blind handwriting comparison',
+      'Dispatch switchboard call record',
+      'Document handling and custody note',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the examiner and dispatch staff' }).click();
+    for (const question of [
+      'Does your report support Rowan Vale as the writer?',
+      'What does Rowan’s 09:01–09:06 call record prove?',
+      'What evidence would identify the actual writer?',
+    ]) await page.getByText(question, { exact: true }).click();
+    await page.getByRole('button', { name: 'Reconstruct the specimen and entry timeline' }).click();
+    for (const event of [
+      'Verified specimen register sealed',
+      'Rowan’s extension connects to control office',
+      '“R. Vale” appears on the duplicate',
+      'Blind comparison report issued',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+    await page.getByText('Unidentified writer', { exact: true }).click();
+    await page.getByText('The handwriting evidence weighs against Rowan, but does not identify another writer', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('Rowan should not be named as the writer on the current evidence.', { exact: false }).waitFor({ timeout: 10000 });
+    await page.screenshot({ path: '/tmp/casezero-case043-review.png', fullPage: true });
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
