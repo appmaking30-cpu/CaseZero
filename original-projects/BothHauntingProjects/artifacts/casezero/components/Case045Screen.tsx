@@ -107,7 +107,7 @@ export default function Case045Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase045TimelineCorrect(next)
-      ? 'That sequence conflicts with the access records. Compare the shared-pool assignment, corridor entry, corridor exit and signed audit timestamps.'
+      ? 'That sequence conflicts with the handover records. Compare packet preparation, role handover, reader event and return count timestamps.'
       : '');
   };
   const submit = () => {
@@ -133,17 +133,17 @@ export default function Case045Screen({ archive, bureauTeamBoard, onArchive, onR
     setPhase('review');
   };
 
-  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING ACCESS CONTROL FILE…</Text></View>;
+  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING SHIFT HANDOVER FILE…</Text></View>;
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 045 · ACCESS CONTROL REVIEW</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 045 · SHIFT HANDOVER REVIEW</Text>
       <Text style={[styles.hero, text]}>{CASE_045_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_045_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_045_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_045_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files recovered the duplicate and compared its handwriting. This file follows the corridor access token without assuming who carried it.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files authenticated the corridor badge event. This file recovers the original shift handover without assuming who collected the shared token.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>TERMINAL RECORDS</Text>
@@ -155,8 +155,8 @@ export default function Case045Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 045 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Trace the badge through the access records and establish what the reader can—and cannot—prove.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: corridor reader extract, shared badge register, access boundary plan and signed controller copy.</Text>
+      <Text style={[styles.hero, text]}>Trace the original and duplicate handover records and establish what they can—and cannot—prove.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: sealed original packet, matching carbon copy, witness notes and return exception register.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_045_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -165,13 +165,13 @@ export default function Case045Screen({ archive, bureauTeamBoard, onArchive, onR
         <Text style={[styles.note, muted]}>{clue.label}</Text>
         {activeClue === clue.id && <Text style={[styles.body, text, styles.divider]}>{clue.detail}</Text>}
       </Pressable>)}
-      <Action title="Interview the access and dispatch staff" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
+      <Action title="Interview the outgoing officer and handover witnesses" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
       <Action title="Back to briefing" colors={colors} onPress={() => setPhase('briefing')} ghost />
     </>}
 
     {phase === 'interviews' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 045 · WITNESS INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What does a shared badge record actually prove?</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 045 · HANDOVER INTERVIEWS</Text>
+      <Text style={[styles.hero, text]}>What does a role-level handover actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and are preserved in the archived report.</Text>
       {CASE_045_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -188,13 +188,13 @@ export default function Case045Screen({ archive, bureauTeamBoard, onArchive, onR
         })}
       </View>)}
       <Text style={[styles.note, muted]}>{heardWitnesses}/3 witnesses heard · {unanswered.length} optional follow-ups remaining</Text>
-      <Action title="Reconstruct the access window timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
+      <Action title="Reconstruct the shift handover timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
       <Action title="Back to evidence" colors={colors} onPress={() => setPhase('evidence')} ghost />
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 045 · EVENT SEQUENCE</Text>
-      <Text style={[styles.hero, text]}>Put the access records in order.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 045 · HANDOVER TIMELINE</Text>
+      <Text style={[styles.hero, text]}>Put the handover records in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four records from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -221,7 +221,7 @@ export default function Case045Screen({ archive, bureauTeamBoard, onArchive, onR
       <Text style={[styles.hero, text]}>What does the recovered handover packet establish about D-17's recipient?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the unresolved RELIEF-2 recipient, then choose the precise fact the records support.</Text>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>ACCESS CREDENTIAL AND CARRIER STATUS UNDER REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>SHIFT HANDOVER AND RECIPIENT STATUS UNDER REVIEW</Text>
         {CASE_045_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
@@ -235,7 +235,7 @@ export default function Case045Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 045</Text></View>
-      <Text style={[styles.hero, text]}>The handover packet verifies a role, not the person who collected the badge.</Text>
+      <Text style={[styles.hero, text]}>The original handover packet verifies a role, not the person who collected the badge.</Text>
       <Text style={[styles.subtitle, muted]}>The sealed handover packet, matching carbon copy, witness notes and return register establish what can be said about the D-17 handover—and what remains unknown.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_045_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_045_GAME.proof}</Text></View>
