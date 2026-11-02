@@ -83,7 +83,7 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 
 - Added **The Handover Copy** after Case 044, with a sealed original packet, matching shift carbon, two independent witness accounts and a return exception register. Three witnesses/six questions, four-event chronology, connected mobile screen, local progress, archive carryover and Bureau XP are included.
 - The evidence narrows the handover to the RELIEF-2 role but does not identify the individual recipient. The outgoing officer's signature authenticates tray placement, not later collection; neither witness saw a named carrier.
-- Dedicated unit tests and a mobile browser walkthrough now cover Case 045. TypeScript, the full suite through Case 045, Expo export and browser validation are pending. No physical Android-device test has been completed.
+- Dedicated unit tests and a mobile browser walkthrough now cover Case 045. TypeScript, the full suite through Case 045 and Expo export passed in [GitHub Actions run 41541691844](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41541691844), but the browser walkthrough stopped at a Case 044 selector that had been accidentally changed during the Case 045 selector fix. The Case 044 selectors have now been restored in commit [f31056a](https://github.com/appmaking30-cpu/CaseZero/commit/f31056aef7b7b1b7f08303312517ca18dfdb6fca); rerun validation is pending. No physical Android-device test has been completed.
 
 ### Not implemented yet
 
