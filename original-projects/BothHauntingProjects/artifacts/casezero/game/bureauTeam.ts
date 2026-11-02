@@ -67,6 +67,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case035', label: 'Case 035 · The Page from Annex K-17' },
   { id: 'case036', label: 'Case 036 · The Restricted Review' },
   { id: 'case037', label: 'Case 037 · The Missing Movement Ledger' },
+  { id: 'case038', label: 'Case 038 · The Queue Before Arrival' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
@@ -307,6 +308,16 @@ export function getBureauSpecialistInsight(
 
   // The late dispatch arc deliberately separates presence, route intent, room occupancy,
   // and identity. Each specialist insight is gated by the records the player has inspected.
+  if (specialistId === 'inez' && caseId === 'case038' && hasClues('ticket', 'permissions', 'bay', 'arrival')) {
+    return { title: 'Inez Shaw · Queue audit review', detail: 'Q-19 predates cart dispatch, and its folio reference matches the arriving cart. The permission audit lists two authorized stations, but the shared account does not identify the user.', rankPerk };
+  }
+  if (specialistId === 'tomas' && caseId === 'case038' && askedQuestions.includes('niko:account') && askedQuestions.includes('mara:identity')) {
+    return { title: 'Tomas Reed · Shared-account attribution review', detail: 'Niko confirms the account is shared across two stations, and Mara confirms there is no personal approval field. Authorization cannot be treated as proof that either witness created Q-19.', rankPerk };
+  }
+  if (specialistId === 'rhea' && caseId === 'case038' && hasClues('ticket', 'bay', 'arrival')) {
+    return { title: 'Rhea Voss · Reservation sequence reconstruction', detail: 'The ticket is created before dispatch, Bay 2 is prepared, and the arriving cart is matched to the reservation. The sequence proves advance knowledge of the delivery, not the requester’s identity.', rankPerk };
+  }
+
   if (specialistId === 'inez' && caseId === 'case037' && hasClues('dispatch', 'seal', 'lift', 'intake')) {
     return { title: 'Inez Shaw · Transfer record audit', detail: 'The dispatch carbon, matching seal, lift extract and intake receipt establish one continuous cart route. None supplies a named carrier, so the torn handler field remains unresolved.', rankPerk };
   }
