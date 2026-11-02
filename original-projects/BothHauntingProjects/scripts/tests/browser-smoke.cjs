@@ -461,6 +461,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
     await page.getByText('The duplicate changes the investigation: a recipient name was entered on one copy.', { exact: false }).waitFor({ timeout: 10000 }).catch(() => undefined);
     await page.screenshot({ path: '/tmp/casezero-case042-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
     // Continue from the archived Case 042 result into the handwriting examination.
     await page.evaluate(() => {
