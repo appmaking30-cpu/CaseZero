@@ -30,11 +30,11 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 ### Implemented in the canonical app
 
 - Dark-first Detective Bureau home screen and sequential campaign file routing.
-- **40 campaign investigations (001–040)** with case-specific data modules, integrated React Native screens and individual case-rule tests.
+- **41 campaign investigations (001–041)** with case-specific data modules, integrated React Native screens and individual case-rule tests.
 - **Case 001 — The Last Train Home:** the tutorial has five inspectable records, three witnesses/six questions, a four-event timeline, person-plus-motive deduction, retryable wrong answers, and separate Truth / Proof / Outcome review. Progress can be resumed locally.
 - **Cases 002–004:** connected opening investigations; Case 002 receives Case 001 findings and unanswered questions, and the Missing Detective thread unlocks after the opening cases. Case 004 follows Rowan Vale’s missing recorder to North Quay.
 - **Cases 005–006:** the M-2 transfer/recorder trail and transcript reconstruction. Case 006 deliberately attributes the recording to an upstream authority rather than inventing a speaker identity.
-- **Cases 007–040:** each has a case-specific evidence/interview/timeline/deduction data module, integrated React Native screen, local progress, archive carryover and a dedicated unit-test file.
+- **Cases 007–041:** each has a case-specific evidence/interview/timeline/deduction data module, integrated React Native screen, local progress, archive carryover and a dedicated unit-test file.
 - **Cases 037–040** extend the dispatch/transfer investigation chain: the Missing Movement Ledger, The Queue Before Arrival, The Station Without an Operator, and a shift-handover investigation. Their tests check evidence structure, chronology, careful attribution where individual identity is not established, and carryover from earlier files.
 - **Investigation memory:** completed conclusions, inspected clues, asked questions and unanswered questions are kept in a shared local archive and used by later cases.
 - **Missing Detective arc:** the first dossier unlocks after Cases 001–002; a four-file convergence report unlocks after Cases 001–004. The connected investigation continues beyond Case 036, but the final revelation/ending is not implemented yet.
@@ -44,20 +44,20 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 
 ### Verification coverage — what the checks actually prove
 
-- Unit tests cover the case rules for Cases 001–040, campaign/archive behavior, the Missing Detective unlock/convergence, daily rotation and Bureau assignment/progression.
+- Unit tests cover the case rules for Cases 001–041, campaign/archive behavior, the Missing Detective unlock/convergence, daily rotation and Bureau assignment/progression.
 - The Playwright mobile-viewport walkthrough runs at **390×844** and completes Cases 001–006, checks retry paths, then checks the Daily Case Bulletin and Bureau assignment flow.
-- The 2 November 2026 GitHub Actions run passed dependency installation, Expo TypeScript checking, the full unit-test suite, Android-friendly Expo web export, Chromium installation, the browser walkthrough and screenshot upload.
+- The 2 November 2026 GitHub Actions run (workflow run 41500196001) passed dependency installation, Expo TypeScript checking, the full unit-test suite, Android-friendly Expo web export, Chromium installation, the mobile campaign browser walkthrough including Case 041, and screenshot upload.
 - A passing browser walkthrough is **not** a physical Android-device test. Cases 007–040 have unit/type/export validation but are not yet individually completed in the browser walkthrough.
 - No signed APK/AAB, Play Store release, real-device compatibility pass, crash/analytics service, or production backend has been completed.
 
-### Case 041 development — 2 November 2026
+### Case 041 — The Missing Signature — 2 November 2026
 
 - Added the Case 041 evidence/rules module, dedicated unit tests and a React Native investigation screen on `casezero-development`.
 - Working title: **The Missing Signature**. The file traces the dispatch carbon, Records Annex duplicate manifest, control-office intake and Annex container index.
 - The fair deduction is deliberately limited: a second copy is indexed in container RA-17, but its contents have not been retrieved. The case does not claim that a signature was erased, never written, or that a named person altered the record.
 - The screen includes local save/restore, evidence inspection, witness interviews, four-event timeline reconstruction, evidence-based deduction, archived completion and Bureau specialist insight. It is connected after Case 040 in the campaign.
-- **Validation status: automated typecheck, full test suite, Expo export and browser walkthrough are running; Case 041 is not counted as fully verified until these checks pass.** No physical Android-device test has been completed.
-- Next step: add dedicated Case 041 mobile-browser walkthrough coverage and verify the full campaign unlock/close flow before starting Case 042.
+- **Automated validation passed:** Case 041’s dedicated mobile-browser walkthrough, TypeScript check, full unit-test suite, Expo web export and screenshot upload all passed in [GitHub Actions run 41500196001](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41500196001). No physical Android-device test has been completed.
+- Next step: build Case 042, the controlled retrieval of RA-17, and compare the duplicate against the dispatch carbon without assuming in advance what the duplicate contains.
 
 ### Not implemented yet
 
