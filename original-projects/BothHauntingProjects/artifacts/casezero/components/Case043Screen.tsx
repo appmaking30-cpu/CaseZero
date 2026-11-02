@@ -218,7 +218,7 @@ export default function Case043Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 043 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>What does the retrieved duplicate establish about the recipient acknowledgement?</Text>
+      <Text style={[styles.hero, text]}>What does the specimen comparison establish about the writer of the “R. Vale” entry?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the unresolved records custodian, then choose the precise fact the records support.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>ARCHIVE CUSTODY AND RECORD STATUS UNDER REVIEW</Text>
