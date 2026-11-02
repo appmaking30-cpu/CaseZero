@@ -52,15 +52,16 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 
 ### Case 041 development — 2 November 2026
 
-- Added the Case 041 evidence/rules module and dedicated unit tests on `casezero-development`.
+- Added the Case 041 evidence/rules module, dedicated unit tests and a React Native investigation screen on `casezero-development`.
 - Working title: **The Missing Signature**. The file traces the dispatch carbon, Records Annex duplicate manifest, control-office intake and Annex container index.
 - The fair deduction is deliberately limited: a second copy is indexed in container RA-17, but its contents have not been retrieved. The case does not claim that a signature was erased, never written, or that a named person altered the record.
-- **Important: Case 041 is currently a tested game-data/rules foundation, not yet an integrated playable screen.** It is not routed from the Bureau campaign and must not be counted as a playable campaign investigation until its React Native screen, save/restore flow, archive completion, campaign unlock and mobile walkthrough are implemented and tested.
-- Next implementation step: build `Case041Screen.tsx`, connect it after Case 040 in the Bureau route, then add mobile-browser walkthrough coverage before starting Case 042.
+- The screen includes local save/restore, evidence inspection, witness interviews, four-event timeline reconstruction, evidence-based deduction, archived completion and Bureau specialist insight. It is connected after Case 040 in the campaign.
+- **Validation status: automated typecheck, full test suite, Expo export and browser walkthrough are running; Case 041 is not counted as fully verified until these checks pass.** No physical Android-device test has been completed.
+- Next step: add dedicated Case 041 mobile-browser walkthrough coverage and verify the full campaign unlock/close flow before starting Case 042.
 
 ### Not implemented yet
 
-- The final Missing Detective reveal and campaign ending; the current campaign stops at Case 040.
+- The final Missing Detective reveal and campaign ending; the current campaign’s latest investigation is Case 041; the Missing Detective arc remains unresolved.
 - Full detective HQ facilities/building upgrades and a deeper team-management layer beyond the current roster, assignments, XP/ranks and evidence insights.
 - Cloud accounts, cross-device sync, multiplayer, online/community case publishing or a live backend.
 - Monetization, paid features or ad integration.
