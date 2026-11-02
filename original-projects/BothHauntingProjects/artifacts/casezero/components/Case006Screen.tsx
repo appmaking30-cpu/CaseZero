@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
-import { CASE_006_GAME, CASE_006_EMPTY_PROGRESS, isCase006OrderCorrect } from '@/game/case006Game';
+import { CASE_006_GAME, CASE_006_EMPTY_PROGRESS, isCase006OrderCorrect, isCase006SourceCorrect } from '@/game/case006Game';
 import { archiveCompletedCase } from '@/game/investigationArchive';
 
 const SAVE_KEY = 'casezero.case006.progress.v1';
@@ -38,7 +38,7 @@ export default function Case006Screen({ onArchive, onReturn }: Props) {
         heardFragments: heard,
         order: validOrder ? [...order] : order,
         selectedSource: typeof saved.selectedSource === 'string' && sourceIds.has(saved.selectedSource) ? saved.selectedSource : null,
-        completed: validOrder && saved.selectedSource === CASE_006_GAME.correctSource,
+        completed: validOrder && isCase006SourceCorrect(saved.selectedSource ?? null),
       };
       setProgress(restored);
       if (restored.completed) setPhase('review');
@@ -58,7 +58,7 @@ export default function Case006Screen({ onArchive, onReturn }: Props) {
   const muted = { color: colors.mutedForeground };
 
   const archiveCase = () => {
-    if (progress.completed || !sequenceCorrect || progress.selectedSource !== CASE_006_GAME.correctSource) return;
+    if (progress.completed || !sequenceCorrect || !isCase006SourceCorrect(progress.selectedSource)) return;
     onArchive({
       caseId: CASE_006_GAME.id,
       caseTitle: CASE_006_GAME.title,
@@ -153,7 +153,7 @@ export default function Case006Screen({ onArchive, onReturn }: Props) {
       </Pressable>)}
       {!!message && <Text style={[styles.note, { color: colors.destructive }]}>{message}</Text>}
       <Action title="Submit conclusion" colors={colors} onPress={() => {
-        if (progress.selectedSource !== CASE_006_GAME.correctSource) {
+        if (!isCase006SourceCorrect(progress.selectedSource)) {
           setMessage('The recording proves an active transfer authority, but it does not identify the registrar or the audit supervisor as its source.');
           return;
         }

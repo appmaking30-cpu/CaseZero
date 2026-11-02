@@ -1,63 +1,81 @@
 # CaseZero — Beyond the Evidence
 
-A mobile-first detective mystery game. The visual target is a polished, cinematic midnight-navy interface with warm evidence-gold accents and restrained red alerts. The first priority is a fair, fully playable tutorial mystery; connected investigations follow only after that foundation is solid.
+A mobile-first detective mystery game. The visual target is a cinematic midnight-navy interface with warm evidence-gold accents and restrained red alerts. The canonical app is the original Expo/React Native project, not the earlier web-only rebuild.
 
-## Canonical source and preservation
+## Preservation and canonical source
 
-- The existing Replit app is **BothHauntingProjects**: https://replit.com/@appmaking30/BothHauntingProjects
-- The original Replit source archive, `BothHauntingProjects.zip`, is preserved unchanged on the `replit-original-backup-2026-10-31` branch (7,167,701 bytes).
-- The `casezero-original-work` branch contains the extracted source snapshot under `original-projects/BothHauntingProjects/`. `original-projects/SOURCE_IMPORT_REPORT.md` records 387 archive entries, 136 extracted source/config files, and 251 excluded machine-local, dependency, build, log, and nested-Git entries. The original ZIP remains separately preserved.
-- The active working branch is `casezero-development`, based on that extracted Expo project.
-- `main`, `replit-original-backup-2026-10-31`, and `casezero-original-work` are preservation/reference branches. Do not develop directly on them.
-- `casezero-rebuild` is a separate earlier web prototype; it is not the canonical Android-capable app.
+- Existing Replit app: **BothHauntingProjects** — https://replit.com/@appmaking30/BothHauntingProjects
+- Original Replit ZIP: `BothHauntingProjects.zip`, preserved unchanged on `replit-original-backup-2026-10-31` (7,167,701 bytes).
+- Extracted source snapshot: `casezero-original-work`, under `original-projects/BothHauntingProjects/`.
+- Import report: `original-projects/SOURCE_IMPORT_REPORT.md` (387 archive entries; 136 source/config files extracted; machine-local, dependency, build, log and nested-Git entries excluded).
+- Active development branch: `casezero-development`.
+- `main`, `replit-original-backup-2026-10-31` and `casezero-original-work` are preservation/reference branches. Never develop directly on them.
+- `casezero-rebuild` is an earlier web prototype, not the canonical Android-capable app.
 
-The original Replit workspace is preserved separately from GitHub. Changes committed to `casezero-development` do **not** automatically sync back into the Replit workspace. Treat this branch as the current development source; do not make independent edits in both places or overwrite the original workspace.
+The Replit workspace remains separate and preserved. GitHub changes do **not** sync back into Replit automatically. Do not edit both copies independently or overwrite the original Replit workspace with an unverified build.
 
-## Where the app lives
+## App structure
 
-- Replit workspace root: `BothHauntingProjects/`
-- GitHub workspace snapshot: `original-projects/BothHauntingProjects/`
+- Original workspace snapshot: `original-projects/BothHauntingProjects/`
 - Expo app: `original-projects/BothHauntingProjects/artifacts/casezero/`
-- Case data and deduction rules: `artifacts/casezero/game/`
-- Main mobile screen: `artifacts/casezero/app/(tabs)/index.tsx`
-- Tests: `scripts/tests/`
+- Main Bureau/navigation screen: `artifacts/casezero/app/(tabs)/index.tsx`
+- Case screens: `artifacts/casezero/components/`
+- Case rules/data: `artifacts/casezero/game/`
+- Automated tests: `scripts/tests/`
 
-The canonical app uses Expo Router, React Native, TypeScript, and AsyncStorage for local progress. Its Expo configuration targets portrait Android and static web export.
+The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-device progress. Its Expo configuration targets portrait Android and supports a static web export for automated mobile-viewport testing.
 
-## Current implementation status
+## Implementation audit — 2 November 2026
 
-**Playable in the active Expo app**
+### Implemented in the canonical app
 
-- Dark-first Detective Bureau home screen and connected case-file navigation.
-- **Case 001 — The Last Train Home:** complete tutorial flow with five inspectable records, three witnesses, a four-event timeline, suspect-plus-motive deduction, retryable conclusions, and Truth / Proof / Outcome review.
-- Case 001 local save/resume and a cross-case investigation archive recording inspected clues, asked questions, unanswered questions, and the player's conclusion.
-- **Case 002 — The Unlit Room:** connected follow-on investigation with four records, three witnesses, a four-event timeline, deduction, and Truth / Proof / Outcome review. It uses the actual findings and unanswered lead from Case 001.
-- **Case 003 — The Black Square:** playable Missing Detective investigation. It traces the black-square mark through the records annex, includes four records, three witnesses, six questions, a timeline puzzle, a deduction, and a full review.
-- **Case 004 — The Last Signal:** playable continuation following Rowan Vale's missing field recorder to North Quay Signal House. It includes four records, three witnesses, six questions, a timeline puzzle, a suspect-and-motive deduction, and a full review.
-- Cases 002–004 preserve separate local progress and feed completed findings into the shared investigation archive. Later case dialogue can change based on earlier recorded conclusions and unanswered questions.
-- The Bureau archive displays each completed investigation and its recorded conclusion.
-- **Daily Case Bulletin:** seven short standalone investigations rotate deterministically by the device's local calendar date. Each has three inspectable records, a suspect-and-motive deduction, retryable wrong answers, and separate on-device progress. Daily files do not alter the main campaign archive.
-- **Bureau Team:** three specialists unlock at campaign milestones. The assignment board lets the player assign one recruited specialist to each active file or the next incoming case, with assignments saved on-device. Specialist abilities and training upgrades are not yet connected to investigation gameplay.
-- Automated checks currently pass for TypeScript, unit tests, Expo web export, and the Playwright mobile-viewport walkthrough through the four campaign cases and the daily bulletin.
+- Dark-first Detective Bureau home screen and sequential campaign file routing.
+- **36 campaign investigations (001–036)** with case-specific data and integrated screens.
+- **Case 001 — The Last Train Home:** the tutorial has five inspectable records, three witnesses/six questions, a four-event timeline, person-plus-motive deduction, retryable wrong answers, and separate Truth / Proof / Outcome review. Progress can be resumed locally.
+- **Cases 002–004:** connected opening investigations; Case 002 receives Case 001 findings and unanswered questions, and the Missing Detective thread unlocks after the opening cases. Case 004 follows Rowan Vale’s missing recorder to North Quay.
+- **Cases 005–006:** the M-2 transfer/recorder trail and transcript reconstruction. Case 006 deliberately attributes the recording to an upstream authority rather than inventing a speaker identity.
+- **Cases 007–036:** each has a case-specific evidence/interview/timeline/deduction data module, integrated React Native screen, local progress, archive carryover and a dedicated unit-test file.
+- **Investigation memory:** completed conclusions, inspected clues, asked questions and unanswered questions are kept in a shared local archive and used by later cases.
+- **Missing Detective arc:** the first dossier unlocks after Cases 001–002; a four-file convergence report unlocks after Cases 001–004. The story continues through Case 036, but the final revelation/ending is not implemented yet.
+- **Daily Case Bulletin:** seven standalone cases rotate deterministically by the device’s local calendar date. Each has three inspectable records, a person-and-motive deduction, retryable choices and separate local progress; daily files do not change the campaign archive.
+- **Bureau Team:** three specialists unlock at campaign milestones. The board supports one specialist per file and one file per specialist, saved assignments, case-closure/daily XP, two rank-up steps and evidence-gated insights. These insights support analysis; they do not reveal uninspected evidence or auto-solve cases.
+- **Local persistence:** case progress, the investigation archive, daily progress and Bureau assignments/ranks use AsyncStorage on the device.
 
-**Not yet implemented**
+### Verification coverage — what the checks actually prove
 
-- Specialist abilities, training upgrades, and gameplay bonuses.
-- Cloud accounts or cross-device saves.
-- Multiplayer or online services.
-- Monetization or paid features.
+- Unit tests cover the case rules for Cases 001–036, campaign/archive behavior, the Missing Detective unlock/convergence, daily rotation and Bureau assignment/progression.
+- The Playwright mobile-viewport walkthrough runs at **390×844** and completes Cases 001–006, checks retry paths, then checks the Daily Case Bulletin and Bureau assignment flow.
+- GitHub Actions runs frozen dependency installation, Expo TypeScript checking, the full unit-test suite, an Android-friendly Expo web export, Chromium installation, the browser walkthrough and screenshot upload.
+- A passing browser walkthrough is **not** a physical Android-device test. Cases 007–036 have unit/type/export validation but are not yet individually completed in the browser walkthrough.
+- No signed APK/AAB, Play Store release, real-device compatibility pass, crash/analytics service, or production backend has been completed.
 
-The Bureau screen and case archive are still a foundation, not a finished team-management HQ. Optional monetization remains a late-stage choice and must never block the core game.
+### Not implemented yet
 
-## Sustainable, no-Agent development workflow
+- The final Missing Detective reveal and campaign ending; the current campaign stops at Case 036.
+- Full detective HQ facilities/building upgrades and a deeper team-management layer beyond the current roster, assignments, XP/ranks and evidence insights.
+- Cloud accounts, cross-device sync, multiplayer, online/community case publishing or a live backend.
+- Monetization, paid features or ad integration.
 
-1. Preserve the existing Replit workspace and the original ZIP branch; do not use Replit Agent for routine coding.
-2. Make small, reviewable commits directly to `casezero-development`. ChatGPT can read and update the GitHub source without consuming Replit Agent allowance.
-3. Each app/test/workflow change runs GitHub Actions: frozen pnpm install, Expo TypeScript check, unit tests, Expo web export, and a Playwright mobile-viewport walkthrough (390×844).
-4. Fix a failing check before adding the next feature. Keep the original ZIP and `casezero-original-work` snapshot unchanged.
-5. The browser walkthrough is an automated mobile-size check, not proof of behavior on a physical Android phone. Do a real-device check before release. No public preview/deployment, paid build, paid hosting, paid API, or other paid service should be enabled without explicit approval.
-6. If the Replit workspace needs to be updated later, do it as a deliberate GitHub sync/import step; never overwrite the preserved original with an unverified build.
+## Sustainable Android-friendly workflow — no Replit Agent required
+
+1. Keep the existing Replit app and original ZIP untouched as the recovery source.
+2. Treat `casezero-development` as the only active coding branch. ChatGPT can make small, reviewable GitHub commits to this branch without using Replit Agent's monthly allowance.
+3. For each change, update the relevant screen/data module and its tests together. Keep commits narrow; do not batch unrelated features.
+4. GitHub Actions validates each push with the checks above. Fix a failing check before adding another feature.
+5. Use the browser screenshots and test logs to review behavior. Then perform a real Android-device test before release.
+6. Do not enable public deployment, paid hosting, paid APIs, paid builds, analytics or monetization without explicit approval.
+7. If the Replit workspace must be refreshed later, do it as a deliberate, reviewed GitHub import/sync. Never overwrite the preserved original workspace.
+
+## Master-plan priorities
+
+1. Keep Case 001 as the fair, complete tutorial and protect its evidence-backed solution/retry behavior.
+2. Finish end-to-end mobile walkthrough coverage for the connected campaign beyond Case 006; review every later case for stale copy, continuity and fair deductions.
+3. Complete the Missing Detective investigation with a genuine, earned ending rather than adding endless cases without resolution.
+4. Expand HQ/team systems only where they add meaningful investigation choices and progression.
+5. Maintain the daily bulletin as optional replayable content.
+6. Finish accessibility, art/audio, performance, save migration, Android device testing and release packaging.
+7. Consider optional monetization only after the free core campaign is complete. It must not block core story or investigation mechanics.
 
 ## Quality bar
 
-The tutorial must be fair: the decisive person, timeline, and motive must be supported by inspectable evidence. Wrong answers must allow a retry. Keep Truth (what happened), Proof (what the evidence establishes), and Outcome (what follows) distinct. Do not label a feature complete until it exists in the canonical Expo app and its relevant unit and browser tests pass.
+A case is not release-ready merely because a screen exists. Its clues must support the intended conclusion; timeline and deduction rules must reject incomplete/wrong solutions while allowing retries; local progress and archive carryover must be reliable; and the case must pass relevant unit, typecheck, export and browser/device checks. Keep Truth (what happened), Proof (what the evidence establishes) and Outcome (what follows) distinct.

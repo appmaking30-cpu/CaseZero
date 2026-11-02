@@ -240,6 +240,99 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText(/Conclusion: Bram Holt · To suppress Rowan’s recording of the relay network/).waitFor();
 
 
+    // Case 005 follows the four-file convergence and tests the next connected investigation.
+    await page.getByRole('button', { name: 'Open Case 005' }).click();
+    await page.getByText('The Empty Ledger', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Begin evidence review' }).click();
+    for (const clue of [
+      'The carbon receipt',
+      'The receiving ledger',
+      'The loading-bay gate sheet',
+      'The closing audit correction',
+    ]) {
+      await page.getByText(clue, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: 'Question the witnesses' }).click();
+    for (const question of [
+      'Where did you leave the sealed case?',
+      'Why was Locker 14 opened?',
+      'Who authorized the closing-count correction?',
+    ]) {
+      await page.getByText(question, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: 'Reconstruct the timeline' }).click();
+
+    // A wrong order can be reset without losing the investigation.
+    for (const event of [
+      'The closing count is corrected',
+      'Locker 14 is opened',
+      'The M-2 case is signed in',
+      'The courier leaves the loading bay',
+    ]) {
+      await page.getByText(event, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: 'Reset sequence and retry' }).click();
+    for (const event of [
+      'The M-2 case is signed in',
+      'The courier leaves the loading bay',
+      'Locker 14 is opened',
+      'The closing count is corrected',
+    ]) {
+      await page.getByText(event, { exact: true }).click();
+    }
+    await page.getByText('Timeline confirmed. The courier left before the locker was opened.').waitFor();
+    await page.getByRole('button', { name: 'Make your deduction' }).click();
+    await page.getByText('Lena Vesper', { exact: true }).click();
+    await page.getByText('To sell the recorder', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/That conclusion does not explain the signed carbon/).waitFor();
+    await page.getByText('Sera Quill', { exact: true }).click();
+    await page.getByText('To conceal the recorder’s destination from the Bureau', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The recorder has a location again.', { exact: true }).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case005-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
+    // Case 006 reconstructs a transcript without inventing the speaker's identity.
+    await page.getByRole('button', { name: 'Open recorder review' }).click();
+    await page.getByText('The Voice Between Stations', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Begin transcript review' }).click();
+    for (const fragment of [
+      'Fragment C · Destination',
+      'Fragment A · Arrival',
+      'Fragment B · Authorization',
+    ]) {
+      await page.getByText(fragment, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: 'Reconstruct the instruction' }).click();
+
+    // The shuffled fragment order is retryable.
+    for (const fragment of [
+      'Fragment C · Destination',
+      'Fragment A · Arrival',
+      'Fragment B · Authorization',
+    ]) {
+      await page.getByText(fragment, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: 'Reset sequence and retry' }).click();
+    for (const fragment of [
+      'Fragment A · Arrival',
+      'Fragment B · Authorization',
+      'Fragment C · Destination',
+    ]) {
+      await page.getByText(fragment, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: 'Sequence confirmed' }).click();
+    await page.getByText('Sera Quill acting alone', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit conclusion' }).click();
+    await page.getByText(/The recording proves an active transfer authority/).waitFor();
+    await page.getByText('An upstream dispatch authority', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit conclusion' }).click();
+    await page.getByText('The voice has no name. The order does.', { exact: true }).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case006-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
+
     // The Daily Case Bulletin is a separate short investigation and does not change the campaign archive.
     await page.getByRole('button', { name: 'Open Daily Case Bulletin' }).click();
     await page.getByText(/DAILY CASE BULLETIN · \d{4}-\d{2}-\d{2}/).waitFor();
@@ -267,7 +360,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
-    console.log('PASS: mobile Case 001, Case 002 and Case 003 investigations, cross-case memory, timelines, deductions, reviews and persisted archive');
+    console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
     await browser.close();
   }

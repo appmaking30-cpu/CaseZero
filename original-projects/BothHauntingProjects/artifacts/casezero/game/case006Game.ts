@@ -31,3 +31,7 @@ export function isCase006OrderCorrect(order: readonly string[]) {
   return order.length === CASE_006_GAME.correctOrder.length &&
     order.every((id, index) => id === CASE_006_GAME.correctOrder[index]);
 }
+
+export function isCase006SourceCorrect(sourceId: string | null) {
+  return sourceId === CASE_006_GAME.correctSource;
+}
