@@ -143,7 +143,7 @@ export default function Case041Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_041_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_041_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established that Q-19 was created at DS-1. This file reconstructs the shift handover without guessing who used the shared session.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the handover gap. This file follows the duplicate packet into the Records Annex without assuming what its acknowledgement contains.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>TERMINAL RECORDS</Text>
