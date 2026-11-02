@@ -50,6 +50,14 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 - A passing browser walkthrough is **not** a physical Android-device test. Cases 007–040 have unit/type/export validation but are not yet individually completed in the browser walkthrough.
 - No signed APK/AAB, Play Store release, real-device compatibility pass, crash/analytics service, or production backend has been completed.
 
+### Case 041 development — 2 November 2026
+
+- Added the Case 041 evidence/rules module and dedicated unit tests on `casezero-development`.
+- Working title: **The Missing Signature**. The file traces the dispatch carbon, Records Annex duplicate manifest, control-office intake and Annex container index.
+- The fair deduction is deliberately limited: a second copy is indexed in container RA-17, but its contents have not been retrieved. The case does not claim that a signature was erased, never written, or that a named person altered the record.
+- **Important: Case 041 is currently a tested game-data/rules foundation, not yet an integrated playable screen.** It is not routed from the Bureau campaign and must not be counted as a playable campaign investigation until its React Native screen, save/restore flow, archive completion, campaign unlock and mobile walkthrough are implemented and tested.
+- Next implementation step: build `Case041Screen.tsx`, connect it after Case 040 in the Bureau route, then add mobile-browser walkthrough coverage before starting Case 042.
+
 ### Not implemented yet
 
 - The final Missing Detective reveal and campaign ending; the current campaign stops at Case 040.
