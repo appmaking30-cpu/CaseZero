@@ -234,7 +234,7 @@ export default function Case042Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'review' && <>
-      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 040</Text></View>
+      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 042</Text></View>
       <Text style={[styles.hero, text]}>The duplicate contains a handwritten recipient name, but authorship is not authenticated.</Text>
       <Text style={[styles.subtitle, muted]}>The retrieval authorization, intact-seal log, dual-custody opening record and carbon comparison establish how the duplicate was recovered. The handwritten name is visible, but authorship remains unverified.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_042_GAME.truth}</Text></View>
