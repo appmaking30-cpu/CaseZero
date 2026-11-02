@@ -8,7 +8,7 @@ import { CASE_037_GAME, CASE_037_EMPTY_PROGRESS, getCase037Carryover, isCase037D
 
 const SAVE_KEY = 'casezero.case037.progress.v1';
 type Progress = typeof CASE_037_EMPTY_PROGRESS;
-type Phase = 'briefing' | 'evidence' | 'interviews' | 'timeline' | 'deduction' | 'review';
+type Phase = 'briefing' | 'evidence' | 'interviews' | 'timeline' | 'deduction' | 'transfer';
 type Props = {
   archive: InvestigationArchive;
   bureauTeamBoard: BureauTeamBoard;
@@ -114,7 +114,7 @@ export default function Case037Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase037DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records confirm Rowan’s sealed cart route, but not who physically moved the cart.`);
+      setMessage(`The records confirm the sealed cart route, but not the carrier’s identity.`);
       return;
     }
     archiveLock.current = true;
@@ -143,20 +143,20 @@ export default function Case037Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_037_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_037_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files verified the Annex K-17 page and its source. This file tests the sealed cart route without assuming a transfer.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the review assignment and missing handler. This file traces the sealed cart from dispatch to imaging.</Text>
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>REVIEW RECORDS</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>TRANSFER RECORDS</Text>
         {CASE_037_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
-      <Action title="Review Restricted Records" colors={colors} onPress={() => setPhase('evidence')} />
+      <Action title="Review Transfer Records" colors={colors} onPress={() => setPhase('evidence')} />
       <Action title="Back to Bureau" colors={colors} onPress={onReturn} ghost />
     </>}
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 037 · EVIDENCE REVIEW</Text>
       <Text style={[styles.hero, text]}>Trace the cart route without treating a seal scan or receiving signature as the carrier’s identity.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: movement ledger, access log, transfer handler note and page comparison.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: dispatch carbon, cart seal inspection, service lift extract and imaging intake receipt.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_037_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -235,8 +235,8 @@ export default function Case037Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 037</Text></View>
-      <Text style={[styles.hero, text]}>The review trail are established; the transfer handler is not.</Text>
-      <Text style={[styles.subtitle, muted]}>The movement ledger, room log, transfer handler note and sign-off establish an sealed cart route sequence. They do not identify who physically moved the cart or applied the access stamp.</Text>
+      <Text style={[styles.hero, text]}>The cart route is established; the carrier is not.</Text>
+      <Text style={[styles.subtitle, muted]}>The dispatch carbon, seal check, lift extract and imaging receipt establish a sealed cart route. They do not identify who pushed the cart.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_037_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_037_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_037_GAME.outcome}</Text></View>
