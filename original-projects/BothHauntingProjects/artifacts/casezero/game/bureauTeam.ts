@@ -68,6 +68,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case036', label: 'Case 036 · The Restricted Review' },
   { id: 'case037', label: 'Case 037 · The Missing Movement Ledger' },
   { id: 'case038', label: 'Case 038 · The Queue Before Arrival' },
+  { id: 'case039', label: 'Case 039 · The Station Without an Operator' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
@@ -308,6 +309,16 @@ export function getBureauSpecialistInsight(
 
   // The late dispatch arc deliberately separates presence, route intent, room occupancy,
   // and identity. Each specialist insight is gated by the records the player has inspected.
+  if (specialistId === 'inez' && caseId === 'case039' && hasClues('terminal', 'session', 'proximity', 'print')) {
+    return { title: 'Inez Shaw · Terminal audit review', detail: 'The audit and print slip corroborate Q-19 activity at DS-1. The shared session and absent personal badge association do not identify the operator.', rankPerk };
+  }
+  if (specialistId === 'tomas' && caseId === 'case039' && askedQuestions.includes('niko:login') && askedQuestions.includes('talia:handover')) {
+    return { title: 'Tomas Reed · Operator attribution review', detail: 'Niko confirms the desk-level credential is shared, and Talia identifies the missing signed handover or personal authentication as the necessary link. Neither witness supports naming an operator.', rankPerk };
+  }
+  if (specialistId === 'rhea' && caseId === 'case039' && hasClues('session', 'terminal', 'print')) {
+    return { title: 'Rhea Voss · Workstation sequence reconstruction', detail: 'The shared session opens first, Q-19 is created at DS-1, and the confirmation slip prints one minute later. The order ties the action to a station, not a person.', rankPerk };
+  }
+
   if (specialistId === 'inez' && caseId === 'case038' && hasClues('ticket', 'permissions', 'bay', 'arrival')) {
     return { title: 'Inez Shaw · Queue audit review', detail: 'Q-19 predates cart dispatch, and its folio reference matches the arriving cart. The permission audit lists two authorized stations, but the shared account does not identify the user.', rankPerk };
   }
