@@ -8,7 +8,7 @@ import { CASE_037_GAME, CASE_037_EMPTY_PROGRESS, getCase037Carryover, isCase037D
 
 const SAVE_KEY = 'casezero.case037.progress.v1';
 type Progress = typeof CASE_037_EMPTY_PROGRESS;
-type Phase = 'briefing' | 'evidence' | 'interviews' | 'timeline' | 'deduction' | 'transfer';
+type Phase = 'briefing' | 'evidence' | 'interviews' | 'timeline' | 'deduction' | 'review';
 type Props = {
   archive: InvestigationArchive;
   bureauTeamBoard: BureauTeamBoard;
