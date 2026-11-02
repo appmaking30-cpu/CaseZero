@@ -30,28 +30,29 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 ### Implemented in the canonical app
 
 - Dark-first Detective Bureau home screen and sequential campaign file routing.
-- **36 campaign investigations (001–036)** with case-specific data and integrated screens.
+- **40 campaign investigations (001–040)** with case-specific data modules, integrated React Native screens and individual case-rule tests.
 - **Case 001 — The Last Train Home:** the tutorial has five inspectable records, three witnesses/six questions, a four-event timeline, person-plus-motive deduction, retryable wrong answers, and separate Truth / Proof / Outcome review. Progress can be resumed locally.
 - **Cases 002–004:** connected opening investigations; Case 002 receives Case 001 findings and unanswered questions, and the Missing Detective thread unlocks after the opening cases. Case 004 follows Rowan Vale’s missing recorder to North Quay.
 - **Cases 005–006:** the M-2 transfer/recorder trail and transcript reconstruction. Case 006 deliberately attributes the recording to an upstream authority rather than inventing a speaker identity.
-- **Cases 007–036:** each has a case-specific evidence/interview/timeline/deduction data module, integrated React Native screen, local progress, archive carryover and a dedicated unit-test file.
+- **Cases 007–040:** each has a case-specific evidence/interview/timeline/deduction data module, integrated React Native screen, local progress, archive carryover and a dedicated unit-test file.
+- **Cases 037–040** extend the dispatch/transfer investigation chain: the Missing Movement Ledger, The Queue Before Arrival, The Station Without an Operator, and a shift-handover investigation. Their tests check evidence structure, chronology, careful attribution where individual identity is not established, and carryover from earlier files.
 - **Investigation memory:** completed conclusions, inspected clues, asked questions and unanswered questions are kept in a shared local archive and used by later cases.
-- **Missing Detective arc:** the first dossier unlocks after Cases 001–002; a four-file convergence report unlocks after Cases 001–004. The story continues through Case 036, but the final revelation/ending is not implemented yet.
+- **Missing Detective arc:** the first dossier unlocks after Cases 001–002; a four-file convergence report unlocks after Cases 001–004. The connected investigation continues beyond Case 036, but the final revelation/ending is not implemented yet.
 - **Daily Case Bulletin:** seven standalone cases rotate deterministically by the device’s local calendar date. Each has three inspectable records, a person-and-motive deduction, retryable choices and separate local progress; daily files do not change the campaign archive.
 - **Bureau Team:** three specialists unlock at campaign milestones. The board supports one specialist per file and one file per specialist, saved assignments, case-closure/daily XP, two rank-up steps and evidence-gated insights. These insights support analysis; they do not reveal uninspected evidence or auto-solve cases.
 - **Local persistence:** case progress, the investigation archive, daily progress and Bureau assignments/ranks use AsyncStorage on the device.
 
 ### Verification coverage — what the checks actually prove
 
-- Unit tests cover the case rules for Cases 001–036, campaign/archive behavior, the Missing Detective unlock/convergence, daily rotation and Bureau assignment/progression.
+- Unit tests cover the case rules for Cases 001–040, campaign/archive behavior, the Missing Detective unlock/convergence, daily rotation and Bureau assignment/progression.
 - The Playwright mobile-viewport walkthrough runs at **390×844** and completes Cases 001–006, checks retry paths, then checks the Daily Case Bulletin and Bureau assignment flow.
-- GitHub Actions runs frozen dependency installation, Expo TypeScript checking, the full unit-test suite, an Android-friendly Expo web export, Chromium installation, the browser walkthrough and screenshot upload.
-- A passing browser walkthrough is **not** a physical Android-device test. Cases 007–036 have unit/type/export validation but are not yet individually completed in the browser walkthrough.
+- The 2 November 2026 GitHub Actions run passed dependency installation, Expo TypeScript checking, the full unit-test suite, Android-friendly Expo web export, Chromium installation, the browser walkthrough and screenshot upload.
+- A passing browser walkthrough is **not** a physical Android-device test. Cases 007–040 have unit/type/export validation but are not yet individually completed in the browser walkthrough.
 - No signed APK/AAB, Play Store release, real-device compatibility pass, crash/analytics service, or production backend has been completed.
 
 ### Not implemented yet
 
-- The final Missing Detective reveal and campaign ending; the current campaign stops at Case 036.
+- The final Missing Detective reveal and campaign ending; the current campaign stops at Case 040.
 - Full detective HQ facilities/building upgrades and a deeper team-management layer beyond the current roster, assignments, XP/ranks and evidence insights.
 - Cloud accounts, cross-device sync, multiplayer, online/community case publishing or a live backend.
 - Monetization, paid features or ad integration.
@@ -69,7 +70,7 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 ## Master-plan priorities
 
 1. Keep Case 001 as the fair, complete tutorial and protect its evidence-backed solution/retry behavior.
-2. Finish end-to-end mobile walkthrough coverage for the connected campaign beyond Case 006; review every later case for stale copy, continuity and fair deductions.
+2. Review Cases 007–040 for continuity, fair deductions, accurate carryover and mobile usability; add targeted end-to-end walkthrough coverage in manageable groups.
 3. Complete the Missing Detective investigation with a genuine, earned ending rather than adding endless cases without resolution.
 4. Expand HQ/team systems only where they add meaningful investigation choices and progression.
 5. Maintain the daily bulletin as optional replayable content.
