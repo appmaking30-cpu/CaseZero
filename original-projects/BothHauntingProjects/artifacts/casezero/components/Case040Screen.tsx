@@ -107,7 +107,7 @@ export default function Case040Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 5 && !isCase040TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the shared sign-in, ticket creation, print event and supervisor acknowledgement.'
+      ? 'That sequence conflicts with the time stamps. Compare the roster, desk transfer, condition checklist, shared session and ticket timestamps.'
       : '');
   };
   const submit = () => {
@@ -143,7 +143,7 @@ export default function Case040Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_040_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_040_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established that Q-19 was created before dispatch. This file identifies the desk behind the ticket, without guessing who used it.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established that Q-19 was created at DS-1. This file reconstructs the shift handover without guessing who used the shared session.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>TERMINAL RECORDS</Text>
@@ -188,7 +188,7 @@ export default function Case040Screen({ archive, bureauTeamBoard, onArchive, onR
         })}
       </View>)}
       <Text style={[styles.note, muted]}>{heardWitnesses}/3 witnesses heard · {unanswered.length} optional follow-ups remaining</Text>
-      <Action title="Reconstruct the terminal activity sequence" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
+      <Action title="Reconstruct the shift-change sequence" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
       <Action title="Back to evidence" colors={colors} onPress={() => setPhase('evidence')} ghost />
     </>}
 
@@ -203,13 +203,13 @@ export default function Case040Screen({ archive, bureauTeamBoard, onArchive, onR
           return <Text key={id} style={[styles.body, text]}>{index + 1}. {event?.time} — {event?.title}</Text>;
         })}
       </View>
-      {[...CASE_040_GAME.timelineEvents].reverse().map((event) => <Pressable key={event.id} disabled={progress.timelineOrder.includes(event.id) || progress.timelineOrder.length >= 4} onPress={() => chooseEvent(event.id)} style={[styles.card, card, { opacity: progress.timelineOrder.includes(event.id) ? 0.4 : 1 }]}>
+      {[...CASE_040_GAME.timelineEvents].reverse().map((event) => <Pressable key={event.id} disabled={progress.timelineOrder.includes(event.id) || progress.timelineOrder.length >= 5} onPress={() => chooseEvent(event.id)} style={[styles.card, card, { opacity: progress.timelineOrder.includes(event.id) ? 0.4 : 1 }]}>
         <Text style={[styles.label, { color: colors.primary }]}>{event.time}</Text>
         <Text style={[styles.cardTitle, text]}>{event.title}</Text>
         <Text style={[styles.note, muted]}>{event.detail}</Text>
       </Pressable>)}
       {!!message && <Text style={[styles.note, { color: colors.destructive }]}>{message}</Text>}
-      {progress.timelineOrder.length === 4 ? timelineSolved
+      {progress.timelineOrder.length === 5 ? timelineSolved
         ? <Action title="Timeline confirmed · Make deduction" colors={colors} onPress={() => { setMessage(''); setPhase('deduction'); }} />
         : <Action title="Reset timeline and retry" colors={colors} onPress={() => { setProgress((current) => ({ ...current, timelineOrder: [] })); setMessage(''); }} />
         : <Text style={[styles.note, muted]}>{progress.timelineOrder.length}/5 events selected</Text>}
@@ -218,7 +218,7 @@ export default function Case040Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 040 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Which desk created Q-19—and can we identify its incoming recipient?</Text>
+      <Text style={[styles.hero, text]}>Which shift held responsibility for DS-1 when Q-19 was created?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the unresolved incoming recipient, then choose the precise fact the records support.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>WORKSTATION ATTRIBUTION AND OPERATOR UNDER REVIEW</Text>
@@ -236,7 +236,7 @@ export default function Case040Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 040</Text></View>
       <Text style={[styles.hero, text]}>The desk is identified; the incoming recipient is not.</Text>
-      <Text style={[styles.subtitle, muted]}>The handover record, shift handover, queue print slip and supervisor acknowledgement establish activity at DS-1. They do not identify the individual at the keyboard.</Text>
+      <Text style={[styles.subtitle, muted]}>The roster, handover carbon, console checklist and supervisor register establish shift-level responsibility. They do not identify the individual at the keyboard.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_040_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_040_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_040_GAME.outcome}</Text></View>
