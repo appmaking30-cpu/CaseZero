@@ -549,13 +549,13 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
       'Two-staff handover observation',
       'Return and exception register',
     ]) await page.getByText(clue, { exact: true }).click();
-    await page.getByRole('button', { name: 'Interview the access and dispatch staff' }).click();
+    await page.getByRole('button', { name: 'Interview the outgoing officer and handover witnesses' }).click();
     for (const question of [
       'Who received D-17 at 08:54?',
       'What did you personally observe?',
       'Does the return exception identify the carrier?',
     ]) await page.getByText(question, { exact: true }).click();
-    await page.getByRole('button', { name: 'Reconstruct the access window timeline' }).click();
+    await page.getByRole('button', { name: 'Reconstruct the shift handover timeline' }).click();
     for (const event of [
       'Outgoing packet prepared and sealed',
       'D-17 placed in RELIEF-2 tray',
