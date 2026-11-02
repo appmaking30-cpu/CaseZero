@@ -107,7 +107,7 @@ export default function Case042Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase042TimelineCorrect(next)
-      ? 'That sequence conflicts with the time stamps. Compare the dispatch copy, Annex manifest, control-office receipt and archive index timestamps.'
+      ? 'That sequence conflicts with the retrieval log. Compare the authorization, seal inspection, dual-custody opening and comparison timestamps.'
       : '');
   };
   const submit = () => {
@@ -143,7 +143,7 @@ export default function Case042Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_042_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_042_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the handover gap. This file follows the retrieved archive packet into the Records Annex without assuming what its acknowledgement contains.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files located the duplicate in RA-17. This file examines the retrieved carbon and separates the written name from proof of its author.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>TERMINAL RECORDS</Text>
@@ -155,7 +155,7 @@ export default function Case042Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 042 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Trace the retrieved handover copy through the records system without assuming what its acknowledgement contains.</Text>
+      <Text style={[styles.hero, text]}>Examine the retrieved carbon and determine what its handwritten recipient entry can—and cannot—prove.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all four records: dispatch carbon, RA-17 retrieval record, control-office intake and archive container index.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
@@ -218,7 +218,7 @@ export default function Case042Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 042 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>What does the records trail establish about the missing handover acknowledgement?</Text>
+      <Text style={[styles.hero, text]}>What does the retrieved duplicate establish about the recipient acknowledgement?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the unresolved records custodian, then choose the precise fact the records support.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>ARCHIVE CUSTODY AND RECORD STATUS UNDER REVIEW</Text>
@@ -236,7 +236,7 @@ export default function Case042Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 040</Text></View>
       <Text style={[styles.hero, text]}>The duplicate contains a handwritten recipient name, but authorship is not authenticated.</Text>
-      <Text style={[styles.subtitle, muted]}>The dispatch copy, Annex manifest, control-office receipt and archive index establish the duplicate’s route and storage location. They do not establish whether its signature field is complete.</Text>
+      <Text style={[styles.subtitle, muted]}>The retrieval authorization, intact-seal log, dual-custody opening record and carbon comparison establish how the duplicate was recovered. The handwritten name is visible, but authorship remains unverified.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_042_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_042_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_042_GAME.outcome}</Text></View>
