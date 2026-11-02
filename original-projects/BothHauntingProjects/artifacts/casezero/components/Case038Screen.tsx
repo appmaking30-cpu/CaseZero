@@ -143,7 +143,7 @@ export default function Case038Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_038_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_038_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the review assignment and missing handler. This file traces the imaging reservation from dispatch to imaging.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files traced cart M-4 from the restricted office to imaging. This file examines the queue reservation created before the cart was released.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>QUEUE RECORDS</Text>
@@ -155,8 +155,8 @@ export default function Case038Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 038 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Trace the queue reservation without treating a seal scan or receiving signature as the requester’s identity.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: dispatch carbon, folio seal inspection, service lift extract and imaging intake receipt.</Text>
+      <Text style={[styles.hero, text]}>Trace the early queue reservation without treating shared-account access as proof of who created it.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: queue ticket Q-19, priority-account permissions, Bay 2 preparation log and cart arrival cross-reference.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_038_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -236,7 +236,7 @@ export default function Case038Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 038</Text></View>
       <Text style={[styles.hero, text]}>The queue reservation is established; the requester is not.</Text>
-      <Text style={[styles.subtitle, muted]}>The queue ticket, permission audit, bay preparation and arrival cross-reference establish a sealed queue reservation. They do not identify who created the reservation.</Text>
+      <Text style={[styles.subtitle, muted]}>The queue ticket, permission audit, Bay 2 preparation log and arrival cross-reference establish a planned reservation before the cart arrived. They do not identify who created Q-19.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_038_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_038_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_038_GAME.outcome}</Text></View>
