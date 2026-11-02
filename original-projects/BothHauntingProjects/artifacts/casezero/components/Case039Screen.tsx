@@ -114,7 +114,7 @@ export default function Case039Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase039DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records confirm the sealed workstation activity, but not the operator’s identity.`);
+      setMessage(`The records identify DS-1 as the workstation, but not the individual operator.`);
       return;
     }
     archiveLock.current = true;
@@ -143,10 +143,10 @@ export default function Case039Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_039_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_039_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files traced cart M-4 from the restricted office to imaging. This file examines the workstation activity created before the cart was released.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established that Q-19 was created before dispatch. This file identifies the workstation behind the ticket, without guessing who used it.</Text>
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>QUEUE RECORDS</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>TERMINAL RECORDS</Text>
         {CASE_039_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
       <Action title="Review Terminal Records" colors={colors} onPress={() => setPhase('evidence')} />
@@ -235,7 +235,7 @@ export default function Case039Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 039</Text></View>
-      <Text style={[styles.hero, text]}>The workstation activity is established; the requester is not.</Text>
+      <Text style={[styles.hero, text]}>The workstation is identified; the operator is not.</Text>
       <Text style={[styles.subtitle, muted]}>The terminal audit, shared-session sign-in, queue print slip and badge-proximity extract establish activity at DS-1. They do not identify the individual at the keyboard.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_039_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_039_GAME.proof}</Text></View>
