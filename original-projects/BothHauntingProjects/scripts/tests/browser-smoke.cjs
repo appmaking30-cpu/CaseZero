@@ -403,10 +403,10 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: "Reconstruct the packet's records trail" }).click();
 
     for (const event of [
-      'Duplicate assigned to container RA-17',
-      'Control office receives sealed packet',
-      'Duplicate routed to Records Annex',
       'Dispatch carbon records desk transfer',
+      'Duplicate routed to Records Annex',
+      'Control office receives sealed packet',
+      'Duplicate assigned to container RA-17',
     ]) {
       await page.getByText(event, { exact: true }).click();
     }
