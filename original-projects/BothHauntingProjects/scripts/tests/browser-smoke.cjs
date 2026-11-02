@@ -538,6 +538,37 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('Do not identify the badge carrier or accuse a named employee.', { exact: false }).waitFor({ timeout: 10000 });
     await page.screenshot({ path: '/tmp/casezero-case044-review.png', fullPage: true });
 
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+    await page.getByRole('button', { name: 'Open Case 045' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 045' }).click();
+    await page.getByText('The Handover Copy', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the handover file' }).click();
+    for (const clue of [
+      'Original D-17 handover packet',
+      'Independent shift carbon copy',
+      'Two-staff handover observation',
+      'Return and exception register',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the access and dispatch staff' }).click();
+    for (const question of [
+      'Who received D-17 at 08:54?',
+      'What did you personally observe?',
+      'Does the return exception identify the carrier?',
+    ]) await page.getByText(question, { exact: true }).click();
+    await page.getByRole('button', { name: 'Reconstruct the access window timeline' }).click();
+    for (const event of [
+      'Outgoing packet prepared and sealed',
+      'D-17 placed in RELIEF-2 tray',
+      'D-17 passes corridor reader',
+      'D-17 listed as outstanding',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+    await page.getByText('Unidentified RELIEF-2 recipient', { exact: true }).click();
+    await page.getByText('The original packet narrows custody to the RELIEF-2 role, but does not identify its recipient', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('Do not accuse Elias or Mina', { exact: false }).waitFor({ timeout: 10000 });
+    await page.screenshot({ path: '/tmp/casezero-case045-review.png', fullPage: true });
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
