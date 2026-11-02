@@ -69,6 +69,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case037', label: 'Case 037 · The Missing Movement Ledger' },
   { id: 'case038', label: 'Case 038 · The Queue Before Arrival' },
   { id: 'case039', label: 'Case 039 · The Station Without an Operator' },
+  { id: 'case040', label: 'Case 040 · The Shift-Change Gap' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
@@ -306,6 +307,17 @@ export function getBureauSpecialistInsight(
     };
   }
 
+
+
+  if (specialistId === 'inez' && caseId === 'case040' && hasClues('roster', 'carbon', 'checklist', 'acknowledgement')) {
+    return { title: 'Inez Shaw · Handover integrity review', detail: 'The roster and carbon establish a shift-level transfer, while the blank acknowledgement limits what can be said about personal acceptance. Keep desk responsibility separate from individual identity.', rankPerk };
+  }
+  if (specialistId === 'tomas' && caseId === 'case040' && askedQuestions.includes('mara:signature') && askedQuestions.includes('niko:operator')) {
+    return { title: 'Tomas Reed · Attribution boundary review', detail: 'Mara confirms the incoming signature is incomplete, and Niko confirms that no personal authentication ties him to Q-19. The interviews support a shift-level conclusion, not a named operator.', rankPerk };
+  }
+  if (specialistId === 'rhea' && caseId === 'case040' && hasClues('roster', 'carbon', 'checklist')) {
+    return { title: 'Rhea Voss · Shift sequence reconstruction', detail: 'The roster precedes the 09:02 transfer, the 09:03 checklist captures the desk state, and the shared session opens at 09:09 before Q-19 at 09:12. This sequence supports Silver Shift responsibility without proving who used the console.', rankPerk };
+  }
 
   // The late dispatch arc deliberately separates presence, route intent, room occupancy,
   // and identity. Each specialist insight is gated by the records the player has inspected.
