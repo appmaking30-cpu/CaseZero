@@ -359,6 +359,65 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText(/Currently assigned: Next incoming case/).waitFor();
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+    // Seed the archive at the Case 040 campaign boundary so the new Case 041
+    // screen can be exercised without replaying the entire 40-case campaign.
+    await page.evaluate(() => {
+      localStorage.setItem('casezero.investigation.archive.v1', JSON.stringify({
+        version: 1,
+        completedCases: [{
+          caseId: 'case040',
+          caseTitle: 'The Shift-Change Gap',
+          closedAt: '2026-11-02T00:00:00.000Z',
+          selectedSuspectId: 'unknown',
+          selectedMotiveId: 'shift',
+          inspectedClues: ['Dispatch shift roster', 'DS-1 handover carbon'],
+          askedQuestions: ['Mara Venn: Does the incomplete signature name the incoming operator?'],
+          unansweredQuestions: [],
+        }],
+      }));
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    const openCase041 = page.getByRole('button', { name: 'Open Case 041' });
+    await openCase041.waitFor();
+    await openCase041.click();
+    await page.getByText('The Missing Signature', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Review the duplicate packet' }).click();
+
+    for (const clue of [
+      'Dispatch carbon copy',
+      'Records Annex duplicate manifest',
+      'Control-office packet intake',
+      'Annex container index',
+    ]) {
+      await page.getByText(clue, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: 'Interview the records and archive staff' }).click();
+
+    for (const question of [
+      'Does the blank dispatch copy prove the signature was erased?',
+      'What does the two-copy manifest establish?',
+      'Can the archive index tell us what is written on the duplicate?',
+    ]) {
+      await page.getByText(question, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: "Reconstruct the packet's records trail" }).click();
+
+    for (const event of [
+      'Duplicate assigned to container RA-17',
+      'Control office receives sealed packet',
+      'Duplicate routed to Records Annex',
+      'Dispatch carbon records desk transfer',
+    ]) {
+      await page.getByText(event, { exact: true }).click();
+    }
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+    await page.getByText('Unresolved records custodian', { exact: true }).click();
+    await page.getByText('A second handover copy exists in Records Annex container RA-17, but its contents remain unverified', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The duplicate is located; its contents remain unknown.', { exact: true }).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case041-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
