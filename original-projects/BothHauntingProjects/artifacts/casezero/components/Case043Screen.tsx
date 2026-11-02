@@ -107,7 +107,7 @@ export default function Case043Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase043TimelineCorrect(next)
-      ? 'That sequence conflicts with the retrieval log. Compare the authorization, seal inspection, dual-custody opening and comparison timestamps.'
+      ? 'That sequence conflicts with the register and call records. Compare the specimen collection, switchboard connection, questioned entry and examiner report timestamps.'
       : '');
   };
   const submit = () => {
