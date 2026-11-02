@@ -66,6 +66,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case034', label: 'Case 034 · The Revision in the Margin' },
   { id: 'case035', label: 'Case 035 · The Page from Annex K-17' },
   { id: 'case036', label: 'Case 036 · The Restricted Review' },
+  { id: 'case037', label: 'Case 037 · The Missing Movement Ledger' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
@@ -306,6 +307,16 @@ export function getBureauSpecialistInsight(
 
   // The late dispatch arc deliberately separates presence, route intent, room occupancy,
   // and identity. Each specialist insight is gated by the records the player has inspected.
+  if (specialistId === 'inez' && caseId === 'case037' && hasClues('dispatch', 'seal', 'lift', 'intake')) {
+    return { title: 'Inez Shaw · Transfer record audit', detail: 'The dispatch carbon, matching seal, lift extract and intake receipt establish one continuous cart route. None supplies a named carrier, so the torn handler field remains unresolved.', rankPerk };
+  }
+  if (specialistId === 'tomas' && caseId === 'case037' && askedQuestions.includes('rowan:handoff') && askedQuestions.includes('sana:receipt')) {
+    return { title: 'Tomas Reed · Handoff attribution review', detail: 'Rowan separates review duties from transport, while Sana confirms she signed only as receiver. Neither statement supports naming either person as the carrier.', rankPerk };
+  }
+  if (specialistId === 'rhea' && caseId === 'case037' && hasClues('dispatch', 'seal', 'lift')) {
+    return { title: 'Rhea Voss · Cart route reconstruction', detail: 'The cart leaves the restricted office, passes the seal checkpoint, and reaches imaging level before intake. The route is ordered and corroborated; the missing handler field prevents personal attribution.', rankPerk };
+  }
+
   if (specialistId === 'inez' && caseId === 'case036' && hasClues('register', 'access', 'note', 'comparison')) {
     return { title: 'Inez Shaw · Review record audit', detail: 'The register and access log establish Rowan’s authorized review and room entry. The comparison sign-off validates the page match, but no custody event identifies who moved the folio.', rankPerk };
   }
