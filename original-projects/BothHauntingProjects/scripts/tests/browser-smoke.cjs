@@ -507,6 +507,37 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('Rowan should not be named as the writer on the current evidence.', { exact: false }).waitFor({ timeout: 10000 });
     await page.screenshot({ path: '/tmp/casezero-case043-review.png', fullPage: true });
 
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+    await page.getByRole('button', { name: 'Open Case 044' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 044' }).click();
+    await page.getByText('The Badge Without a Name', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the access file' }).click();
+    for (const clue of [
+      'Dispatch corridor reader extract',
+      'Shared badge pool register',
+      'Corridor access boundary plan',
+      'Reader maintenance and audit copy',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the access and dispatch staff' }).click();
+    for (const question of [
+      'What does the D-17 reader event establish?',
+      'Who was assigned badge D-17?',
+      'What would connect the badge to a person?',
+    ]) await page.getByText(question, { exact: true }).click();
+    await page.getByRole('button', { name: 'Reconstruct the access window timeline' }).click();
+    for (const event of [
+      'D-17 assigned to shared relief pool',
+      'D-17 enters dispatch corridor',
+      'D-17 leaves dispatch corridor',
+      'Signed controller copy reconciled',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+    await page.getByText('Unidentified badge carrier', { exact: true }).click();
+    await page.getByText('The log verifies a shared badge entered the corridor, not who carried it or reached the desk', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('Do not identify the badge carrier or accuse a named employee.', { exact: false }).waitFor({ timeout: 10000 });
+    await page.screenshot({ path: '/tmp/casezero-case044-review.png', fullPage: true });
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
