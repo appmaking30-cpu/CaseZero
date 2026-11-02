@@ -107,7 +107,7 @@ export default function Case044Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase044TimelineCorrect(next)
-      ? 'That sequence conflicts with the register and call records. Compare the specimen collection, switchboard connection, questioned entry and examiner report timestamps.'
+      ? 'That sequence conflicts with the access records. Compare the shared-pool assignment, corridor entry, corridor exit and signed audit timestamps.'
       : '');
   };
   const submit = () => {
