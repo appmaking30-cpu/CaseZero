@@ -45,7 +45,7 @@ test('convergence review requires all four opening campaign cases', () => {
 
 test('convergence report does not claim Rowan or the recorder has been located', () => {
   const report = getMissingDetectiveConvergence(archiveCases(['case001', 'case002', 'case003', 'case004']));
-  assert.match(report.reportSummary, /Rowan's recorder is still missing/i);
+  assert.match(report.reportSummary, /Rowan[’']s recorder is still missing/i);
   assert.match(report.reportSummary, /transfer can now be traced/i);
   assert.doesNotMatch(report.reportSummary, /Rowan has been found/i);
 });
