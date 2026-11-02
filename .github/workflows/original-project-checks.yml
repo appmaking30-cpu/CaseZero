@@ -42,7 +42,7 @@ jobs:
         run: npm install --prefix /tmp/casezero-browser playwright@1.56.1
       - name: Install Chromium
         run: /tmp/casezero-browser/node_modules/.bin/playwright install --with-deps chromium
-      - name: Run mobile campaign smoke test (Cases 001–006 and 041–044)
+      - name: Run mobile campaign smoke test (Cases 001–006 and 041–045)
         run: |
           python3 -m http.server 4173 --directory artifacts/casezero/dist >/tmp/casezero-http.log 2>&1 &
           echo $! >/tmp/casezero-http.pid
