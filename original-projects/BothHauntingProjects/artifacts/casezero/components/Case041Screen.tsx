@@ -137,7 +137,7 @@ export default function Case041Screen({ archive, bureauTeamBoard, onArchive, onR
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 041 · SHIFT RECORDS</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 041 · RECORDS INTAKE</Text>
       <Text style={[styles.hero, text]}>{CASE_041_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_041_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
@@ -149,14 +149,14 @@ export default function Case041Screen({ archive, bureauTeamBoard, onArchive, onR
         <Text style={[styles.label, { color: colors.primary }]}>TERMINAL RECORDS</Text>
         {CASE_041_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
-      <Action title="Review Handover Records" colors={colors} onPress={() => setPhase('evidence')} />
+      <Action title="Review the duplicate packet" colors={colors} onPress={() => setPhase('evidence')} />
       <Action title="Back to Bureau" colors={colors} onPress={onReturn} ghost />
     </>}
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 041 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Trace the early desk activity without treating shared-account access as proof of who created it.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: handover record, shift handover, supervisor acknowledgement and console condition checklist.</Text>
+      <Text style={[styles.hero, text]}>Trace the second handover copy through the records system without assuming what its acknowledgement contains.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: dispatch carbon, Annex duplicate manifest, control-office intake and archive container index.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_041_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -165,13 +165,13 @@ export default function Case041Screen({ archive, bureauTeamBoard, onArchive, onR
         <Text style={[styles.note, muted]}>{clue.label}</Text>
         {activeClue === clue.id && <Text style={[styles.body, text, styles.divider]}>{clue.detail}</Text>}
       </Pressable>)}
-      <Action title="Interview the dispatch and console audit staff" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
+      <Action title="Interview the records and archive staff" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
       <Action title="Back to briefing" colors={colors} onPress={() => setPhase('briefing')} ghost />
     </>}
 
     {phase === 'interviews' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 041 · WITNESS INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What do the handover records actually prove?</Text>
+      <Text style={[styles.hero, text]}>What do the two-copy records actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and are preserved in the archived report.</Text>
       {CASE_041_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -188,7 +188,7 @@ export default function Case041Screen({ archive, bureauTeamBoard, onArchive, onR
         })}
       </View>)}
       <Text style={[styles.note, muted]}>{heardWitnesses}/3 witnesses heard · {unanswered.length} optional follow-ups remaining</Text>
-      <Action title="Reconstruct the shift-change sequence" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
+      <Action title="Reconstruct the packet's records trail" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
       <Action title="Back to evidence" colors={colors} onPress={() => setPhase('evidence')} ghost />
     </>}
 
