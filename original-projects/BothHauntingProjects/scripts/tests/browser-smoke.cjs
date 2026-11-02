@@ -418,6 +418,50 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case041-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+    // Continue the campaign into Case 042 after Case 041 has been archived.
+    await page.evaluate(() => {
+      const raw = localStorage.getItem('casezero.investigation.archive.v1');
+      const archive = raw ? JSON.parse(raw) : { version: 1, completedCases: [] };
+      archive.completedCases = archive.completedCases.filter((record) => record.caseId !== 'case041');
+      archive.completedCases.push({
+        caseId: 'case041', caseTitle: 'The Missing Signature',
+        closedAt: '2026-11-02T00:00:00.000Z', selectedSuspectId: 'unknown',
+        selectedMotiveId: 'archive', inspectedClues: ['Dispatch carbon copy'],
+        askedQuestions: [], unansweredQuestions: [],
+      });
+      localStorage.setItem('casezero.investigation.archive.v1', JSON.stringify(archive));
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: 'Open Case 042' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 042' }).click();
+    await page.getByText('The Name on the Carbon', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the sealed archive' }).click();
+    for (const clue of [
+      'Controlled retrieval authorization',
+      'RA-17 seal inspection log',
+      'Dual-custody opening record',
+      'Carbon comparison sheet',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the retrieval and audit staff' }).click();
+    for (const question of [
+      'Does the name R. Vale prove Rowan Vale signed?',
+      'What would authenticate the handwriting?',
+      'Does the opening record identify the original writer?',
+    ]) await page.getByText(question, { exact: true }).click();
+    await page.getByRole('button', { name: 'Reconstruct the retrieval sequence' }).click();
+    for (const event of [
+      'Retrieval authorized for two custodians',
+      'RA-17 seal checked and recorded intact',
+      'Container opened under dual custody',
+      'Duplicate compared with dispatch carbon',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+    await page.getByText('Unverified acknowledgement writer', { exact: true }).click();
+    await page.getByText('The duplicate records “R. Vale” at 09:03, but the writer’s identity remains unverified', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The duplicate changes the investigation: a recipient name was entered on one copy.', { exact: false }).waitFor({ timeout: 10000 }).catch(() => undefined);
+    await page.screenshot({ path: '/tmp/casezero-case042-review.png', fullPage: true });
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
