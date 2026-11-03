@@ -107,7 +107,7 @@ export default function Case047Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase047TimelineCorrect(next)
-      ? 'That sequence conflicts with the duty records. Compare pickup record sign-off, desk allocation, corridor reader event and shared session start.'
+      ? 'That sequence conflicts with the pickup file. Compare the counter issue time, the carbon mark, the destination correction and the later return seal.'
       : '');
   };
   const submit = () => {
