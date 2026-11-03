@@ -1112,7 +1112,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
 
     await page.getByText('Nara Pell', { exact: true }).click();
-    await page.getByText(/The 19:23 west-corridor entry is an automatic WC-4 network acknowledgement/).click();
+    await page.getByText(/The west-corridor entry is an automatic network receipt/).click();
     await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
     await page.getByText(/The records establish a network acknowledgement, not a person’s location/).waitFor();
 
