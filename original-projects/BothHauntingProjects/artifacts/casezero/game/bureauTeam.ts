@@ -70,6 +70,8 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case038', label: 'Case 038 · The Queue Before Arrival' },
   { id: 'case039', label: 'Case 039 · The Station Without an Operator' },
   { id: 'case040', label: 'Case 040 · The Shift-Change Gap' },
+  { id: 'case053', label: 'Case 053 · The Duplicate Dispatch Seal' },
+  { id: 'case054', label: 'Case 054 · The Recorder Transfer' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
