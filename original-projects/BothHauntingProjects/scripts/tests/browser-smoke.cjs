@@ -1128,6 +1128,58 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case057-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+    // Case 058 authenticates the unindexed cache fragment without inventing a recorder-device match.
+    await page.getByRole('button', { name: 'Open Case 058' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 058' }).click();
+    await page.getByText('The Unindexed Buffer', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the unindexed buffer file' }).click();
+
+    for (const clue of [
+      'Local cache inventory card',
+      'Independent checksum comparison',
+      'Cache clock calibration note',
+      'Maintenance export journal',
+      'Recorder fingerprint comparison',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the cache and media witnesses' }).click();
+
+    for (const question of [
+      'What does the matching checksum establish?',
+      'Does the cabinet card identify who created the buffer?',
+      'How should the buffer timestamp be read?',
+      'Can the export journal identify the maintenance operator?',
+      'Does B-17 carry Rowan’s recorder fingerprint?',
+      'Can the authentic fragment still be attributed to Rowan?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the unindexed buffer timeline' }).click();
+    for (const event of [
+      'WC-4 local journal records the RS-14 fragment',
+      'B-17 retained on local cache C-2',
+      'Weekly cabinet inventory lists B-17',
+      'Independent checksum confirms an unchanged copy',
+      'B-17 exported to an isolated review drive',
+      'Media lab finds no recorder-specific fingerprint',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Oren Vey', { exact: true }).click();
+    await page.getByText(/B-17 is an authentic, correctly timed network fragment/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records authenticate B-17 as a network fragment/).waitFor();
+
+    await page.getByText('Authentic WC-4 network fragment', { exact: true }).click();
+    await page.getByText(/The matching checksum proves Rowan’s recorder sent the fragment/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records authenticate B-17 as a network fragment/).waitFor();
+
+    await page.getByText(/B-17 is an authentic, correctly timed network fragment/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/B-17 is an unchanged copy of the WC-4 network fragment/).waitFor();
+    await page.getByText(/The unindexed buffer is authentic and correctly timed, but it does not identify Rowan’s recorder/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case058-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
