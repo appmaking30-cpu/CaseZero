@@ -603,6 +603,59 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('Do not accuse Leena Voss or Omar Pell', { exact: false }).waitFor({ timeout: 10000 });
     await page.screenshot({ path: '/tmp/casezero-case046-review.png', fullPage: true });
 
+    // Case 047 checks the new pickup-slip investigation end to end, including save recovery and a fair deduction retry.
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+    await page.getByRole('button', { name: 'Open Case 047' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 047' }).click();
+    await page.getByText('The Pickup Slip', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the pickup record file' }).click();
+
+    await page.getByText('D-17 pickup carbon', { exact: true }).click();
+    await page.getByText(/Initials alone are not unique/).waitFor();
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.getByText('CASE 047 · EVIDENCE REVIEW').waitFor();
+    await page.getByText('1/4 records logged', { exact: true }).waitFor();
+
+    for (const clue of [
+      'D-17 pickup carbon',
+      'Counter issue register',
+      'Carbon correction note',
+      'Return-envelope seal log',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the pickup record and dispatch witnesses' }).click();
+
+    for (const question of [
+      'Who wrote “M.P.” on the carbon slip?',
+      'Does the bound register name the recipient?',
+      'Do the initials uniquely identify a staff member?',
+      'Who authorized the destination correction?',
+      'What does the return seal establish?',
+      'Can the seal log authenticate the pickup initials?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the pickup record-to-access timeline' }).click();
+    for (const event of [
+      'Relief desk issue entered',
+      'Pickup carbon marked',
+      'Destination field corrected',
+      'Return envelope sealed',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Mara Pell', { exact: true }).click();
+    await page.getByText(/The slip records M\.P\., but the initials are not authenticated/).waitFor();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/no verified specimen or witness identifies the writer/).waitFor();
+
+    await page.getByText('Unidentified relief-desk recipient', { exact: true }).click();
+    await page.getByText(/The slip records M\.P\., but the initials are not authenticated/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The carbon slip records M.P., but the author and physical collector remain unidentified.', { exact: true }).waitFor();
+    await page.getByText(/Do not accuse Mara Pell or Omar Pell/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case047-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+    await page.getByRole('button', { name: 'Review closed file' }).waitFor();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
