@@ -1296,6 +1296,44 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case061-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+    // Case 062 distinguishes a pending service request from completed work or a verified cylinder replacement.
+    await page.getByRole('button', { name: 'Open Case 062' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 062' }).click();
+    await page.getByText('The Cylinder Service Report', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the cylinder service report' }).click();
+    for (const clue of [
+      'C-2 cylinder installation register',
+      'Facilities service request C2-441',
+      'Preventive maintenance rota',
+      'Independent post-incident cylinder inspection',
+      'Work-order and removed-parts reconciliation',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the maintenance and parts witnesses' }).click();
+    for (const question of [
+      'Did request C2-441 authorize a cylinder replacement?',
+      'Does the maintenance rota show a C-2 service during the incident window?',
+      'What cylinder identifier did the later inspection record?',
+      'Does the inspection prove the cylinder was never handled or adjusted?',
+      'Was a removed CY-8841 cylinder retained in the parts archive?',
+      'Can the missing retained part prove that no cylinder work occurred?',
+    ]) await page.getByText(question, { exact: true }).click();
+    await page.getByRole('button', { name: 'Reconstruct the cylinder service timeline' }).click();
+    for (const event of [
+      'CY-8841 recorded at C-2 installation',
+      'C2-441 inspection request opened',
+      'Preventive maintenance rota published',
+      'MT-4 credential enters maintenance zone',
+      'Independent inspection records CY-8841',
+      'Completion and removed-parts records reconciled',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+    await page.getByText('CY-8841 remains the documented cylinder identifier', { exact: true }).click();
+    await page.getByText(/CY-8841 is the matching documented cylinder, but no completed service, replacement or individual handling is established/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The cylinder lead is narrowed: no completed service or replacement is verified/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case062-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 and 041–059 investigations, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
