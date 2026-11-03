@@ -37,7 +37,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Typecheck the CaseZero Expo app
         run: pnpm --filter @workspace/casezero run typecheck
-      - name: Run full CaseZero unit-test suite (Cases 001–050 and systems)
+      - name: Run full CaseZero unit-test suite (Cases 001–051 and systems)
         run: pnpm --filter @workspace/scripts test
       - name: Export Android-friendly web preview
         run: pnpm --filter @workspace/casezero exec expo export --platform web
@@ -47,7 +47,7 @@ jobs:
         run: npm install --prefix /tmp/casezero-browser playwright@1.56.1
       - name: Install Chromium
         run: /tmp/casezero-browser/node_modules/.bin/playwright install --with-deps chromium
-      - name: Run mobile campaign smoke test (Cases 001–006 and 041–050)
+      - name: Run mobile campaign smoke test (Cases 001–006 and 041–051)
         run: |
           python3 -m http.server 4173 --directory artifacts/casezero/dist >/tmp/casezero-http.log 2>&1 &
           echo $! >/tmp/casezero-http.pid
