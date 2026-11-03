@@ -74,6 +74,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case054', label: 'Case 054 · The Recorder Transfer' },
   { id: 'case055', label: 'Case 055 · The Last Verified Assignment' },
   { id: 'case056', label: 'Case 056 · The Relay Window' },
+  { id: 'case057', label: 'Case 057 · The West-Corridor Response' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
