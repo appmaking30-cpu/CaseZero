@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import {
   getMissingDetectiveArcStatus,
   getMissingDetectiveConvergence,
+  getMissingDetectiveRecorderTrail,
 } from '../../artifacts/casezero/game/missingDetectiveArc';
 import {
   archiveCompletedCase,
@@ -48,4 +49,32 @@ test('convergence report does not claim Rowan or the recorder has been located',
   assert.match(report.reportSummary, /Rowan[’']s recorder is still missing/i);
   assert.match(report.reportSummary, /transfer can now be traced/i);
   assert.doesNotMatch(report.reportSummary, /Rowan has been found/i);
+});
+
+
+test('recorder-transfer review stays locked until Cases 048–053 are archived', () => {
+  const partial = getMissingDetectiveRecorderTrail(archiveCases([
+    'case048', 'case049', 'case050', 'case051', 'case052',
+  ]));
+  assert.equal(partial.unlocked, false);
+  assert.deepEqual(partial.missingCaseIds, ['case053']);
+  assert.deepEqual(partial.evidenceLinks, []);
+
+  const complete = getMissingDetectiveRecorderTrail(archiveCases([
+    'case048', 'case049', 'case050', 'case051', 'case052', 'case053',
+  ]));
+  assert.equal(complete.unlocked, true);
+  assert.equal(complete.completedCaseCount, 6);
+  assert.equal(complete.reportTitle, 'The Recorder Transfer Index');
+  assert.equal(complete.evidenceLinks.length, 3);
+  assert.match(complete.nextLead, /recover the recorder-transfer packet/i);
+});
+
+test('recorder-transfer review does not overclaim the identity or recovery of Rowan’s recorder', () => {
+  const report = getMissingDetectiveRecorderTrail(archiveCases([
+    'case048', 'case049', 'case050', 'case051', 'case052', 'case053',
+  ]));
+  assert.match(report.reportSummary, /does not identify the person/i);
+  assert.match(report.reportSummary, /packet itself has not yet been recovered/i);
+  assert.doesNotMatch(report.reportSummary, /operator was identified/i);
 });
