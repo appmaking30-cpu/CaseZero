@@ -16,7 +16,7 @@ type Props = {
   onReturn: () => void;
 };
 
-export default function Case055Screen({ archive, bureauTeamBoard, onArchive, onReturn }: Props) {
+export default function Case056Screen({ archive, bureauTeamBoard, onArchive, onReturn }: Props) {
   const colors = useColors();
   const [loaded, setLoaded] = useState(false);
   const [phase, setPhase] = useState<Phase>('briefing');
@@ -26,7 +26,7 @@ export default function Case055Screen({ archive, bureauTeamBoard, onArchive, onR
   const [message, setMessage] = useState('');
   const archiveLock = useRef(false);
   const carryover = getCase056Carryover(archive);
-  const caseAssignment = bureauTeamBoard.presences.find((item) => item.targetId === CASE_056_GAME.id);
+  const caseAssignment = bureauTeamBoard.assignments.find((item) => item.targetId === CASE_056_GAME.id);
   const specialistRank = caseAssignment ? getBureauSpecialistProgress(bureauTeamBoard, caseAssignment.specialistId).rank : 0;
   const specialistInsight = getBureauSpecialistInsight(
     caseAssignment?.specialistId ?? null,
@@ -107,14 +107,14 @@ export default function Case055Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 5 && !isCase056TimelineCorrect(next)
-      ? 'That sequence conflicts with the transfer records. Check the original schedule, duty roster, North Annex acknowledgment and independent closeout.'
+      ? 'That sequence conflicts with the event records. Check the corrected field-log time, relay recording, channel assignment and clock certificate.'
       : '');
   };
   const submit = () => {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase056DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records establish Rowan’s presence and relay participation, not recorder custody. Recheck the original schedule, independent closeout and missing serial reconciliation.`);
+      setMessage(`The records corroborate Rowan’s presence and RS-14 participation, not recorder custody. Recheck the clock correction, independent recording and missing serial reconciliation.`);
       return;
     }
     archiveLock.current = true;
@@ -133,11 +133,11 @@ export default function Case055Screen({ archive, bureauTeamBoard, onArchive, onR
     setPhase('review');
   };
 
-  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING LAST VERIFIED ASSIGNMENT FILE…</Text></View>;
+  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING RELAY WINDOW FILE…</Text></View>;
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 056 · LAST VERIFIED ASSIGNMENT</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 056 · RELAY WINDOW</Text>
       <Text style={[styles.hero, text]}>{CASE_056_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_056_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
@@ -170,7 +170,7 @@ export default function Case055Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'interviews' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 056 · ASSIGNMENT RECORD INTERVIEWS</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 056 · RELAY WINDOW INTERVIEWS</Text>
       <Text style={[styles.hero, text]}>What can independent presence records verify?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and preserved in the archived report.</Text>
       {CASE_056_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
