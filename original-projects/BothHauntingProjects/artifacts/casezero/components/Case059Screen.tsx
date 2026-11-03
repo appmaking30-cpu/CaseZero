@@ -114,7 +114,7 @@ export default function Case059Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase059DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records authenticate C-2 as a network fragment, but they do not identify the cabinet user. Recheck the checksum, corrected clock, shared export role and missing individual access record.`);
+      setMessage(`The records establish who was authorized, not who actually opened C-2. Recheck the unobserved seal interval, independent retention receipt, shared MT-4 handover and zone-only badge reader.`);
       return;
     }
     archiveLock.current = true;
@@ -137,13 +137,13 @@ export default function Case059Screen({ archive, bureauTeamBoard, onArchive, onR
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 059 · THE UNINDEXED BUFFER</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 059 · THE CACHE ACCESS ROSTER</Text>
       <Text style={[styles.hero, text]}>{CASE_059_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_059_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_059_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_059_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 048–056 traced the authorization gap, dispatch records, recorder-transfer packet, Rowan’s assignment and independently corroborated relay participation. This file tests whether the C-2 access roster is a human location record or an authentic network fragment.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 048–056 traced the authorization gap, dispatch records, recorder-transfer packet, Rowan’s assignment and independently corroborated relay participation. This file tests whether the C-2 access roster defines permission but does not establish an actual cabinet opening.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>THE UNINDEXED BUFFER REVIEW</Text>
@@ -154,9 +154,9 @@ export default function Case059Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'evidence' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 059 · THE UNINDEXED BUFFER REVIEW</Text>
-      <Text style={[styles.hero, text]}>Authenticate C-2 against the local repeater journal, correct its cache-clock offset, and test whether the fragment contains a individual access match to the cabinet.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all five records: the cache inventory, retention-copy comparison, seal inspection, shift handover and recorder fingerprint analysis.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 059 · THE CACHE ACCESS ROSTER REVIEW</Text>
+      <Text style={[styles.hero, text]}>Compare the signed access roster, seal checks, independent retention receipt and shared maintenance handover. Permission is not proof of entry.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all five records: the signed roster, seal inspection, retention receipt, shift handover and access-log audit.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
       {CASE_059_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -170,7 +170,7 @@ export default function Case059Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'interviews' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 059 · THE UNINDEXED BUFFER INTERVIEWS</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 059 · THE CACHE ACCESS ROSTER INTERVIEWS</Text>
       <Text style={[styles.hero, text]}>What does the C-2 access roster actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and preserved in the archived report.</Text>
       {CASE_059_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
@@ -188,12 +188,12 @@ export default function Case059Screen({ archive, bureauTeamBoard, onArchive, onR
         })}
       </View>)}
       <Text style={[styles.note, muted]}>{heardWitnesses}/3 witnesses heard · {unanswered.length} optional follow-ups remaining</Text>
-      <Action title="Reconstruct the C-2 access roster timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
+      <Action title="Reconstruct the C-2 access timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
       <Action title="Back to evidence" colors={colors} onPress={() => setPhase('evidence')} ghost />
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 059 · THE UNINDEXED BUFFER TIMELINE</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 059 · THE CACHE ACCESS ROSTER TIMELINE</Text>
       <Text style={[styles.hero, text]}>Put the roster, seal inspection, WC-4 fragment, retention receipt, handover and access audit in chronological order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the six events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
