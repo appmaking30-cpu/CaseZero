@@ -746,6 +746,52 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case049-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+
+    // Case 050 follows the missing authorization leaf into the source-tray records.
+    await page.getByRole('button', { name: 'Open Case 050' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 050' }).click();
+    await page.getByText('The Empty Source Tray', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the source-tray file' }).click();
+
+    for (const clue of [
+      'Source-tray ledger extract',
+      'Staging transfer slip',
+      'Shelf-position audit',
+      'Source-tray search report',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the source-tray witnesses' }).click();
+
+    for (const question of [
+      'What does the 09:04 ledger entry prove?',
+      'Can the department stamp identify the person who entered it?',
+      'Who signed the 09:11 tray transfer?',
+      'Was the tray contents checked during transfer?',
+      'What did the 09:16 shelf audit actually inspect?',
+      'Does the 09:26 search identify the last person to see the leaf?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the source-tray timeline' }).click();
+    for (const event of [
+      'Authorization leaf entered in tray ledger',
+      'ST-4 moved to scan staging',
+      'Assigned shelf position found empty',
+      'Source-tray search reports no recovery',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Niko Daran', { exact: true }).click();
+    await page.getByText(/The ledger records an allocation, but no independent contents check or signed handover identifies the last handler/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/no individual handover or independent contents check identifies the last handler/).waitFor();
+
+    await page.getByText('Unidentified tray handler', { exact: true }).click();
+    await page.getByText(/The ledger records an allocation, but no independent contents check or signed handover identifies the last handler/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The source-tray ledger records an allocation, but the surviving custody trail cannot establish physical possession or identify who last handled the leaf.', { exact: true }).waitFor();
+    await page.getByText(/Do not accuse Niko Daran or Rhea Venn/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case050-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
