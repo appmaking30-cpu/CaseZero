@@ -107,14 +107,14 @@ export default function Case057Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 5 && !isCase057TimelineCorrect(next)
-      ? 'That sequence conflicts with the event records. Check the corrected field-log time, relay recording, channel assignment and clock certificate.'
+      ? 'That sequence conflicts with the event records. Check the automatic-mode sheet, sealed inventory, carrier receipt, decoder audit and desk return.'
       : '');
   };
   const submit = () => {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase057DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records establish a network acknowledgement, not a person’s location or recorder custody. Recheck the clock correction, independent recording and missing serial reconciliation.`);
+      setMessage(`The records establish a network acknowledgement, not a person’s location or recorder custody. Recheck the maintenance mode sheet, decoder audit and missing serial-level equipment handover.`);
       return;
     }
     archiveLock.current = true;
@@ -143,10 +143,10 @@ export default function Case057Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_057_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_057_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 048–053 traced the request, missing authorization, incomplete approval, executed route and duplicate dispatch reference. This file follows the independent presence trail without assuming that the badge and recording prove recorder custody.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 048–056 traced the authorization gap, dispatch records, recorder-transfer packet, Rowan’s assignment and independently corroborated relay participation. This file tests whether the west-corridor response is a human location record or an automatic network receipt.</Text>
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>RELAY CONTROL PERSONNEL</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>WEST-CORRIDOR RESPONSE REVIEW</Text>
         {CASE_057_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
       <Action title="Open the west-corridor response file" colors={colors} onPress={() => setPhase('evidence')} />
@@ -155,7 +155,7 @@ export default function Case057Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 057 · WEST-CORRIDOR RESPONSE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the west-corridor response log, repeater decoder audit, maintenance mode sheet, channel-side inventory and return register. Establish Rowan’s west-corridor response without overstating what it proves.</Text>
+      <Text style={[styles.hero, text]}>Compare the west-corridor response log, repeater decoder audit, maintenance mode sheet, channel-side inventory and return register. Determine what the west-corridor network response proves without treating a signal receipt as a person’s location.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all five records: the response log, decoder audit, maintenance sheet, channel-side inventory and return register.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
@@ -194,7 +194,7 @@ export default function Case057Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 057 · WEST-CORRIDOR RESPONSE TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the channel assignment, automatic relay mode, sealed channel-side inventory, west-corridor carrier receipt, decoder audit and channel register in order.</Text>
+      <Text style={[styles.hero, text]}>Put the automatic-mode confirmation, sealed channel-side inventory, west-corridor carrier receipt, decoder audit and channel register in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the five events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -234,7 +234,7 @@ export default function Case057Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'review' && <>
-      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 056</Text></View>
+      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 057</Text></View>
       <Text style={[styles.hero, text]}>The 19:23 west-corridor entry is an automatic WC-4 acknowledgement, not proof Rowan or the recorder reached the corridor.</Text>
       <Text style={[styles.subtitle, muted]}>The maintenance sheet and decoder audit establish an automatic acknowledgement. The channel-side inventory does not identify a recorder serial or physical handover.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_057_GAME.truth}</Text></View>
