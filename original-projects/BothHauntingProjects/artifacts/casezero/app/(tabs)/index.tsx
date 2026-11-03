@@ -1192,7 +1192,15 @@ export default function HomeScreen() {
                 <ActionButton title="Open Case 045" onPress={() => setPhase('case045')} colors={colors} />
               </View>
             )}
-            {investigationArchive.completedCases.some((record) => record.caseId === 'case045')
+            {investigationArchive.completedCases.some((record) => record.caseId === 'case045') && !investigationArchive.completedCases.some((record) => record.caseId === 'case046') && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Incoming file · 046</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{CASE_046_GAME.title}</Text>
+                <Text style={[styles.body, mutedStyle]}>{CASE_046_GAME.subtitle}</Text>
+                <Text style={[styles.memoryNote, textStyle]}>The handover names a role, not a recipient. Compare the signed RELIEF-2 roster with the separate desk allocation and shared console audit.</Text>
+                <ActionButton title="Open Case 046" onPress={() => setPhase('case046')} colors={colors} />
+              </View>
+            )}
             {investigationArchive.completedCases.some((record) => record.caseId === 'case046') && !investigationArchive.completedCases.some((record) => record.caseId === 'case047') && (
               <View style={[styles.card, cardStyle]}>
                 <SectionLabel colors={colors}>Incoming file · 047</SectionLabel>
@@ -1200,14 +1208,6 @@ export default function HomeScreen() {
                 <Text style={[styles.body, mutedStyle]}>{CASE_047_GAME.subtitle}</Text>
                 <Text style={[styles.memoryNote, textStyle]}>A carbon slip bears initials M.P. Compare the counter register, correction note and return seal before attributing the pickup to anyone.</Text>
                 <ActionButton title="Open Case 047" onPress={() => setPhase('case047')} colors={colors} />
-              </View>
-            )} && !investigationArchive.completedCases.some((record) => record.caseId === 'case046') && (
-              <View style={[styles.card, cardStyle]}>
-                <SectionLabel colors={colors}>Incoming file · 046</SectionLabel>
-                <Text style={[styles.caseTitle, textStyle]}>{CASE_046_GAME.title}</Text>
-                <Text style={[styles.body, mutedStyle]}>{CASE_046_GAME.subtitle}</Text>
-                <Text style={[styles.memoryNote, textStyle]}>The handover names a role, not a recipient. Compare the signed RELIEF-2 roster with the separate desk allocation and shared console audit.</Text>
-                <ActionButton title="Open Case 046" onPress={() => setPhase('case046')} colors={colors} />
               </View>
             )}
             {investigationArchive.completedCases.some((record) => record.caseId === 'case041') && !investigationArchive.completedCases.some((record) => record.caseId === 'case042') && (
@@ -2162,19 +2162,19 @@ export default function HomeScreen() {
           />
         )}
         {phase === 'case046' && (
+          <Case046Screen archive={investigationArchive} bureauTeamBoard={bureauTeamBoard}
+            onArchive={(record) => {
+              setInvestigationArchive((current) => archiveCompletedCase(current, record));
+              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_046_GAME.id));
+            }}
+            onReturn={() => setPhase('hq')}
+          />
+        )}
         {phase === 'case047' && (
           <Case047Screen archive={investigationArchive} bureauTeamBoard={bureauTeamBoard}
             onArchive={(record) => {
               setInvestigationArchive((current) => archiveCompletedCase(current, record));
               setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_047_GAME.id));
-            }}
-            onReturn={() => setPhase('hq')}
-          />
-        )}
-          <Case046Screen archive={investigationArchive} bureauTeamBoard={bureauTeamBoard}
-            onArchive={(record) => {
-              setInvestigationArchive((current) => archiveCompletedCase(current, record));
-              setBureauTeamBoard((current) => awardBureauCaseExperience(current, CASE_046_GAME.id));
             }}
             onReturn={() => setPhase('hq')}
           />
