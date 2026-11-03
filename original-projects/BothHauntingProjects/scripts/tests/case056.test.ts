@@ -18,7 +18,7 @@ test('Case 056 reconciles channel setup, corrected gate event, relay recording, 
 });
 
 test('Case 056 distinguishes independently corroborated presence from recorder custody', () => {
-  assert.match(CASE_056_GAME.clues[0].detail, /assigned Rowan Vale credential/);
+  assert.match(CASE_056_GAME.clues[0].detail, /Rowan’s assigned credential/);
   assert.match(CASE_056_GAME.clues[1].detail, /registered voice/);
   assert.match(CASE_056_GAME.clues[2].detail, /four minutes fast/);
   assert.match(CASE_056_GAME.clues[4].detail, /last handler remain unknown/);
