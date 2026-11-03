@@ -1028,6 +1028,54 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case055-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+
+    // Case 056 reconciles the corrected field-log clock with an independent relay recording.
+    await page.getByRole('button', { name: 'Open Case 056' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 056' }).click();
+    await page.getByText('The Relay Window', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the relay window file' }).click();
+
+    for (const clue of [
+      'North Annex field log',
+      'Independent relay-control recording',
+      'Clock synchronization certificate',
+      'Channel assignment sheet',
+      'Independent media and equipment audit',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the relay-control witnesses' }).click();
+
+    for (const question of [
+      'What does the east-gate event establish?',
+      'Why does the field-log time need correction?',
+      'Can the recording be linked to Rowan?',
+      'Does the recording identify Rowan’s recorder?',
+      'Do the corrected times fit the RS-14 window?',
+      'Can this file identify the recorder’s last handler?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the relay window timeline' }).click();
+    for (const event of [
+      'Channel 6 assigned to RS-14',
+      'Rowan’s corrected east-gate event',
+      'Independent RS-14 relay call recorded',
+      'RS-14 survey window closes',
+      'Independent audit confirms custody gap',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Tessa Rill', { exact: true }).click();
+    await page.getByText(/Rowan’s presence and RS-14 participation are independently corroborated/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/recorder custody remains unresolved/).waitFor();
+
+    await page.getByText('Rowan’s presence independently corroborated', { exact: true }).click();
+    await page.getByText(/Rowan’s presence and RS-14 participation are independently corroborated/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The North Annex field log, corrected using its documented four-minute clock offset/).waitFor();
+    await page.getByText(/Keep the recorder’s identity and last physical handler unresolved/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case056-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
