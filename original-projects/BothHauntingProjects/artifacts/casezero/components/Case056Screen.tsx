@@ -155,8 +155,8 @@ export default function Case056Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 056 · RELAY WINDOW REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the original RS-14 field log, independent relay recording, clock certificate, channel sheet and equipment audit. Establish Rowan’s relay window without overstating what it proves.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all five records: the field log, relay recording, clock certificate, channel presence and audit.</Text>
+      <Text style={[styles.hero, text]}>Compare the North Annex field log, independent relay recording, clock certificate, channel assignment and equipment audit. Establish Rowan’s relay window without overstating what it proves.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all five records: the field log, relay recording, clock certificate, channel assignment and audit.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
       {CASE_056_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -193,8 +193,8 @@ export default function Case056Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 056 · ASSIGNMENT TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the original schedule, duty roster, North Annex acknowledgment, independent closeout and equipment audit in order.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 056 · RELAY WINDOW TIMELINE</Text>
+      <Text style={[styles.hero, text]}>Put the channel assignment, corrected badge event, independent relay recording, survey-window close and equipment audit in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the five events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -218,14 +218,14 @@ export default function Case056Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 056 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>What is Rowan Vale’s last independently verified presence—and what remains unproven about the recorder?</Text>
+      <Text style={[styles.hero, text]}>What does the independent evidence verify about Rowan’s North Annex presence—and what remains unproven about the recorder?</Text>
       <Text style={[styles.subtitle, muted]}>Distinguish a verified presence from personal arrival, a serial-level equipment handover and the recorder’s last physical custodian.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>RECORDER CUSTODY REVIEW</Text>
         {CASE_056_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>WHAT DOES THE ASSIGNMENT RECORD PROVE?</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>WHAT DOES THE RELAY EVIDENCE PROVE?</Text>
         {CASE_056_GAME.motives.map((motive) => <Choice key={motive.id} title={motive.label} note={motive.note} selected={progress.selectedMotive === motive.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedMotive: motive.id }))} />)}
       </View>
       {!!message && <Text style={[styles.note, { color: colors.destructive }]}>{message}</Text>}
@@ -234,9 +234,9 @@ export default function Case056Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'review' && <>
-      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 055</Text></View>
-      <Text style={[styles.hero, text]}>Rowan’s last independently verified presence was Rowan’s corroborated North Annex presence; the recorder’s physical custodian remains unknown.</Text>
-      <Text style={[styles.subtitle, muted]}>The original schedule, signed duty roster, desk acknowledgment and independent closeout corroborate Rowan’s RS-14 presence. None proves personal arrival or recorder custody.</Text>
+      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 056</Text></View>
+      <Text style={[styles.hero, text]}>Rowan’s presence at North Annex and participation in RS-14 are independently corroborated; the recorder’s physical custodian remains unknown.</Text>
+      <Text style={[styles.subtitle, muted]}>The corrected gate event and independent relay recording corroborate Rowan’s presence and RS-14 participation. Neither identifies the recorder or its last physical handler.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_056_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_056_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_056_GAME.outcome}</Text></View>
