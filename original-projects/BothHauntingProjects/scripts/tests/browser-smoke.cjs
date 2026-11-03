@@ -1206,6 +1206,51 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case059-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+    // Case 060 reconciles a shared badge event with the physical key ledger without naming an individual keyholder.
+    await page.getByRole('button', { name: 'Open Case 060' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 060' }).click();
+    await page.getByText('The Missing Key Record', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the missing key record file' }).click();
+    for (const clue of [
+      'Independent badge-controller archive',
+      'Credential assignment register',
+      'Physical key issue ledger',
+      'Independent key-ring reconciliation',
+      'Controller clock and retention certificate',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the security and key-control witnesses' }).click();
+    for (const question of [
+      'What does the independent controller archive prove?',
+      'Can the credential identify the person carrying it?',
+      'Who received physical key K-2 at 18:55?',
+      'Does the key-ring audit prove the key opened C-2?',
+      'Is the 19:16 controller event authentic and correctly timed?',
+      'Can the combined records name the person who opened C-2?',
+    ]) await page.getByText(question, { exact: true }).click();
+    await page.getByRole('button', { name: 'Reconstruct the key-control timeline' }).click();
+    for (const event of [
+      'MT-4 evening team roster confirmed',
+      'Physical key K-2 issued to MT-4',
+      'MT-4 credential enters maintenance zone',
+      'K-2 return logged against MT-4',
+      'Independent controller archive exported',
+      'Key-ring serial reconciled to C-2 schedule',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+    await page.getByText('Maren Sol', { exact: true }).click();
+    await page.getByText(/MT-4 entered the maintenance zone and K-2 was issued to the team/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records corroborate a shared MT-4 zone entry and team-level K-2 issue/).waitFor();
+    await page.getByText('Shared MT-4 credential and team key issue established', { exact: true }).click();
+    await page.getByText(/Sana took K-2 because she maintained the key ledger/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records corroborate a shared MT-4 zone entry and team-level K-2 issue/).waitFor();
+    await page.getByText(/MT-4 entered the maintenance zone and K-2 was issued to the team, but no individual keyholder or C-2 opening is proven/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The badge event and physical key record are now independently reconciled at team level/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case060-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 and 041–059 investigations, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
