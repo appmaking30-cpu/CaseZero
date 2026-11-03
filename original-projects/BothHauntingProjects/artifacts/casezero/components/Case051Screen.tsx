@@ -154,9 +154,9 @@ export default function Case051Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'evidence' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 051 · TRAY CUSTODY REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the authorization ledger, staging transfer, shelf audit and search report. Establish what the approval records actually prove about the missing approval.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: authorization ledger, staging transfer slip, shelf-position audit and authorization search report.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 051 · APPROVAL EVIDENCE REVIEW</Text>
+      <Text style={[styles.hero, text]}>Compare the signatory roster, workflow register, countersignature sheet and exception notice. Establish what the approval records actually prove about the missing approval.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: signatory roster, approval workflow register, countersignature control sheet and workflow exception notice.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_051_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -194,7 +194,7 @@ export default function Case051Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 051 · AUTHORIZATION TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the workflow register, staging transfer, shelf audit and search report in order.</Text>
+      <Text style={[styles.hero, text]}>Put signatory eligibility, the approval request, the countersignature check and the exception notice in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -218,14 +218,14 @@ export default function Case051Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 051 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Can the surviving approval records identify who last handled the authorization approval?</Text>
-      <Text style={[styles.subtitle, muted]}>Identify the unresolved approval handler, then choose the precise limit of the ledger and transfer records.</Text>
+      <Text style={[styles.hero, text]}>Do the surviving records establish that D-17 was validly approved?</Text>
+      <Text style={[styles.subtitle, muted]}>Determine whether the request was approved, then state what the missing signatures mean.</Text>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>AUTHORIZATION CUSTODY REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>APPROVAL STATUS REVIEW</Text>
         {CASE_051_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>WHAT DO THE TRAY RECORDS PROVE?</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>WHAT DOES THE APPROVAL WORKFLOW PROVE?</Text>
         {CASE_051_GAME.motives.map((motive) => <Choice key={motive.id} title={motive.label} note={motive.note} selected={progress.selectedMotive === motive.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedMotive: motive.id }))} />)}
       </View>
       {!!message && <Text style={[styles.note, { color: colors.destructive }]}>{message}</Text>}
@@ -235,8 +235,8 @@ export default function Case051Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 051</Text></View>
-      <Text style={[styles.hero, text]}>The authorization ledger records an allocation, but the surviving custody trail cannot establish valid approval or identify who last handled the approval.</Text>
-      <Text style={[styles.subtitle, muted]}>The ledger, staging transfer, shelf audit and search establish a missing-approval trail—but do not prove the approval was physically present in D-17 or identify who last handled it.</Text>
+      <Text style={[styles.hero, text]}>The workflow records a request, but no authenticated primary approval or independent witness countersignature survives.</Text>
+      <Text style={[styles.subtitle, muted]}>The roster, request register, countersignature sheet and exception notice establish that the workflow remained incomplete—not that D-17 received valid approval.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_051_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_051_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_051_GAME.outcome}</Text></View>
