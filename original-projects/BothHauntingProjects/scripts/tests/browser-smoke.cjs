@@ -701,6 +701,51 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case048-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+    // Case 049 follows the authorization leaf's missing-page custody trail.
+    await page.getByRole('button', { name: 'Open Case 049' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 049' }).click();
+    await page.getByText('The Missing Authorization Page', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the document-control file' }).click();
+
+    for (const clue of [
+      'Original packet sleeve',
+      'Batch scan manifest',
+      'Document transfer register',
+      'Packet discrepancy note',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the document-control witnesses' }).click();
+
+    for (const question of [
+      'What does the sleeve checklist establish?',
+      'Can the 09:24 note identify when the leaf went missing?',
+      'What was included in the 09:18 scan batch?',
+      'Does the scanner field identify the operator?',
+      'Who signed the 09:20 packet transfer?',
+      'Was the authorization leaf checked before dispatch?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the packet custody timeline' }).click();
+    for (const event of [
+      'Request packet scan batch',
+      'Departmental packet transfer',
+      'Sleeve received with broken seal',
+      'Missing-leaf discrepancy recorded',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Jonas Pell', { exact: true }).click();
+    await page.getByText(/The records establish a missing page by 09:18/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/no individual handover or contents check identifies who last handled it/).waitFor();
+
+    await page.getByText('Unidentified packet handler', { exact: true }).click();
+    await page.getByText(/The records establish a missing page by 09:18/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The packet checklist expected an authorization leaf, but the surviving custody trail cannot identify who last handled it.', { exact: true }).waitFor();
+    await page.getByText(/Do not accuse Jonas Pell or Asha Neri/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case049-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
