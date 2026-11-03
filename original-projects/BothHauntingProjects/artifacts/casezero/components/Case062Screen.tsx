@@ -143,7 +143,7 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_062_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_062_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 054–060 established Rowan’s relay assignment, the team-level incident access event and physical key issue. This file tests whether the cylinder installation register establishes more than the existence of a cylinder.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 054–061 established Rowan’s relay assignment and the North Annex access trail. This file tests whether the service records establish completed cylinder work or a physical replacement.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>THE DUPLICATE KEY LEDGER REVIEW</Text>
