@@ -107,7 +107,7 @@ export default function Case051Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase051TimelineCorrect(next)
-      ? 'That sequence conflicts with the custody records. Compare the scan manifest, departmental transfer, sleeve receipt and discrepancy audit.'
+      ? 'That sequence conflicts with the approval records. Compare the effective signatory roster, pending request, blank countersignature sheet and exception notice.'
       : '');
   };
   const submit = () => {
@@ -143,10 +143,10 @@ export default function Case051Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_051_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_051_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier files traced the missing authorization approval. This file follows the authorization record that may explain its last documented location.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier files traced the missing approval record. This file tests whether the D-17 change ever received the required sign-off.</Text>
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>AUTHORIZATION PERSONNEL</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>APPROVAL WORKFLOW PERSONNEL</Text>
         {CASE_051_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
       <Action title="Open the approval file" colors={colors} onPress={() => setPhase('evidence')} />
@@ -193,7 +193,7 @@ export default function Case051Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 051 · AUTHORIZATION TIMELINE</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 051 · APPROVAL WORKFLOW TIMELINE</Text>
       <Text style={[styles.hero, text]}>Put signatory eligibility, the approval request, the countersignature check and the exception notice in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
