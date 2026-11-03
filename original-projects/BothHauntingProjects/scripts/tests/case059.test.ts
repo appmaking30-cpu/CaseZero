@@ -1,2 +1,8 @@
-import { test } from 'node:test';
-test('Case 059 placeholder', () => {});
+import assert from 'node:assert/strict';
+import {test} from 'node:test';
+import {CASE_059_GAME,getCase059Carryover,isCase059DeductionCorrect,isCase059TimelineCorrect} from '../../artifacts/casezero/game/case059Game';
+import {archiveCompletedCase,EMPTY_INVESTIGATION_ARCHIVE} from '../../artifacts/casezero/game/investigationArchive';
+test('Case 059 has five distinct records and three witnesses with two questions each',()=>{assert.equal(CASE_059_GAME.clues.length,5);assert.equal(new Set(CASE_059_GAME.clues.map(x=>x.id)).size,5);assert.equal(CASE_059_GAME.witnesses.length,3);assert.ok(CASE_059_GAME.witnesses.every(w=>w.questions.length===2));});
+test('Case 059 timeline separates authorization, seal gap, retention and audit',()=>{assert.equal(CASE_059_GAME.timelineEvents.length,6);assert.equal(isCase059TimelineCorrect(CASE_059_GAME.correctOrder),true);assert.equal(isCase059TimelineCorrect([...CASE_059_GAME.correctOrder].reverse()),false);});
+test('Case 059 does not confuse authorization or receipt with actual access or creation',()=>{assert.equal(isCase059DeductionCorrect('authorized','limits'),true);assert.equal(isCase059DeductionCorrect('sana','limits'),false);assert.equal(isCase059DeductionCorrect('authorized','dev'),false);});
+test('Case 059 carries forward archived evidence',()=>{const archive=archiveCompletedCase(EMPTY_INVESTIGATION_ARCHIVE,{caseId:'case058',caseTitle:'The Unindexed Buffer',closedAt:'2026-11-03T10:00:00.000Z',selectedSuspectId:'authentic',selectedMotiveId:'integrity',inspectedClues:['Local cache inventory card'],askedQuestions:[],unansweredQuestions:[]});const m=getCase059Carryover(archive);assert.equal(m.priorFiles.length,1);assert.equal(m.clueCount,1);assert.equal(m.recorderTrailFiles,1);});
