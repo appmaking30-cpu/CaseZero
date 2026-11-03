@@ -107,14 +107,14 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 6 && !isCase062TimelineCorrect(next)
-      ? 'That sequence conflicts with the records. Check the service request, installation register, maintenance rota, incident badge event, later cylinder inspection and independent review.'
+      ? 'That sequence conflicts with the records. Check the service request, installation register, maintenance rota, incident incident access event, later cylinder inspection and independent reconciliation.'
       : '');
   };
   const submit = () => {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase062DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records establish a documented cylinder identifier, not incident-time use. Recheck the work order, later cylinder inspection, packet inventory and limits of the missing checkout record.`);
+      setMessage(`The records establish a documented cylinder identifier, not incident-time use. Recheck the service request, later cylinder inspection, parts archive and limits of the searched completion and parts records.`);
       return;
     }
     archiveLock.current = true;
@@ -137,24 +137,24 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 061 · THE DUPLICATE KEY LEDGER</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 062 · THE CYLINDER SERVICE REPORT</Text>
       <Text style={[styles.hero, text]}>{CASE_062_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_062_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_062_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_062_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 054–060 established Rowan’s relay assignment, the team-level badge event and physical key issue. This file tests whether the cylinder-service register establishes more than the existence of a cylinder.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 054–060 established Rowan’s relay assignment, the team-level incident access event and physical key issue. This file tests whether the cylinder installation register establishes more than the existence of a cylinder.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>THE DUPLICATE KEY LEDGER REVIEW</Text>
         {CASE_062_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
-      <Action title="Open the cylinder service ledger file" colors={colors} onPress={() => setPhase('evidence')} />
+      <Action title="Open the cylinder service report" colors={colors} onPress={() => setPhase('evidence')} />
       <Action title="Back to Bureau" colors={colors} onPress={onReturn} ghost />
     </>}
 
     {phase === 'evidence' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 061 · THE DUPLICATE KEY LEDGER REVIEW</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 062 · THE CYLINDER SERVICE REPORT REVIEW</Text>
       <Text style={[styles.hero, text]}>Compare the cylinder-service installation register, service request, independent cylinder inspection and retention packet. A registered cylinder is not proof of use.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all five records: the installation register, service request, independent cylinder inspection, retention packet and independent reconciliation.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
@@ -170,7 +170,7 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'interviews' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 061 · THE DUPLICATE KEY LEDGER INTERVIEWS</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 062 · THE CYLINDER SERVICE REPORT INTERVIEWS</Text>
       <Text style={[styles.hero, text]}>What do the cylinder service records actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and preserved in the archived report.</Text>
       {CASE_062_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
@@ -193,8 +193,8 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 061 · THE DUPLICATE KEY LEDGER TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the duplicate cutting, pending service request, maintenance rota, badge event, later cylinder inspection and independent review in chronological order.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 062 · THE CYLINDER SERVICE REPORT TIMELINE</Text>
+      <Text style={[styles.hero, text]}>Put the original installation, pending service request, maintenance rota, incident access event, later cylinder inspection and independent reconciliation in chronological order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the six events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -217,7 +217,7 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'deduction' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 061 · FINAL DEDUCTION</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 062 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>Do the records prove CY-8841 was serviced or replaced during the incident?</Text>
       <Text style={[styles.subtitle, muted]}>Separate proof that a cylinder existed from proof it was serviced, replaced or handled at C-2.</Text>
       <View style={[styles.card, card]}>
@@ -234,9 +234,9 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'review' && <>
-      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 061</Text></View>
-      <Text style={[styles.hero, text]}>A matching cylinder CY-8841 existed as a documented cylinder, but no incident-time checkout or cabinet event connects it to the C-2 opening.</Text>
-      <Text style={[styles.subtitle, muted]}>The installation register identifies CY-8841 and its reserve location; the service request confirms its creation; the later inspection records its numbered envelope intact; and the retained packet contains no completion record. None proves its condition throughout the incident night or connects it to an opening.</Text>
+      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 062</Text></View>
+      <Text style={[styles.hero, text]}>The installation register and later inspection both identify CY-8841, but no completed service or replacement is verified in the searched records.</Text>
+      <Text style={[styles.subtitle, muted]}>The installation register records CY-8841 at C-2; the service request remained awaiting scheduling; the later inspection records the same identifier; and the completion and parts archives contain no signed replacement trail. These records do not rule out undocumented handling or identify anyone who touched the lock.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_062_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_062_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_062_GAME.outcome}</Text></View>
