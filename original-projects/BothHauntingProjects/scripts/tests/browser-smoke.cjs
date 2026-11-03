@@ -656,6 +656,51 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
     await page.getByRole('button', { name: 'Review closed file' }).waitFor();
 
+    // Case 048 follows the recovered correction request through intake and retention.
+    await page.getByRole('button', { name: 'Open Case 048' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 048' }).click();
+    await page.getByText('The Original Request', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the request packet file' }).click();
+
+    for (const clue of [
+      'Recovered correction request',
+      'Records intake docket',
+      'Dispatch terminal activity summary',
+      'Records retention index',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the records intake and dispatch witnesses' }).click();
+
+    for (const question of [
+      'What does the intake docket authenticate?',
+      'Was the original requester line completed?',
+      'Do the initials T.R. identify you as the author?',
+      'Who could use the DC-1 role credential?',
+      'What does the 09:18 retention scan prove?',
+      'Can the index confirm every original attachment survived?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the request-to-archive timeline' }).click();
+    for (const event of [
+      'Shared DC-1 document session',
+      'Correction request completed',
+      'Request received and routed',
+      'Request packet archived',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Tamsin Reeve', { exact: true }).click();
+    await page.getByText(/The request and docket confirm a role-level correction request/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/no verified specimen or witness identifies the author/).waitFor();
+
+    await page.getByText('Unidentified dispatch coordination requester', { exact: true }).click();
+    await page.getByText(/The request and docket confirm a role-level correction request/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The recovered form confirms a role-level request, but its individual author remains unidentified.', { exact: true }).waitFor();
+    await page.getByText(/Do not accuse Tamsin Reeve or Ilya Norr/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case048-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
