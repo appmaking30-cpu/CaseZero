@@ -107,14 +107,14 @@ export default function Case049Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase049TimelineCorrect(next)
-      ? 'That sequence conflicts with the request packet. Compare the shared terminal activity, request completion, intake receipt and later retention scan.'
+      ? 'That sequence conflicts with the custody records. Compare the scan manifest, departmental transfer, sleeve receipt and discrepancy audit.'
       : '');
   };
   const submit = () => {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase049DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The recovered form contains T.R., but no verified specimen or witness identifies the author.`);
+      setMessage(`The missing leaf is recorded in the scan manifest, but no individual handover or contents check identifies who last handled it.`);
       return;
     }
     archiveLock.current = true;
@@ -133,30 +133,30 @@ export default function Case049Screen({ archive, bureauTeamBoard, onArchive, onR
     setPhase('review');
   };
 
-  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING ORIGINAL REQUEST FILE…</Text></View>;
+  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING DOCUMENT-CONTROL FILE…</Text></View>;
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 049 · ORIGINAL REQUEST REVIEW</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 049 · MISSING AUTHORIZATION REVIEW</Text>
       <Text style={[styles.hero, text]}>{CASE_049_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_049_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_049_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_049_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the D-17 correction trail. This file tests the recovered request packet without assuming who authored its initials.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier files traced the correction request. This file examines the authorization leaf that should have accompanied it.</Text>
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>RECORDS INTAKE PERSONNEL</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>DOCUMENT CONTROL PERSONNEL</Text>
         {CASE_049_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
-      <Action title="Open the request packet file" colors={colors} onPress={() => setPhase('evidence')} />
+      <Action title="Open the document-control file" colors={colors} onPress={() => setPhase('evidence')} />
       <Action title="Back to Bureau" colors={colors} onPress={onReturn} ghost />
     </>}
 
     {phase === 'evidence' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 049 · REQUEST PACKET REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the recovered request, intake docket, shared terminal summary and retention index. Establish what each record can—and cannot—prove.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: recovered correction request, intake docket, terminal activity summary and retention index.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 049 · PACKET CONTENTS REVIEW</Text>
+      <Text style={[styles.hero, text]}>Compare the packet sleeve, scan manifest, transfer register and discrepancy note. Establish when the authorization leaf is first recorded as missing—and what the custody trail cannot prove.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: original packet sleeve, batch scan manifest, document transfer register and packet discrepancy note.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_049_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -165,14 +165,14 @@ export default function Case049Screen({ archive, bureauTeamBoard, onArchive, onR
         <Text style={[styles.note, muted]}>{clue.label}</Text>
         {activeClue === clue.id && <Text style={[styles.body, text, styles.divider]}>{clue.detail}</Text>}
       </Pressable>)}
-      <Action title="Interview the records intake and dispatch witnesses" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
+      <Action title="Interview the document-control witnesses" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
       <Action title="Back to briefing" colors={colors} onPress={() => setPhase('briefing')} ghost />
     </>}
 
     {phase === 'interviews' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 049 · RECORDS INTAKE INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What does a correction request actually prove?</Text>
-      <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and are preserved in the archived report.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 049 · DOCUMENT-CONTROL INTERVIEWS</Text>
+      <Text style={[styles.hero, text]}>What does a missing-page audit actually establish?</Text>
+      <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and preserved in the archived report.</Text>
       {CASE_049_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
         <Text style={[styles.note, muted]}>{witness.role} · {witness.questions.some((question) => progress.askedQuestions.includes(witness.id + ':' + question.id)) ? 'HEARD' : 'WITNESS 0' + (index + 1)}</Text>
@@ -188,13 +188,13 @@ export default function Case049Screen({ archive, bureauTeamBoard, onArchive, onR
         })}
       </View>)}
       <Text style={[styles.note, muted]}>{heardWitnesses}/3 witnesses heard · {unanswered.length} optional follow-ups remaining</Text>
-      <Action title="Reconstruct the request-to-archive timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
+      <Action title="Reconstruct the packet custody timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
       <Action title="Back to evidence" colors={colors} onPress={() => setPhase('evidence')} ghost />
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 049 · REQUEST ROUTING TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the terminal activity, request form, intake receipt and archive scan in order.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 049 · PACKET CUSTODY TIMELINE</Text>
+      <Text style={[styles.hero, text]}>Put the scan batch, departmental transfer, sleeve receipt and discrepancy audit in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -218,14 +218,14 @@ export default function Case049Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 049 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Can the unauthenticated initials fairly identify who authored the correction request?</Text>
-      <Text style={[styles.subtitle, muted]}>Identify the unresolved requester, then choose the precise limit of the form and routing records.</Text>
+      <Text style={[styles.hero, text]}>Can the surviving custody records identify who last handled the missing authorization leaf?</Text>
+      <Text style={[styles.subtitle, muted]}>Identify the unresolved packet handler, then choose the precise limit of the scan and transfer records.</Text>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>REQUEST AUTHORSHIP AND AUTHENTICATION UNDER REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>PACKET CUSTODY AND MISSING-PAGE REVIEW</Text>
         {CASE_049_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>WHAT DID THE RECORD PROVE?</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>WHAT DO THE CUSTODY RECORDS PROVE?</Text>
         {CASE_049_GAME.motives.map((motive) => <Choice key={motive.id} title={motive.label} note={motive.note} selected={progress.selectedMotive === motive.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedMotive: motive.id }))} />)}
       </View>
       {!!message && <Text style={[styles.note, { color: colors.destructive }]}>{message}</Text>}
@@ -234,9 +234,9 @@ export default function Case049Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'review' && <>
-      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 048</Text></View>
-      <Text style={[styles.hero, text]}>The recovered form confirms a role-level request, but its individual author remains unidentified.</Text>
-      <Text style={[styles.subtitle, muted]}>The request form, matching intake docket, shared terminal activity and retention index establish a sequence—but do not identify the individual author.</Text>
+      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 049</Text></View>
+      <Text style={[styles.hero, text]}>The packet checklist expected an authorization leaf, but the surviving custody trail cannot identify who last handled it.</Text>
+      <Text style={[styles.subtitle, muted]}>The scan manifest, departmental transfer, sleeve check and discrepancy note establish when the page was first recorded as absent—but do not identify when it disappeared or who last handled it.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_049_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_049_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_049_GAME.outcome}</Text></View>
