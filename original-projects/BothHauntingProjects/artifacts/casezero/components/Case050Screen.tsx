@@ -143,7 +143,7 @@ export default function Case050Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_050_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_050_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier files traced the correction request. This file examines the authorization leaf that should have accompanied it.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier files traced the missing authorization leaf. This file follows the source-tray record that may explain its last documented location.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>SOURCE-TRAY PERSONNEL</Text>
@@ -193,8 +193,8 @@ export default function Case050Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 050 · PACKET CUSTODY TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the scan batch, departmental transfer, sleeve receipt and discrepancy audit in order.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 050 · SOURCE-TRAY TIMELINE</Text>
+      <Text style={[styles.hero, text]}>Put the tray ledger, staging transfer, shelf audit and search report in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
