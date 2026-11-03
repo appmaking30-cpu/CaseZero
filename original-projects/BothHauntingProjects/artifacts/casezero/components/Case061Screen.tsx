@@ -218,7 +218,7 @@ export default function Case061Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 061 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Do the badge and key records identify who carried K-2 or prove that C-2 was opened?</Text>
+      <Text style={[styles.hero, text]}>Do the records prove K-2B was checked out or used during the incident?</Text>
       <Text style={[styles.subtitle, muted]}>Separate proof that a spare existed from proof it was checked out, carried or used at C-2.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>RESPONSE TYPE REVIEW</Text>
