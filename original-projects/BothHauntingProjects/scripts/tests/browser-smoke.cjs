@@ -1175,7 +1175,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
 
     await page.getByText(/B-17 is an authentic, correctly timed network fragment/).click();
     await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
-    await page.getByText(/B-17 is an unchanged copy of the WC-4 network fragment/).waitFor();
+    await page.getByText(/B-17 is an unchanged copy of the WC-4 network fragment, correctly timed/).waitFor();
     await page.getByText(/The unindexed buffer is authentic and correctly timed, but it does not identify Rowan’s recorder/).waitFor();
     await page.screenshot({ path: '/tmp/casezero-case058-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
