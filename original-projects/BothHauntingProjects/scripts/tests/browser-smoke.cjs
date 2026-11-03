@@ -1251,6 +1251,51 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case060-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+    // Case 061 verifies that a registered duplicate is not automatically evidence of use.
+    await page.getByRole('button', { name: 'Open Case 061' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 061' }).click();
+    await page.getByText('The Duplicate Key Ledger', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the duplicate key ledger file' }).click();
+    for (const clue of [
+      'Duplicate-key master register',
+      'Locksmith work-order archive',
+      'Independent reserve-safe inspection',
+      'Maintenance-room retention index',
+      'Independent register reconciliation',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the key-control and archive witnesses' }).click();
+    for (const question of [
+      'Did a duplicate for the C-2 lock profile exist?',
+      'Does the register show K-2B issued during the relevant shift?',
+      'What does the maintenance-room packet inventory contain?',
+      'Can the packet inventory prove the duplicate was never used?',
+      'Does the independent review identify who held K-2B?',
+      'Does any evidence connect K-2B to an actual C-2 opening?',
+    ]) await page.getByText(question, { exact: true }).click();
+    await page.getByRole('button', { name: 'Reconstruct the duplicate-key timeline' }).click();
+    for (const event of [
+      'K-2B duplicate cut and tested',
+      'Duplicate-key master register verified',
+      'Shift handover packet sealed',
+      'MT-4 credential enters maintenance zone',
+      'Reserve-safe inspection records K-2B envelope intact',
+      'Independent register reconciliation completed',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+    await page.getByText('Sana Mire', { exact: true }).click();
+    await page.getByText(/A matching duplicate existed as sealed reserve, but no record connects K-2B to an incident-time checkout or opening/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records establish a registered reserve duplicate, not incident-time use/).waitFor();
+    await page.getByText('K-2B existed as a registered sealed reserve', { exact: true }).click();
+    await page.getByText(/Dev removed the duplicate when sealing the retention packet/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records establish a registered reserve duplicate, not incident-time use/).waitFor();
+    await page.getByText(/A matching duplicate existed as sealed reserve, but no record connects K-2B to the incident or identifies an individual keyholder/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The duplicate-key lead is narrowed: K-2B existed as a registered reserve/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case061-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 and 041–059 investigations, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
