@@ -103,11 +103,11 @@ export default function Case053Screen({ archive, bureauTeamBoard, onArchive, onR
     setActiveReply(key);
   };
   const chooseEvent = (id: string) => {
-    if (progress.timelineOrder.includes(id) || progress.timelineOrder.length >= 4) return;
+    if (progress.timelineOrder.includes(id) || progress.timelineOrder.length >= 5) return;
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
-    setMessage(next.length === 4 && !isCase053TimelineCorrect(next)
-      ? 'That sequence conflicts with the seal records. Compare the effective dispatch copy, pending request, blank destination receipt and route variance report.'
+    setMessage(next.length === 5 && !isCase053TimelineCorrect(next)
+      ? 'That sequence conflicts with the seal records. Check the single registered issue, the D-17 and F-09 packet entries, and the later independent audit.'
       : '');
   };
   const submit = () => {
@@ -155,10 +155,10 @@ export default function Case053Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 053 · SEAL RECORD REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the dispatch copy, release ledger, destination receipt and reconciliation report. Establish what the seal records actually prove about the missing approval.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: dispatch copy carbon, dispatch release ledger, destination receipt and route reconciliation variance.</Text>
-      <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
-      <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
+      <Text style={[styles.hero, text]}>Compare the seal master register, issue counterfoil, D-17 and F-09 packet entries, and independent review. Establish what the repeated serial actually proves.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all five records: the master register, issue counterfoil, D-17 entry, F-09 entry and independent seal variance review.</Text>
+      <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
+      <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
       {CASE_053_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
         <Text style={[styles.label, { color: colors.primary }]}>0{index + 1} · {progress.cluesFound.includes(clue.id) ? 'LOGGED' : 'INSPECT'}</Text>
         <Text style={[styles.cardTitle, text]}>{clue.title}</Text>
@@ -194,8 +194,8 @@ export default function Case053Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 053 · SEAL RECORD TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put dispatch copy generation, route release, destination receipt and reconciliation in order.</Text>
-      <Text style={[styles.subtitle, muted]}>Select the four events from earliest to latest. The options are deliberately shuffled.</Text>
+      <Text style={[styles.hero, text]}>Put the seal register, department issue, two packet entries and independent audit in order.</Text>
+      <Text style={[styles.subtitle, muted]}>Select the five events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
         {progress.timelineOrder.length === 0 ? <Text style={[styles.note, muted]}>No events placed yet.</Text> : progress.timelineOrder.map((id, index) => {
@@ -203,16 +203,16 @@ export default function Case053Screen({ archive, bureauTeamBoard, onArchive, onR
           return <Text key={id} style={[styles.body, text]}>{index + 1}. {event?.time} — {event?.title}</Text>;
         })}
       </View>
-      {[...CASE_053_GAME.timelineEvents].reverse().map((event) => <Pressable key={event.id} disabled={progress.timelineOrder.includes(event.id) || progress.timelineOrder.length >= 4} onPress={() => chooseEvent(event.id)} style={[styles.card, card, { opacity: progress.timelineOrder.includes(event.id) ? 0.4 : 1 }]}>
+      {[...CASE_053_GAME.timelineEvents].reverse().map((event) => <Pressable key={event.id} disabled={progress.timelineOrder.includes(event.id) || progress.timelineOrder.length >= 5} onPress={() => chooseEvent(event.id)} style={[styles.card, card, { opacity: progress.timelineOrder.includes(event.id) ? 0.4 : 1 }]}>
         <Text style={[styles.label, { color: colors.primary }]}>{event.time}</Text>
         <Text style={[styles.cardTitle, text]}>{event.title}</Text>
         <Text style={[styles.note, muted]}>{event.detail}</Text>
       </Pressable>)}
       {!!message && <Text style={[styles.note, { color: colors.destructive }]}>{message}</Text>}
-      {progress.timelineOrder.length === 4 ? timelineSolved
+      {progress.timelineOrder.length === 5 ? timelineSolved
         ? <Action title="Timeline confirmed · Make deduction" colors={colors} onPress={() => { setMessage(''); setPhase('deduction'); }} />
         : <Action title="Reset timeline and retry" colors={colors} onPress={() => { setProgress((current) => ({ ...current, timelineOrder: [] })); setMessage(''); }} />
-        : <Text style={[styles.note, muted]}>{progress.timelineOrder.length}/4 events selected</Text>}
+        : <Text style={[styles.note, muted]}>{progress.timelineOrder.length}/5 events selected</Text>}
       <Action title="Back to interviews" colors={colors} onPress={() => setPhase('interviews')} ghost />
     </>}
 
@@ -240,7 +240,7 @@ export default function Case053Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_053_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_053_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_053_GAME.outcome}</Text></View>
-      <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>ARCHIVED INTERVIEW MEMORY</Text><Text style={[styles.body, text]}>Records inspected: {progress.cluesFound.length}/4</Text><Text style={[styles.body, text]}>Questions asked: {progress.askedQuestions.length}/6</Text><Text style={[styles.body, text]}>Optional questions left unasked: {unanswered.length}</Text></View>
+      <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>ARCHIVED INTERVIEW MEMORY</Text><Text style={[styles.body, text]}>Records inspected: {progress.cluesFound.length}/5</Text><Text style={[styles.body, text]}>Questions asked: {progress.askedQuestions.length}/6</Text><Text style={[styles.body, text]}>Optional questions left unasked: {unanswered.length}</Text></View>
       <Action title="Return to Detective Bureau" colors={colors} onPress={onReturn} />
     </>}
     {specialistInsight && (
