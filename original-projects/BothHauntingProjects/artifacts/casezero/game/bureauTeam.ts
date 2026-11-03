@@ -77,6 +77,7 @@ export const BUREAU_ASSIGNMENT_TARGETS = [
   { id: 'case057', label: 'Case 057 · The West-Corridor Response' },
   { id: 'case058', label: 'Case 058 · The Unindexed Buffer' },
   { id: 'case059', label: 'Case 059 · The Cache Access Roster' },
+  { id: 'case060', label: 'Case 060 · The Missing Key Record' },
   { id: 'next-case', label: 'Next incoming case' },
   { id: 'daily', label: 'Daily Case Bulletin' },
 ] as const;
