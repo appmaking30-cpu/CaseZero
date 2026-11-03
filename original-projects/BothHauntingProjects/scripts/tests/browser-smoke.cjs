@@ -1076,6 +1076,58 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case056-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+
+    // Case 057 distinguishes an automatic west-corridor network receipt from a human reply or equipment movement.
+    await page.getByRole('button', { name: 'Open Case 057' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 057' }).click();
+    await page.getByText('The West-Corridor Response', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the west-corridor response file' }).click();
+
+    for (const clue of [
+      'West-corridor response log',
+      'Repeater decoder audit',
+      'WC-4 maintenance and mode sheet',
+      'Channel-side equipment inventory',
+      'Channel issue and return register',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the relay-response witnesses' }).click();
+
+    for (const question of [
+      'What does the 19:23 response entry actually record?',
+      'Does the response log identify a speaker or operator?',
+      'Could WC-4 generate the response automatically?',
+      'Was a second human voice captured?',
+      'What does the sealed control-cage inventory establish?',
+      'Can the channel register identify Rowan’s recorder or its handler?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the west-corridor response timeline' }).click();
+    for (const event of [
+      'WC-4 confirmed in automatic relay mode',
+      'Channel-side field units sealed in control cage',
+      'RS-14 carrier received at west-corridor WC-4',
+      'Decoder audit confirms automatic acknowledgement',
+      'Channel register closes at the task desk',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Nara Pell', { exact: true }).click();
+    await page.getByText(/The 19:23 west-corridor entry is an automatic WC-4 network acknowledgement/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records establish a network acknowledgement, not a person’s location/).waitFor();
+
+    await page.getByText('Automatic WC-4 relay acknowledgement', { exact: true }).click();
+    await page.getByText(/Rowan travelled to WC-4 and left the recorder there/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records establish a network acknowledgement, not a person’s location/).waitFor();
+
+    await page.getByText(/The west-corridor entry is an automatic network receipt/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The 19:23 west-corridor response was an automatic WC-4 network acknowledgement/).waitFor();
+    await page.getByText(/Reject the west-corridor response as a physical-location lead/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case057-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
