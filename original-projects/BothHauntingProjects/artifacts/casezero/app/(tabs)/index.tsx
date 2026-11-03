@@ -137,7 +137,7 @@ import {
   parseStoredJson,
   type BureauTeamBoard,
 } from '@/game/bureauTeam';
-import { getMissingDetectiveArcStatus, getMissingDetectiveConvergence, MISSING_DETECTIVE_DOSSIER } from '@/game/missingDetectiveArc';
+import { getMissingDetectiveArcStatus, getMissingDetectiveConvergence, getMissingDetectiveRecorderTrail, MISSING_DETECTIVE_DOSSIER } from '@/game/missingDetectiveArc';
 import {
   CASE_003_GAME,
   EMPTY_CASE003_PROGRESS,
@@ -441,6 +441,10 @@ export default function HomeScreen() {
   );
   const missingDetectiveConvergence = useMemo(
     () => getMissingDetectiveConvergence(investigationArchive),
+    [investigationArchive],
+  );
+  const missingDetectiveRecorderTrail = useMemo(
+    () => getMissingDetectiveRecorderTrail(investigationArchive),
     [investigationArchive],
   );
   const case003Carryover = useMemo(() => getCase003Carryover(investigationArchive), [investigationArchive]);
@@ -1378,6 +1382,20 @@ export default function HomeScreen() {
                   </View>
                 ))}
                 <Text style={[styles.memoryNote, mutedStyle]}>{investigationArchive.completedCases.some((record) => record.caseId === 'case006') ? 'Next lead: trace the relay desk named in the recovered instruction.' : investigationArchive.completedCases.some((record) => record.caseId === 'case005') ? 'Next lead: review the recorder and establish who issued the M-2 instruction.' : 'Next lead: trace who received the M-2 transfer after the North Quay collection.'}</Text>
+              </View>
+            )}
+            {missingDetectiveRecorderTrail.unlocked && (
+              <View style={[styles.card, cardStyle]}>
+                <SectionLabel colors={colors}>Classified · Rowan Vale casefile</SectionLabel>
+                <Text style={[styles.caseTitle, textStyle]}>{missingDetectiveRecorderTrail.reportTitle}</Text>
+                <Text style={[styles.small, { color: colors.primary }]}>Dispatch chain reviewed · {missingDetectiveRecorderTrail.completedCaseCount}/{missingDetectiveRecorderTrail.requiredCaseCount} files archived</Text>
+                <Text style={[styles.body, mutedStyle]}>{missingDetectiveRecorderTrail.reportSummary}</Text>
+                {missingDetectiveRecorderTrail.evidenceLinks.map((entry) => (
+                  <View key={entry} style={[styles.detail, { borderTopColor: colors.border }]}>
+                    <Text style={[styles.small, textStyle]}>{entry}</Text>
+                  </View>
+                ))}
+                <Text style={[styles.memoryNote, mutedStyle]}>{missingDetectiveRecorderTrail.nextLead}</Text>
               </View>
             )}
             <View style={[styles.card, cardStyle]}>
