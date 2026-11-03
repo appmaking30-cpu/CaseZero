@@ -46,7 +46,7 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 
 - Unit tests cover the case rules for Cases 001–046, campaign/archive behavior, the Missing Detective unlock/convergence, daily rotation and Bureau assignment/progression.
 - The Playwright mobile-viewport walkthrough runs at **390×844** and completes Cases 001–006, checks retry paths, then checks the Daily Case Bulletin and Bureau assignment flow.
-- The 3 November 2026 GitHub Actions run (workflow run 41545366253) passed dependency installation, Expo TypeScript checking, the full unit-test suite through Case 045, Android-friendly Expo web export, Chromium installation, the mobile campaign browser walkthrough for Cases 001–006 and 041–045, and screenshot upload. Case 046 has been added; its first complete validation run is pending.
+- The 3 November 2026 GitHub Actions run (workflow run 41636052524) passed dependency installation, Expo TypeScript checking, the full unit-test suite through Case 046, Android-friendly Expo web export, Chromium installation, the mobile campaign browser walkthrough for Cases 001–006 and 041–046, and screenshot upload.
 - A passing browser walkthrough is **not** a physical Android-device test. Cases 007–040 have unit/type/export validation but are not yet individually completed in the browser walkthrough. Dedicated walkthroughs now cover Cases 041–046.
 - No signed APK/AAB, Play Store release, real-device compatibility pass, crash/analytics service, or production backend has been completed.
 
@@ -90,7 +90,7 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 
 - Added **The Relief Roster** after Case 045, with a signed two-person RELIEF-2 roster, independent DS-2 duty board, shared R2 console session audit and corridor observer note. The case includes four records, three witnesses/six questions, a four-event chronology, a connected React Native screen, local progress, archive carryover, Bureau XP and a dedicated unit test/browser walkthrough.
 - The fair deduction distinguishes scheduled responsibility from physical possession: Leena Voss is assigned to DS-2 and Omar Pell is assigned as floor support, but the shared console credential and obscured observation do not identify who carried D-17. The case deliberately does not accuse either staff member.
-- The first complete automated validation run for Case 046 is pending. No physical Android-device test has been completed.
+- **Automated validation passed:** TypeScript, the full unit-test suite through Case 046, Expo web export, the mobile browser walkthrough for Cases 001–006 and 041–046, and screenshot upload all passed in [GitHub Actions run 41636052524](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41636052524). No physical Android-device test has been completed.
 
 ### Not implemented yet
 
