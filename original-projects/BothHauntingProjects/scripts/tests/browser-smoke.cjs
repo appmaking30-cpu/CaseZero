@@ -643,7 +643,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
 
     await page.getByText('Mara Pell', { exact: true }).click();
-    await page.getByText(/The slip records M\.P\., but the initials are not authenticated/).waitFor();
+    await page.getByText(/The slip records M\.P\., but the initials are not authenticated/).click();
     await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
     await page.getByText(/no verified specimen or witness identifies the writer/).waitFor();
 
