@@ -932,6 +932,54 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case053-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+
+    // Case 054 traces Rowan Vale's recorder-transfer packet without treating a packet receipt as proof of device custody.
+    await page.getByRole('button', { name: 'Open Case 054' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 054' }).click();
+    await page.getByText('The Recorder Transfer', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the recorder transfer file' }).click();
+
+    for (const clue of [
+      'Independent archive index',
+      'Transfer retrieval request',
+      'Archive receipt extract',
+      'Internal routing slip',
+      'Custody exception note',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the archive custody witnesses' }).click();
+
+    for (const question of [
+      'What does the IA-6 catalogue entry establish?',
+      'Was a packet formally received by the archive?',
+      'Where was the IA-6 packet routed?',
+      'Can the AR-2 or archive unit account identify an individual?',
+      'What is missing from the transfer documentation?',
+      'Can this file establish the recorder’s last physical custodian?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the recorder transfer timeline' }).click();
+    for (const event of [
+      'IA-6 packet appears in archive index',
+      'Shared AR-2 account requests retrieval',
+      'Sealed IA-6 packet accepted at intake',
+      'Packet routed to restricted shelf R-3',
+      'Custody reviewer records item-level gap',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Sela Marr', { exact: true }).click();
+    await page.getByText(/The archive received a transfer packet, but the recorder’s physical custody remains unverified/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The archive records establish a packet route, not the recorder’s physical custody/).waitFor();
+
+    await page.getByText('Unverified recorder custody', { exact: true }).click();
+    await page.getByText(/The archive received a transfer packet, but the recorder’s physical custody remains unverified/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The independent archive indexed and received a sealed packet under IA-6/).waitFor();
+    await page.getByText(/Do not accuse Sela Marr or Corin Vale/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case054-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
