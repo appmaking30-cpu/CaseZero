@@ -792,6 +792,52 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case050-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+
+    // Case 051 checks whether the missing authorization leaf ever received valid approval.
+    await page.getByRole('button', { name: 'Open Case 051' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 051' }).click();
+    await page.getByText('The Blank Approval Line', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the approval file' }).click();
+
+    for (const clue of [
+      'Authorization signatory roster',
+      'Approval workflow register',
+      'Countersignature control sheet',
+      'Workflow exception notice',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the authorization witnesses' }).click();
+
+    for (const question of [
+      'What does the signatory roster establish?',
+      'Does being on the roster prove someone approved D-17?',
+      'What does the 09:02 workflow entry record?',
+      'Can the shared AC-2 role identify the person who opened it?',
+      'What is missing from the countersignature sheet?',
+      'What does the 09:14 exception notice prove?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the approval workflow timeline' }).click();
+    for (const event of [
+      'Signatory roster takes effect',
+      'D-17 approval request opened',
+      'Countersignature check remains blank',
+      'Incomplete workflow exception issued',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Elian Voss', { exact: true }).click();
+    await page.getByText(/A permitted signatory and an opened request are not proof of approval; both required signatures are absent/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/no individual handover or independent witness signature identifies the approver/).waitFor();
+
+    await page.getByText('No authenticated approver', { exact: true }).click();
+    await page.getByText(/A permitted signatory and an opened request are not proof of approval; both required signatures are absent/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The workflow records a request, but no authenticated primary approval or independent witness countersignature survives.', { exact: true }).waitFor();
+    await page.getByText(/Do not accuse Elian Voss or Mara Quill/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case051-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
