@@ -114,7 +114,7 @@ export default function Case052Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase052DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The dispatch records show a department-level allocation and movement, but no individual handover or independent witness signature identifies the approver.`);
+      setMessage(`The dispatch records prove the changed route reached D-4, but the shared DS-3 role does not identify an individual operator or establish valid authority.`);
       return;
     }
     archiveLock.current = true;
@@ -143,10 +143,10 @@ export default function Case052Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_052_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_052_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier files traced the missing approval record. This file tests whether the D-17 change ever received the required sign-off.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. The earlier files established that approval was incomplete. This file tests whether the changed D-17 route was nevertheless executed.</Text>
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>APPROVAL WORKFLOW PERSONNEL</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>DISPATCH PERSONNEL</Text>
         {CASE_052_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
       <Action title="Open the dispatch file" colors={colors} onPress={() => setPhase('evidence')} />
@@ -193,7 +193,7 @@ export default function Case052Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 052 · APPROVAL WORKFLOW TIMELINE</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 052 · DISPATCH EXECUTION TIMELINE</Text>
       <Text style={[styles.hero, text]}>Put signatory eligibility, the approval request, the countersignature check and the route variance report in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
@@ -221,11 +221,11 @@ export default function Case052Screen({ archive, bureauTeamBoard, onArchive, onR
       <Text style={[styles.hero, text]}>Do the surviving records establish that D-17 was validly approved?</Text>
       <Text style={[styles.subtitle, muted]}>Determine whether the request was approved, then state what the missing signatures mean.</Text>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>APPROVAL STATUS REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>ROUTE EXECUTION REVIEW</Text>
         {CASE_052_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>WHAT DOES THE APPROVAL WORKFLOW PROVE?</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>WHAT DO THE DISPATCH RECORDS PROVE?</Text>
         {CASE_052_GAME.motives.map((motive) => <Choice key={motive.id} title={motive.label} note={motive.note} selected={progress.selectedMotive === motive.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedMotive: motive.id }))} />)}
       </View>
       {!!message && <Text style={[styles.note, { color: colors.destructive }]}>{message}</Text>}
