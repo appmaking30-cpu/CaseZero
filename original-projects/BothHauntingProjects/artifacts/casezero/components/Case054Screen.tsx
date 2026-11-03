@@ -114,7 +114,7 @@ export default function Case054Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase054DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records establish a repeated packet reference, not a second physical seal or a named operator. Recheck the master register, retrieval request and both packet entries.`);
+      setMessage(`The archive records establish a packet route, not the recorder’s physical custody. Recheck the packet receipt, office-level routing and missing item-level handover.`);
       return;
     }
     archiveLock.current = true;
@@ -137,7 +137,7 @@ export default function Case054Screen({ archive, bureauTeamBoard, onArchive, onR
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 054 · DISPATCH SEAL AUDIT</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 054 · RECORDER TRANSFER</Text>
       <Text style={[styles.hero, text]}>{CASE_054_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_054_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
@@ -154,9 +154,9 @@ export default function Case054Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'evidence' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 054 · SEAL RECORD REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the archive index, retrieval request, IA-6 receipt and routing entries, and independent review. Establish what the repeated serial actually proves.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all five records: the master register, retrieval request, D-17 entry, F-09 entry and independent seal variance review.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 054 · ARCHIVE RECORD REVIEW</Text>
+      <Text style={[styles.hero, text]}>Compare the IA-6 index, retrieval request, packet receipt, routing slip and custody exception. Establish what the archive records prove—and whether they establish the recorder’s physical custody.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all five records: the archive index, retrieval request, receipt extract, routing slip and custody exception note.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
       {CASE_054_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -170,7 +170,7 @@ export default function Case054Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'interviews' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 054 · SEAL CONTROL INTERVIEWS</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 054 · ARCHIVE CUSTODY INTERVIEWS</Text>
       <Text style={[styles.hero, text]}>What does the repeated packet reference actually establish?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and preserved in the archived report.</Text>
       {CASE_054_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
@@ -193,7 +193,7 @@ export default function Case054Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 054 · SEAL RECORD TIMELINE</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 054 · RECORDER TRANSFER TIMELINE</Text>
       <Text style={[styles.hero, text]}>Put the archive index, department issue, two packet entries and independent audit in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the five events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
@@ -221,7 +221,7 @@ export default function Case054Screen({ archive, bureauTeamBoard, onArchive, onR
       <Text style={[styles.hero, text]}>Do the surviving records establish that two physical seals existed?</Text>
       <Text style={[styles.subtitle, muted]}>Distinguish a duplicated identifier in the records from proof of a duplicated physical seal or a named operator.</Text>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>SEAL IDENTIFIER REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>RECORDER CUSTODY REVIEW</Text>
         {CASE_054_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
@@ -234,9 +234,9 @@ export default function Case054Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'review' && <>
-      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 053</Text></View>
+      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 054</Text></View>
       <Text style={[styles.hero, text]}>The same packet reference appears on two packet records, but the physical seal and individual operator cannot be established.</Text>
-      <Text style={[styles.subtitle, muted]}>The master register, retrieval request, two packet entries and independent review establish a duplicate record reference—not a proven duplicate physical seal.</Text>
+      <Text style={[styles.subtitle, muted]}>The archive index, packet receipt, routing slip and custody exception establish an office-level records trail—not proof that the recorder itself was physically received.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_054_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_054_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_054_GAME.outcome}</Text></View>
