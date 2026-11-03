@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
 import { getBureauSpecialistInsight, getBureauSpecialistProgress, type BureauTeamBoard } from '@/game/bureauTeam';
-import { CASE_046_GAME, CASE_046_EMPTY_PROGRESS, getCase046Carryover, isCase046DeductionCorrect, isCase046TimelineCorrect } from '@/game/case045Game';
+import { CASE_046_GAME, CASE_046_EMPTY_PROGRESS, getCase046Carryover, isCase046DeductionCorrect, isCase046TimelineCorrect } from '@/game/case046Game';
 
 const SAVE_KEY = 'casezero.case046.progress.v1';
 type Progress = typeof CASE_046_EMPTY_PROGRESS;
