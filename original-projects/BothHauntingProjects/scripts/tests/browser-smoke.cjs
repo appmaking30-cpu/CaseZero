@@ -980,6 +980,54 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case054-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+    
+    // Case 055 verifies Rowan's last independently documented assignment without equating assignment with possession.
+    await page.getByRole('button', { name: 'Open Case 055' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 055' }).click();
+    await page.getByText('The Last Verified Assignment', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the last verified assignment file' }).click();
+
+    for (const clue of [
+      'Original item-level transfer schedule',
+      'Duty roster extract',
+      'Route acknowledgment copy',
+      'Independent task closeout',
+      'Equipment reconciliation variance',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the assignment record witnesses' }).click();
+
+    for (const question of [
+      'What does the original RS-14 schedule establish?',
+      'Was the schedule reconstructed after Rowan disappeared?',
+      'Does the route acknowledgment prove Rowan arrived?',
+      'What does the 19:42 closeout mean?',
+      'Can the equipment record identify the recorder?',
+      'Can the last assignment identify the recorder’s last handler?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the last verified assignment timeline' }).click();
+    for (const event of [
+      'Original RS-14 assignment is retained',
+      'Rowan’s duty window begins',
+      'North Annex desk acknowledges RS-14',
+      'Independent control copy closes survey window',
+      'Equipment audit records unreconciled serial',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Elara Finch', { exact: true }).click();
+    await page.getByText(/RS-14 at North Annex was Rowan’s last independently verified assignment/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records establish Rowan’s assignment, not the recorder’s physical custody/).waitFor();
+
+    await page.getByText('Last verified assignment · RS-14', { exact: true }).click();
+    await page.getByText(/RS-14 at North Annex was Rowan’s last independently verified assignment/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The strongest independent records place Rowan Vale’s last verified assignment at North Annex/).waitFor();
+    await page.getByText(/Do not convert a roster, desk acknowledgment or task closeout into proof/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case055-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
