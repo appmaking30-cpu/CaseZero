@@ -143,7 +143,7 @@ export default function Case054Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_054_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_054_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Case 052 established that the changed route was executed. This file tests the repeated packet reference without assuming that two physical seals existed.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 048–053 traced the request, missing authorization, incomplete approval, executed route and duplicate dispatch reference. This file follows the independent archive trail without assuming the recorder was inside the packet.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>ARCHIVE PERSONNEL</Text>
@@ -218,14 +218,14 @@ export default function Case054Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 054 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Do the surviving records establish that two physical seals existed?</Text>
-      <Text style={[styles.subtitle, muted]}>Distinguish a duplicated identifier in the records from proof of a duplicated physical seal or a named operator.</Text>
+      <Text style={[styles.hero, text]}>Do the surviving records establish that Rowan Vale’s recorder entered the archive’s physical custody?</Text>
+      <Text style={[styles.subtitle, muted]}>Distinguish proof that an archive packet was received from proof that the recorder itself was inside it or handed to a named person.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>RECORDER CUSTODY REVIEW</Text>
         {CASE_054_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>WHAT DOES THE SEAL AUDIT PROVE?</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>WHAT DOES THE CUSTODY REVIEW PROVE?</Text>
         {CASE_054_GAME.motives.map((motive) => <Choice key={motive.id} title={motive.label} note={motive.note} selected={progress.selectedMotive === motive.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedMotive: motive.id }))} />)}
       </View>
       {!!message && <Text style={[styles.note, { color: colors.destructive }]}>{message}</Text>}
@@ -235,7 +235,7 @@ export default function Case054Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 054</Text></View>
-      <Text style={[styles.hero, text]}>The same packet reference appears on two packet records, but the physical seal and individual operator cannot be established.</Text>
+      <Text style={[styles.hero, text]}>The archive received and routed a transfer packet, but the recorder’s physical custody and last custodian cannot be established.</Text>
       <Text style={[styles.subtitle, muted]}>The archive index, packet receipt, routing slip and custody exception establish an office-level records trail—not proof that the recorder itself was physically received.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_054_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_054_GAME.proof}</Text></View>
