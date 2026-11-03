@@ -51,7 +51,6 @@ test('convergence report does not claim Rowan or the recorder has been located',
   assert.doesNotMatch(report.reportSummary, /Rowan has been found/i);
 });
 
-
 test('recorder-transfer review stays locked until Cases 048–053 are archived', () => {
   const partial = getMissingDetectiveRecorderTrail(archiveCases([
     'case048', 'case049', 'case050', 'case051', 'case052',
@@ -74,7 +73,7 @@ test('recorder-transfer review does not overclaim the identity or recovery of Ro
   const report = getMissingDetectiveRecorderTrail(archiveCases([
     'case048', 'case049', 'case050', 'case051', 'case052', 'case053',
   ]));
-  assert.match(report.reportSummary, /does not identify the person/i);
+  assert.match(report.reportSummary, /do not identify the person/i);
   assert.match(report.reportSummary, /packet itself has not yet been recovered/i);
   assert.doesNotMatch(report.reportSummary, /operator was identified/i);
 });
