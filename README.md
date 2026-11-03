@@ -30,11 +30,11 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 ### Implemented in the canonical app
 
 - Dark-first Detective Bureau home screen and sequential campaign file routing.
-- **45 campaign investigations in development (001–045)** with case-specific data modules, integrated React Native screens and individual case-rule tests.
+- **46 campaign investigations in development (001–046)** with case-specific data modules, integrated React Native screens and individual case-rule tests.
 - **Case 001 — The Last Train Home:** the tutorial has five inspectable records, three witnesses/six questions, a four-event timeline, person-plus-motive deduction, retryable wrong answers, and separate Truth / Proof / Outcome review. Progress can be resumed locally.
 - **Cases 002–004:** connected opening investigations; Case 002 receives Case 001 findings and unanswered questions, and the Missing Detective thread unlocks after the opening cases. Case 004 follows Rowan Vale’s missing recorder to North Quay.
 - **Cases 005–006:** the M-2 transfer/recorder trail and transcript reconstruction. Case 006 deliberately attributes the recording to an upstream authority rather than inventing a speaker identity.
-- **Cases 007–043:** each has a case-specific evidence/interview/timeline/deduction data module, integrated React Native screen, local progress, archive carryover and a dedicated unit-test file.
+- **Cases 007–046:** each has a case-specific evidence/interview/timeline/deduction data module, integrated React Native screen, local progress, archive carryover and a dedicated unit-test file.
 - **Cases 037–040** extend the dispatch/transfer investigation chain: the Missing Movement Ledger, The Queue Before Arrival, The Station Without an Operator, and a shift-handover investigation. Their tests check evidence structure, chronology, careful attribution where individual identity is not established, and carryover from earlier files.
 - **Investigation memory:** completed conclusions, inspected clues, asked questions and unanswered questions are kept in a shared local archive and used by later cases.
 - **Missing Detective arc:** the first dossier unlocks after Cases 001–002; a four-file convergence report unlocks after Cases 001–004. The connected investigation continues beyond Case 036, but the final revelation/ending is not implemented yet.
@@ -44,10 +44,10 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 
 ### Verification coverage — what the checks actually prove
 
-- Unit tests cover the case rules for Cases 001–045, campaign/archive behavior, the Missing Detective unlock/convergence, daily rotation and Bureau assignment/progression.
+- Unit tests cover the case rules for Cases 001–046, campaign/archive behavior, the Missing Detective unlock/convergence, daily rotation and Bureau assignment/progression.
 - The Playwright mobile-viewport walkthrough runs at **390×844** and completes Cases 001–006, checks retry paths, then checks the Daily Case Bulletin and Bureau assignment flow.
-- The 2 November 2026 GitHub Actions run (workflow run 41527950610) passed dependency installation, Expo TypeScript checking, the full unit-test suite, Android-friendly Expo web export, Chromium installation, the mobile campaign browser walkthrough including Cases 041–042, and screenshot upload.
-- A passing browser walkthrough is **not** a physical Android-device test. Cases 007–040 have unit/type/export validation but are not yet individually completed in the browser walkthrough. Case 041 and Case 042 each have completed browser walkthroughs; Case 043’s dedicated walkthrough passed in the 2 November 2026 run 41529695694.
+- The 3 November 2026 GitHub Actions run (workflow run 41545366253) passed dependency installation, Expo TypeScript checking, the full unit-test suite through Case 045, Android-friendly Expo web export, Chromium installation, the mobile campaign browser walkthrough for Cases 001–006 and 041–045, and screenshot upload. Case 046 has been added; its first complete validation run is pending.
+- A passing browser walkthrough is **not** a physical Android-device test. Cases 007–040 have unit/type/export validation but are not yet individually completed in the browser walkthrough. Dedicated walkthroughs now cover Cases 041–046.
 - No signed APK/AAB, Play Store release, real-device compatibility pass, crash/analytics service, or production backend has been completed.
 
 ### Case 041 — The Missing Signature — 2 November 2026
@@ -79,15 +79,22 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 - The authenticated reader proves shared badge D-17 entered and left the dispatch corridor; it does not identify the carrier or prove the carrier reached the writing surface. The fair deduction preserves that distinction and leaves the personal handover unresolved.
 - A dedicated unit test and mobile browser walkthrough cover Case 044. TypeScript, the full unit-test suite through Case 044, Expo web export, the mobile campaign walkthrough for Cases 001–006 and 041–044, and screenshot upload all passed in [GitHub Actions run 41530344524](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41530344524). No physical Android-device test has been completed.
 
-### Case 045 development — 3 November 2026
+### Case 045 — The Handover Copy — 3 November 2026
 
 - Added **The Handover Copy** after Case 044, with a sealed original packet, matching shift carbon, two independent witness accounts and a return exception register. Three witnesses/six questions, four-event chronology, connected mobile screen, local progress, archive carryover and Bureau XP are included.
 - The evidence narrows the handover to the RELIEF-2 role but does not identify the individual recipient. The outgoing officer's signature authenticates tray placement, not later collection; neither witness saw a named carrier.
-- Dedicated unit tests and a mobile browser walkthrough now cover Case 045. TypeScript, the full suite through Case 045 and Expo export passed in [GitHub Actions run 41541691844](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41541691844), but the browser walkthrough stopped at a Case 044 selector that had been accidentally changed during the Case 045 selector fix. The Case 044 selectors have now been restored in commit [f31056a](https://github.com/appmaking30-cpu/CaseZero/commit/f31056aef7b7b1b7f08303312517ca18dfdb6fca); rerun validation is pending. No physical Android-device test has been completed.
+- Dedicated unit tests and a mobile browser walkthrough cover Case 045. The corrected run passed TypeScript, the full suite through Case 045, Expo export, the complete mobile browser walkthrough for Cases 001–006 and 041–045, and screenshot upload in [GitHub Actions run 41545366253](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41545366253). The earlier selector regression was fixed by restoring the Case 044 selectors while retaining the Case 045-specific selectors. No physical Android-device test has been completed.
+
+
+### Case 046 — The Relief Roster — 3 November 2026
+
+- Added **The Relief Roster** after Case 045, with a signed two-person RELIEF-2 roster, independent DS-2 duty board, shared R2 console session audit and corridor observer note. The case includes four records, three witnesses/six questions, a four-event chronology, a connected React Native screen, local progress, archive carryover, Bureau XP and a dedicated unit test/browser walkthrough.
+- The fair deduction distinguishes scheduled responsibility from physical possession: Leena Voss is assigned to DS-2 and Omar Pell is assigned as floor support, but the shared console credential and obscured observation do not identify who carried D-17. The case deliberately does not accuse either staff member.
+- The first complete automated validation run for Case 046 is pending. No physical Android-device test has been completed.
 
 ### Not implemented yet
 
-- The final Missing Detective reveal and campaign ending; the current campaign’s latest investigation is Case 045; the Missing Detective arc remains unresolved.
+- The final Missing Detective reveal and campaign ending; the current campaign’s latest investigation is Case 046; the Missing Detective arc remains unresolved.
 - Full detective HQ facilities/building upgrades and a deeper team-management layer beyond the current roster, assignments, XP/ranks and evidence insights.
 - Cloud accounts, cross-device sync, multiplayer, online/community case publishing or a live backend.
 - Monetization, paid features or ad integration.

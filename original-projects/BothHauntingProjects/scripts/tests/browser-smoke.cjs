@@ -569,6 +569,40 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('Do not accuse Elias or Mina', { exact: false }).waitFor({ timeout: 10000 });
     await page.screenshot({ path: '/tmp/casezero-case045-review.png', fullPage: true });
 
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+    await page.getByRole('button', { name: 'Open Case 046' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 046' }).click();
+    await page.getByText('The Relief Roster', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the roster file' }).click();
+    for (const clue of [
+      'Signed incoming relief roster',
+      'Independent dispatch desk board',
+      'Shared R2 console session audit',
+      'Corridor observer timing note',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the roster and dispatch witnesses' }).click();
+    for (const question of [
+      'Who was assigned to RELIEF-2 at 08:54?',
+      'Who was assigned to DS-2 from 09:00 to 09:15?',
+      'What does the shared R2 session prove?',
+    ]) await page.getByText(question, { exact: true }).click();
+    await page.getByRole('button', { name: 'Reconstruct the roster-to-access timeline' }).click();
+    for (const event of [
+      'RELIEF-2 roster signed',
+      'DS-2 duty allocation posted',
+      'D-17 passes corridor reader',
+      'Shared R2 console session begins',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+    await page.getByText('Leena Voss', { exact: true }).click();
+    await page.getByText('The roster names Leena and Omar, and the desk board assigns Leena to DS-2, but neither record proves who collected D-17 or used it', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/scheduled duties, but neither proves who collected or carried D-17/).waitFor();
+    await page.getByText('Unidentified RELIEF-2 member', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('Do not accuse Leena Voss or Omar Pell', { exact: false }).waitFor({ timeout: 10000 });
+    await page.screenshot({ path: '/tmp/casezero-case046-review.png', fullPage: true });
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
