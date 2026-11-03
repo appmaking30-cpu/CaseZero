@@ -143,7 +143,7 @@ export default function Case060Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_060_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_060_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 048–056 traced the authorization gap, dispatch records, recorder-transfer packet, Rowan’s assignment and independently corroborated relay participation. This file tests whether the missing key record defines permission but does not establish an actual cabinet opening.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 048–056 traced the authorization gap, dispatch records, recorder-transfer packet, Rowan’s assignment and independently corroborated relay participation. This file tests whether independent badge and physical key records can establish an individual handover or cabinet opening.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>THE UNINDEXED BUFFER REVIEW</Text>
@@ -155,7 +155,7 @@ export default function Case060Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 060 · THE MISSING KEY RECORD REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the badge-controller archive, physical key ledger, independent key-ring audit and clock certificate. Permission is not proof of entry.</Text>
+      <Text style={[styles.hero, text]}>Compare the badge-controller archive, physical key ledger, independent key-ring audit and clock certificate. A team record is not a personal handover.</Text>
       <Text style={[styles.subtitle, muted]}>Inspect all five records: the controller archive, credential register, physical key ledger, key-ring reconciliation and clock certificate.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
@@ -171,7 +171,7 @@ export default function Case060Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'interviews' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 060 · THE MISSING KEY RECORD INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What does the missing key record actually prove?</Text>
+      <Text style={[styles.hero, text]}>What do the badge and key-control records actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and preserved in the archived report.</Text>
       {CASE_060_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
