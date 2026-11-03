@@ -80,3 +80,58 @@ export function getMissingDetectiveConvergence(
       : [],
   };
 }
+
+
+export type MissingDetectiveRecorderTrail = {
+  unlocked: boolean;
+  completedCaseCount: number;
+  requiredCaseCount: number;
+  missingCaseIds: string[];
+  reportTitle: string;
+  reportSummary: string;
+  evidenceLinks: string[];
+  nextLead: string;
+};
+
+const RECORDER_TRAIL_CASE_IDS = [
+  'case048',
+  'case049',
+  'case050',
+  'case051',
+  'case052',
+  'case053',
+] as const;
+
+/**
+ * The recorder-transfer review unlocks only after the dispatch and authorization
+ * chain is archived. It treats the repeated seal as a record collision, not
+ * proof of a second physical seal or an identified operator.
+ */
+export function getMissingDetectiveRecorderTrail(
+  archive: InvestigationArchive,
+): MissingDetectiveRecorderTrail {
+  const completedIds = new Set(archive.completedCases.map((record) => record.caseId));
+  const missingCaseIds = RECORDER_TRAIL_CASE_IDS.filter((caseId) => !completedIds.has(caseId));
+  const unlocked = missingCaseIds.length === 0;
+
+  return {
+    unlocked,
+    completedCaseCount: RECORDER_TRAIL_CASE_IDS.length - missingCaseIds.length,
+    requiredCaseCount: RECORDER_TRAIL_CASE_IDS.length,
+    missingCaseIds: [...missingCaseIds],
+    reportTitle: 'The Recorder Transfer Index',
+    reportSummary: unlocked
+      ? 'The dispatch review is complete. The authorization gap, executed route, and repeated DS-44-19 entry establish a compromised records chain, but they do not identify the person who handled Rowan Vale’s recorder. A separate archive index references a recorder-transfer packet; the packet itself has not yet been recovered.'
+      : 'Close the dispatch and authorization files from Cases 048–053 to request the recorder-transfer index.',
+    evidenceLinks: unlocked
+      ? [
+          'Cases 048–050: the request, missing source material, and empty tray leave individual custody unproven.',
+          'Cases 051–052: the approval fields remained incomplete while the dispatch route was executed.',
+          'Case 053: DS-44-19 appears in two packet records despite one official issue; the duplicate identifier does not identify an operator.',
+        ]
+      : [],
+    nextLead: unlocked
+      ? 'Next lead: recover the recorder-transfer packet from the independent archive and compare its receipt trail with Rowan’s last verified assignment.'
+      : 'The recorder-transfer packet remains sealed until all six linked files are archived.',
+  };
+}
