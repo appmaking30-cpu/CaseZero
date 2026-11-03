@@ -884,6 +884,54 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case052-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+
+    // Case 053 audits the repeated seal identifier without assuming two physical seals.
+    await page.getByRole('button', { name: 'Open Case 053' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 053' }).click();
+    await page.getByText('The Duplicate Dispatch Seal', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the seal audit file' }).click();
+
+    for (const clue of [
+      'Seal master register',
+      'Issue counterfoil',
+      'D-17 packet seal entry',
+      'F-09 packet seal entry',
+      'Independent seal variance review',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the seal control witnesses' }).click();
+
+    for (const question of [
+      'How many DS-44-19 units were officially issued?',
+      'Does the register authorize a second DS-44-19 seal?',
+      'What is unusual about the two packet entries?',
+      'Can the ledger identify who entered the F-09 seal number?',
+      'What did the independent review actually confirm?',
+      'What evidence would be needed to identify the physical seal or its handler?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the seal record timeline' }).click();
+    for (const event of [
+      'Single seal entered in master register',
+      'Seal issued to dispatch department',
+      'D-17 packet lists DS-44-19',
+      'F-09 packet repeats DS-44-19',
+      'Independent review flags serial collision',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Yara Noll', { exact: true }).click();
+    await page.getByText(/The same seal identifier was recorded on two packets/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records establish a repeated seal identifier, not a second physical seal/).waitFor();
+
+    await page.getByText('Duplicate seal identifier in dispatch records', { exact: true }).click();
+    await page.getByText(/The same seal identifier was recorded on two packets/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/DS-44-19 appears in the D-17 and F-09 packet records/).waitFor();
+    await page.getByText(/Do not label a physical seal counterfeit or accuse Yara Noll or Dev Arlen/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case053-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
