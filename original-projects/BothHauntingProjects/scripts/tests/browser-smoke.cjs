@@ -838,6 +838,52 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case051-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+
+    // Case 052 verifies that the changed destination was executed despite the missing approval.
+    await page.getByRole('button', { name: 'Open Case 052' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 052' }).click();
+    await page.getByText('The Dispatch Copy', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the dispatch file' }).click();
+
+    for (const clue of [
+      'Dispatch copy carbon',
+      'Dispatch release ledger',
+      'Destination receipt',
+      'Route reconciliation variance',
+    ]) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the dispatch witnesses' }).click();
+
+    for (const question of [
+      'What does the 09:22 dispatch carbon establish?',
+      'Can the copy identify who prepared the changed route?',
+      'What does the 09:31 release entry prove?',
+      'Does DS-3 identify a single employee?',
+      'What does the D-4 receiving stamp authenticate?',
+      'Why did reconciliation flag D-17?',
+    ]) await page.getByText(question, { exact: true }).click();
+
+    await page.getByRole('button', { name: 'Reconstruct the dispatch execution timeline' }).click();
+    for (const event of [
+      'Changed dispatch copy generated',
+      'D-17 released under DS-3 role',
+      'D-4 receipt stamped',
+      'Route variance recorded',
+    ]) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+
+    await page.getByText('Talia Wren', { exact: true }).click();
+    await page.getByText(/The D-4 route was executed, but the approval chain remained incomplete/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/shared DS-3 role does not identify an individual operator/).waitFor();
+
+    await page.getByText('Unapproved destination change executed', { exact: true }).click();
+    await page.getByText(/The D-4 route was executed, but the approval chain remained incomplete/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText('The revised D-4 dispatch copy was generated, released under the shared DS-3 role and received at D-4.', { exact: false }).waitFor();
+    await page.getByText(/Do not accuse Talia Wren or Bram Ives/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case052-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
