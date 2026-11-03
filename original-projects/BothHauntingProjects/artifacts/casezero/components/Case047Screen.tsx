@@ -170,8 +170,8 @@ export default function Case047Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'interviews' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 047 · ROSTER INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What does a duty assignment actually prove?</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 047 · COUNTER RECORD INTERVIEWS</Text>
+      <Text style={[styles.hero, text]}>What does a counter record actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and are preserved in the archived report.</Text>
       {CASE_047_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -193,7 +193,7 @@ export default function Case047Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 047 · ROSTER-TO-ACCESS TIMELINE</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 047 · PICKUP-RECORD TIMELINE</Text>
       <Text style={[styles.hero, text]}>Put the pickup record and access records in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
@@ -218,7 +218,7 @@ export default function Case047Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 047 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Who can the unauthenticated initials fairly identify as the D-17 collector?</Text>
+      <Text style={[styles.hero, text]}>Can the unauthenticated initials fairly identify who collected D-17?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the unresolved collector, then choose the precise limit of the initials and counter records.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>PICKUP INITIALS AND AUTHENTICATION UNDER REVIEW</Text>
