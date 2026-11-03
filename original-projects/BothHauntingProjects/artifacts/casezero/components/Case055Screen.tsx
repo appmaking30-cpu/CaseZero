@@ -114,7 +114,7 @@ export default function Case055Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase055DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The archive records establish a assignment trail, not the recorder’s physical custody. Recheck the desk acknowledgment, office-level routing and missing item-level handover.`);
+      setMessage(`The records establish Rowan’s assignment, not the recorder’s physical custody. Recheck the original schedule, independent closeout and missing serial reconciliation.`);
       return;
     }
     archiveLock.current = true;
@@ -143,7 +143,7 @@ export default function Case055Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_055_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_055_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 048–053 traced the request, missing authorization, incomplete approval, executed route and duplicate dispatch reference. This file follows the independent archive trail without assuming the recorder was inside the assignment file.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 048–053 traced the request, missing authorization, incomplete approval, executed route and duplicate dispatch reference. This file follows the independent assignment trail without assuming that the schedule proves personal attendance or device custody.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>ASSIGNMENT RECORD PERSONNEL</Text>
@@ -156,7 +156,7 @@ export default function Case055Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 055 · ASSIGNMENT RECORD REVIEW</Text>
       <Text style={[styles.hero, text]}>Compare the original RS-14 schedule, duty roster, desk acknowledgment, independent closeout and equipment variance. Establish Rowan’s last verified assignment without overstating what it proves.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all five records: the original schedule, retrieval request, receipt extract, routing slip and custody exception note.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all five records: the original schedule, duty roster, route acknowledgment, independent closeout and equipment variance.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
       {CASE_055_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -194,7 +194,7 @@ export default function Case055Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 055 · ASSIGNMENT TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the original schedule, department issue, two assignment file entries and independent audit in order.</Text>
+      <Text style={[styles.hero, text]}>Put the original schedule, duty roster, North Annex acknowledgment, independent closeout and equipment audit in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the five events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -219,7 +219,7 @@ export default function Case055Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 055 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>What is Rowan Vale’s last independently verified assignment—and what remains unproven about the recorder?</Text>
-      <Text style={[styles.subtitle, muted]}>Distinguish proof that an archive assignment file was received from proof that the recorder itself was inside it or handed to a named person.</Text>
+      <Text style={[styles.subtitle, muted]}>Distinguish a verified assignment from personal arrival, a serial-level equipment handover and the recorder’s last physical custodian.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>RECORDER CUSTODY REVIEW</Text>
         {CASE_055_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
@@ -236,7 +236,7 @@ export default function Case055Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 055</Text></View>
       <Text style={[styles.hero, text]}>Rowan’s last independently verified assignment was RS-14 at North Annex; the recorder’s physical custodian remains unknown.</Text>
-      <Text style={[styles.subtitle, muted]}>The original schedule, desk acknowledgment, routing slip and custody exception establish an office-level records trail—not proof that the recorder itself was physically received.</Text>
+      <Text style={[styles.subtitle, muted]}>The original schedule, signed duty roster, desk acknowledgment and independent closeout corroborate Rowan’s RS-14 assignment. None proves personal arrival or recorder custody.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_055_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_055_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_055_GAME.outcome}</Text></View>
