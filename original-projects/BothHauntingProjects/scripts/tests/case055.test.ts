@@ -19,7 +19,7 @@ test('Case 055 orders schedule, duty roster, desk acknowledgment, closeout and a
 
 test('Case 055 separates last verified assignment from personal arrival and recorder custody', () => {
   assert.match(CASE_055_GAME.clues[0].detail, /no device serial/);
-  assert.match(CASE_055_GAME.clues[2].detail, /does not carry Rowan’s personal signature/);
+  assert.match(CASE_055_GAME.clues[2].detail, /signed by the desk role, not Rowan/);
   assert.match(CASE_055_GAME.clues[4].detail, /last person to hold the recorder/);
   assert.equal(isCase055DeductionCorrect('gap', 'assignment'), true);
   assert.equal(isCase055DeductionCorrect('elara', 'assignment'), false);
