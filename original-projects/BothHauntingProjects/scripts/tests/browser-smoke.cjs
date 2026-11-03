@@ -1181,7 +1181,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
-    console.log('PASS: mobile Case 001–006 campaign investigations, retries, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
+    console.log('PASS: mobile Case 001–006 and 041–058 investigations, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
     await browser.close();
   }
