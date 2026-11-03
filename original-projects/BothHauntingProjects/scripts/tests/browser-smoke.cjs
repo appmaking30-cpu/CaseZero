@@ -1180,8 +1180,34 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.screenshot({ path: '/tmp/casezero-case058-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
 
+
+    // Case 059 separates cabinet authorization from proof of actual access.
+    await page.getByRole('button', { name: 'Open Case 059' }).waitFor();
+    await page.getByRole('button', { name: 'Open Case 059' }).click();
+    await page.getByText('The Cache Access Roster', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Open the C-2 access roster file' }).click();
+    for (const clue of ['Signed C-2 access roster','Cabinet seal and inspection log','Independent retention copy','Maintenance shift handover','Independent access-log audit']) await page.getByText(clue, { exact: true }).click();
+    await page.getByRole('button', { name: 'Interview the facilities and security witnesses' }).click();
+    for (const question of ['What does the signed access roster establish?','Can the seal log rule out an overnight opening?','What does the matching retention copy prove?','Does the retention receipt identify who made B-17?','Does the nearby badge reader record a cabinet opening?','Can the shared MT-4 handover identify an individual?']) await page.getByText(question, { exact: true }).click();
+    await page.getByRole('button', { name: 'Reconstruct the C-2 access timeline' }).click();
+    for (const event of ['Quarterly C-2 access roster signed','C-2 seal C2-118 inspected intact','WC-4 fragment later copied as B-17','Independent vault receives B-17 copy','C-2 seal inspection and shift handover','Security audit confirms no cabinet door sensor']) await page.getByText(event, { exact: true }).click();
+    await page.getByRole('button', { name: 'Timeline confirmed · Make deduction' }).click();
+    await page.getByText('Sana Mire', { exact: true }).click();
+    await page.getByText(/Four people were authorized to access C-2/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records establish who was authorized, not who actually opened C-2/).waitFor();
+    await page.getByText('Authorized access only established', { exact: true }).click();
+    await page.getByText('Sana opened C-2 because she maintained the roster', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The records establish who was authorized, not who actually opened C-2/).waitFor();
+    await page.getByText(/Four people were authorized to access C-2, but actual cabinet access and B-17’s creator remain unidentified/).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/The access roster narrows the authorized group but does not identify who opened C-2/).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-case059-review.png', fullPage: true });
+    await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
-    console.log('PASS: mobile Case 001–006 and 041–058 investigations, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
+    console.log('PASS: mobile Case 001–006 and 041–059 investigations, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
   } finally {
     await browser.close();
   }
