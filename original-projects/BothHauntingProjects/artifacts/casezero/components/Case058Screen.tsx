@@ -49,7 +49,7 @@ export default function Case058Screen({ archive, bureauTeamBoard, onArchive, onR
       const clean = (items: unknown, allowed: Set<string>) => Array.isArray(items)
         ? [...new Set(items.filter((item): item is string => typeof item === 'string' && allowed.has(item)))]
         : [];
-      const timeline = clean(saved.timelineOrder, eventIds).slice(0, 5);
+      const timeline = clean(saved.timelineOrder, eventIds).slice(0, 6);
       const heard = clean(saved.askedQuestions, questionIds);
       const clues = clean(saved.cluesFound, clueIds);
       const completed = saved.completed === true &&
@@ -103,10 +103,10 @@ export default function Case058Screen({ archive, bureauTeamBoard, onArchive, onR
     setActiveReply(key);
   };
   const chooseEvent = (id: string) => {
-    if (progress.timelineOrder.includes(id) || progress.timelineOrder.length >= 5) return;
+    if (progress.timelineOrder.includes(id) || progress.timelineOrder.length >= 6) return;
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
-    setMessage(next.length === 5 && !isCase058TimelineCorrect(next)
+    setMessage(next.length === 6 && !isCase058TimelineCorrect(next)
       ? 'That sequence conflicts with the event records. Check the cache inventory, checksum comparison, clock calibration, export journal and media-lab comparison.'
       : '');
   };
@@ -114,7 +114,7 @@ export default function Case058Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase058DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records establish a authentic data fragment, not proof of a specific device or recorder custody. Recheck the maintenance mode sheet, decoder audit and missing serial-level equipment handover.`);
+      setMessage(`The records authenticate B-17 as a network fragment, but they do not identify the source device. Recheck the checksum, corrected clock, shared export role and missing recorder-specific fingerprint.`);
       return;
     }
     archiveLock.current = true;
@@ -155,8 +155,8 @@ export default function Case058Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 058 · THE UNINDEXED BUFFER REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the unindexed buffer log, repeater decoder audit, maintenance mode sheet, channel-side inventory and return register. Determine what the local cache network response proves without treating a signal integrity as a person’s location.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all five records: the response log, decoder audit, maintenance sheet, channel-side inventory and return register.</Text>
+      <Text style={[styles.hero, text]}>Authenticate B-17 against the local repeater journal, correct its cache-clock offset, and test whether the fragment contains a device-level match to Rowan’s recorder.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all five records: the cache inventory, checksum comparison, clock calibration, export journal and recorder fingerprint analysis.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
       {CASE_058_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -194,8 +194,8 @@ export default function Case058Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 058 · THE UNINDEXED BUFFER TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the authentic-mode confirmation, sealed channel-side inventory, local cache carrier integrity, decoder audit and channel register in order.</Text>
-      <Text style={[styles.subtitle, muted]}>Select the five events from earliest to latest. The options are deliberately shuffled.</Text>
+      <Text style={[styles.hero, text]}>Put the original WC-4 fragment, cache retention, cabinet inventory, checksum comparison, export and media-lab analysis in chronological order.</Text>
+      <Text style={[styles.subtitle, muted]}>Select the six events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
         {progress.timelineOrder.length === 0 ? <Text style={[styles.note, muted]}>No events placed yet.</Text> : progress.timelineOrder.map((id, index) => {
@@ -203,23 +203,23 @@ export default function Case058Screen({ archive, bureauTeamBoard, onArchive, onR
           return <Text key={id} style={[styles.body, text]}>{index + 1}. {event?.time} — {event?.title}</Text>;
         })}
       </View>
-      {[...CASE_058_GAME.timelineEvents].reverse().map((event) => <Pressable key={event.id} disabled={progress.timelineOrder.includes(event.id) || progress.timelineOrder.length >= 5} onPress={() => chooseEvent(event.id)} style={[styles.card, card, { opacity: progress.timelineOrder.includes(event.id) ? 0.4 : 1 }]}>
+      {[...CASE_058_GAME.timelineEvents].reverse().map((event) => <Pressable key={event.id} disabled={progress.timelineOrder.includes(event.id) || progress.timelineOrder.length >= 6} onPress={() => chooseEvent(event.id)} style={[styles.card, card, { opacity: progress.timelineOrder.includes(event.id) ? 0.4 : 1 }]}>
         <Text style={[styles.label, { color: colors.primary }]}>{event.time}</Text>
         <Text style={[styles.cardTitle, text]}>{event.title}</Text>
         <Text style={[styles.note, muted]}>{event.detail}</Text>
       </Pressable>)}
       {!!message && <Text style={[styles.note, { color: colors.destructive }]}>{message}</Text>}
-      {progress.timelineOrder.length === 5 ? timelineSolved
+      {progress.timelineOrder.length === 6 ? timelineSolved
         ? <Action title="Timeline confirmed · Make deduction" colors={colors} onPress={() => { setMessage(''); setPhase('deduction'); }} />
         : <Action title="Reset timeline and retry" colors={colors} onPress={() => { setProgress((current) => ({ ...current, timelineOrder: [] })); setMessage(''); }} />
-        : <Text style={[styles.note, muted]}>{progress.timelineOrder.length}/5 events selected</Text>}
+        : <Text style={[styles.note, muted]}>{progress.timelineOrder.length}/6 events selected</Text>}
       <Action title="Back to interviews" colors={colors} onPress={() => setPhase('interviews')} ghost />
     </>}
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 058 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Was the unindexed buffer a human reply or an authentic network acknowledgement—and what does the equipment trail prove?</Text>
-      <Text style={[styles.subtitle, muted]}>Distinguish a network integrity from a person’s location, a manually sent reply and a serial-level equipment handover.</Text>
+      <Text style={[styles.hero, text]}>Is B-17 an authentic copy, and can it be linked to Rowan’s recorder?</Text>
+      <Text style={[styles.subtitle, muted]}>Separate data integrity and corrected timing from device identity and individual export responsibility.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>RESPONSE TYPE REVIEW</Text>
         {CASE_058_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
@@ -236,7 +236,7 @@ export default function Case058Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 058</Text></View>
       <Text style={[styles.hero, text]}>The 19:23 local cache entry is an authentic WC-4 acknowledgement, not proof Rowan or the recorder reached the corridor.</Text>
-      <Text style={[styles.subtitle, muted]}>The maintenance sheet and decoder audit establish an authentic acknowledgement. The channel-side inventory does not identify a recorder serial or physical handover.</Text>
+      <Text style={[styles.subtitle, muted]}>The checksum and clock note authenticate the buffer copy and its timing; the media-lab comparison finds no recorder-specific fingerprint.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_058_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_058_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_058_GAME.outcome}</Text></View>
