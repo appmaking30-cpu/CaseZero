@@ -133,7 +133,7 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
     setPhase('review');
   };
 
-  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING THE DUPLICATE KEY LEDGER…</Text></View>;
+  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING THE CYLINDER SERVICE REPORT…</Text></View>;
 
   return <>
     {phase === 'briefing' && <>
@@ -146,7 +146,7 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
         <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 054–061 established Rowan’s relay assignment and the North Annex access trail. This file tests whether the service records establish completed cylinder work or a physical replacement.</Text>
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>THE DUPLICATE KEY LEDGER REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>THE CYLINDER SERVICE REVIEW</Text>
         {CASE_062_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
       <Action title="Open the cylinder service report" colors={colors} onPress={() => setPhase('evidence')} />
@@ -155,8 +155,8 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 062 · THE CYLINDER SERVICE REPORT REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the cylinder-service installation register, service request, independent cylinder inspection and retention packet. A registered cylinder is not proof of use.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all five records: the installation register, service request, independent cylinder inspection, retention packet and independent reconciliation.</Text>
+      <Text style={[styles.hero, text]}>Compare the original installation register, pending service request, maintenance rota, independent inspection and parts archive. A request is not proof that work was completed.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all five records: the installation register, pending request, maintenance rota, later inspection and work-order/parts reconciliation.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
       {CASE_062_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -219,7 +219,7 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 062 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>Do the records prove CY-8841 was serviced or replaced during the incident?</Text>
-      <Text style={[styles.subtitle, muted]}>Separate proof that a cylinder existed from proof it was serviced, replaced or handled at C-2.</Text>
+      <Text style={[styles.subtitle, muted]}>Separate a pending maintenance request from completed work, a physical cylinder change and proof of who handled the lock.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>RESPONSE TYPE REVIEW</Text>
         {CASE_062_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
