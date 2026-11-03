@@ -171,7 +171,7 @@ export default function Case048Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'interviews' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 048 · RECORDS INTAKE INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What does a counter record actually prove?</Text>
+      <Text style={[styles.hero, text]}>What does a correction request actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and are preserved in the archived report.</Text>
       {CASE_048_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -219,7 +219,7 @@ export default function Case048Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 048 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>Can the unauthenticated initials fairly identify who authored the correction request?</Text>
-      <Text style={[styles.subtitle, muted]}>Identify the unresolved collector, then choose the precise limit of the initials and counter records.</Text>
+      <Text style={[styles.subtitle, muted]}>Identify the unresolved requester, then choose the precise limit of the form and routing records.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>REQUEST AUTHORSHIP AND AUTHENTICATION UNDER REVIEW</Text>
         {CASE_048_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
@@ -235,7 +235,7 @@ export default function Case048Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 048</Text></View>
-      <Text style={[styles.hero, text]}>The recovered form records T.R., but its individual author remains unidentified.</Text>
+      <Text style={[styles.hero, text]}>The recovered form confirms a role-level request, but its individual author remains unidentified.</Text>
       <Text style={[styles.subtitle, muted]}>The request form, matching intake docket, shared terminal activity and retention index establish a sequence—but do not identify the individual author.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_048_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_048_GAME.proof}</Text></View>
