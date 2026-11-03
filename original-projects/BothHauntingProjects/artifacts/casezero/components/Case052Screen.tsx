@@ -194,7 +194,7 @@ export default function Case052Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 052 · DISPATCH EXECUTION TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put signatory eligibility, the approval request, the countersignature check and the route variance report in order.</Text>
+      <Text style={[styles.hero, text]}>Put dispatch copy generation, route release, destination receipt and reconciliation in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -235,8 +235,8 @@ export default function Case052Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 052</Text></View>
-      <Text style={[styles.hero, text]}>The workflow records a request, but no authenticated primary approval or independent witness countersignature survives.</Text>
-      <Text style={[styles.subtitle, muted]}>The roster, request register, destination receipt and route variance report establish that the workflow remained incomplete—not that D-17 received valid approval.</Text>
+      <Text style={[styles.hero, text]}>The changed D-4 dispatch route was executed, but no valid approval survives and no individual operator is identified.</Text>
+      <Text style={[styles.subtitle, muted]}>The dispatch carbon, release ledger, destination receipt and route variance report establish execution—not authorization or individual responsibility.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_052_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_052_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_052_GAME.outcome}</Text></View>
