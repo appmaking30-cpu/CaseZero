@@ -107,14 +107,14 @@ export default function Case048Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 4 && !isCase048TimelineCorrect(next)
-      ? 'That sequence conflicts with the request file. Compare the counter issue time, the request mark, the request routing and the later retention scan.'
+      ? 'That sequence conflicts with the request packet. Compare the shared terminal activity, request completion, intake receipt and later retention scan.'
       : '');
   };
   const submit = () => {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase048DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The request slip contains T.R., but no verified specimen or witness identifies the writer.`);
+      setMessage(`The recovered form contains T.R., but no verified specimen or witness identifies the author.`);
       return;
     }
     archiveLock.current = true;
@@ -143,7 +143,7 @@ export default function Case048Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_048_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_048_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the shared badge trail. This file tests a newly recovered request slip without assuming who wrote its initials.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the D-17 correction trail. This file tests the recovered request packet without assuming who authored its initials.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>RECORDS INTAKE PERSONNEL</Text>
@@ -155,8 +155,8 @@ export default function Case048Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 048 · REQUEST PACKET REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the intake docket, request initials, docket note and retention scan. Establish what each record can—and cannot—prove.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: D-17 request request, bound intake docket, request docket note and return-envelope retention log.</Text>
+      <Text style={[styles.hero, text]}>Compare the recovered request, intake docket, shared terminal summary and retention index. Establish what each record can—and cannot—prove.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: recovered correction request, intake docket, terminal activity summary and retention index.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_048_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -165,7 +165,7 @@ export default function Case048Screen({ archive, bureauTeamBoard, onArchive, onR
         <Text style={[styles.note, muted]}>{clue.label}</Text>
         {activeClue === clue.id && <Text style={[styles.body, text, styles.divider]}>{clue.detail}</Text>}
       </Pressable>)}
-      <Action title="Interview the request packet and dispatch witnesses" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
+      <Action title="Interview the records intake and dispatch witnesses" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
       <Action title="Back to briefing" colors={colors} onPress={() => setPhase('briefing')} ghost />
     </>}
 
@@ -188,13 +188,13 @@ export default function Case048Screen({ archive, bureauTeamBoard, onArchive, onR
         })}
       </View>)}
       <Text style={[styles.note, muted]}>{heardWitnesses}/3 witnesses heard · {unanswered.length} optional follow-ups remaining</Text>
-      <Action title="Reconstruct the request packet-to-access timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
+      <Action title="Reconstruct the request-to-archive timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
       <Action title="Back to evidence" colors={colors} onPress={() => setPhase('evidence')} ghost />
     </>}
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 048 · REQUEST ROUTING TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the request packet and access records in order.</Text>
+      <Text style={[styles.hero, text]}>Put the terminal activity, request form, intake receipt and archive scan in order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the four events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -218,7 +218,7 @@ export default function Case048Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 048 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Can the unauthenticated initials fairly identify who authored the request?</Text>
+      <Text style={[styles.hero, text]}>Can the unauthenticated initials fairly identify who authored the correction request?</Text>
       <Text style={[styles.subtitle, muted]}>Identify the unresolved collector, then choose the precise limit of the initials and counter records.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>REQUEST AUTHORSHIP AND AUTHENTICATION UNDER REVIEW</Text>
@@ -235,8 +235,8 @@ export default function Case048Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 048</Text></View>
-      <Text style={[styles.hero, text]}>The request slip records T.R., but the author and physical collector remain unidentified.</Text>
-      <Text style={[styles.subtitle, muted]}>The intake docket, request initials, docket note and retention scan establish a sequence of records—but not the identity of the request writer or collector.</Text>
+      <Text style={[styles.hero, text]}>The recovered form records T.R., but its individual author remains unidentified.</Text>
+      <Text style={[styles.subtitle, muted]}>The request form, matching intake docket, shared terminal activity and retention index establish a sequence—but do not identify the individual author.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_048_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_048_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_048_GAME.outcome}</Text></View>
