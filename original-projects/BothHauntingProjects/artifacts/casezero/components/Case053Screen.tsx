@@ -114,7 +114,7 @@ export default function Case053Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase053DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The seal records prove the changed route reached D-4, but the shared DS-3 role does not identify an individual operator or establish valid authority.`);
+      setMessage(`The records establish a repeated seal identifier, not a second physical seal or a named operator. Recheck the master register, issue counterfoil and both packet entries.`);
       return;
     }
     archiveLock.current = true;
@@ -133,7 +133,7 @@ export default function Case053Screen({ archive, bureauTeamBoard, onArchive, onR
     setPhase('review');
   };
 
-  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING DISPATCH FILE…</Text></View>;
+  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING SEAL AUDIT FILE…</Text></View>;
 
   return <>
     {phase === 'briefing' && <>
@@ -171,7 +171,7 @@ export default function Case053Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'interviews' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 053 · SEAL CONTROL INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What does a release ledger actually establish?</Text>
+      <Text style={[styles.hero, text]}>What does the repeated seal number actually establish?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and preserved in the archived report.</Text>
       {CASE_053_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -218,8 +218,8 @@ export default function Case053Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 053 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Do the surviving records establish that D-17 was validly approved?</Text>
-      <Text style={[styles.subtitle, muted]}>Determine whether the request was approved, then state what the missing signatures mean.</Text>
+      <Text style={[styles.hero, text]}>Do the surviving records establish that two physical seals existed?</Text>
+      <Text style={[styles.subtitle, muted]}>Distinguish a duplicated identifier in the records from proof of a duplicated physical seal or a named operator.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>SEAL IDENTIFIER REVIEW</Text>
         {CASE_053_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
