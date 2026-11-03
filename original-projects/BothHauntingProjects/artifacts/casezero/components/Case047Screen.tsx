@@ -114,7 +114,7 @@ export default function Case047Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase047DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The pickup record and desk board establish recorded duties, but neither proves who signed for D-17.`);
+      setMessage(`The carbon slip contains initials, but no authenticated specimen links those marks to a named person.`);
       return;
     }
     archiveLock.current = true;
@@ -218,10 +218,10 @@ export default function Case047Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 047 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Who can the duty records place with D-17 during the 09:02 corridor event?</Text>
-      <Text style={[styles.subtitle, muted]}>Identify the unresolved carrier, then choose the precise limit of the pickup record and desk records.</Text>
+      <Text style={[styles.hero, text]}>Who can the unauthenticated initials fairly identify as the D-17 collector?</Text>
+      <Text style={[styles.subtitle, muted]}>Identify the unresolved collector, then choose the precise limit of the initials and counter records.</Text>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>PICKUP DESK ASSIGNMENT AND BADGE CUSTODY UNDER REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>PICKUP INITIALS AND AUTHENTICATION UNDER REVIEW</Text>
         {CASE_047_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
       </View>
       <View style={[styles.card, card]}>
@@ -235,8 +235,8 @@ export default function Case047Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 047</Text></View>
-      <Text style={[styles.hero, text]}>The pickup record names the PICKUP DESK team, but does not identify who carried D-17.</Text>
-      <Text style={[styles.subtitle, muted]}>The signed pickup record, independent desk board, shared console audit and corridor observation establish the scheduled team and access window—but not the badge carrier.</Text>
+      <Text style={[styles.hero, text]}>The carbon slip records M.P., but the author and physical collector remain unidentified.</Text>
+      <Text style={[styles.subtitle, muted]}>The counter register, carbon initials, correction note and return seal establish a sequence of records—but not the identity of the pickup writer or collector.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_047_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_047_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_047_GAME.outcome}</Text></View>
