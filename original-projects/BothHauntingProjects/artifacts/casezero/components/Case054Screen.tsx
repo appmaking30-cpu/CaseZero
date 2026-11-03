@@ -49,7 +49,7 @@ export default function Case054Screen({ archive, bureauTeamBoard, onArchive, onR
       const clean = (items: unknown, allowed: Set<string>) => Array.isArray(items)
         ? [...new Set(items.filter((item): item is string => typeof item === 'string' && allowed.has(item)))]
         : [];
-      const timeline = clean(saved.timelineOrder, eventIds).slice(0, 4);
+      const timeline = clean(saved.timelineOrder, eventIds).slice(0, 5);
       const heard = clean(saved.askedQuestions, questionIds);
       const clues = clean(saved.cluesFound, clueIds);
       const completed = saved.completed === true &&
