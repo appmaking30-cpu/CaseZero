@@ -235,7 +235,7 @@ export default function Case058Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 058</Text></View>
-      <Text style={[styles.hero, text]}>The 19:23 local cache entry is an authentic WC-4 acknowledgement, not proof Rowan or the recorder reached the corridor.</Text>
+      <Text style={[styles.hero, text]}>B-17 is an unchanged copy of the WC-4 network fragment, correctly timed to 19:23, but it has no recorder-specific fingerprint.</Text>
       <Text style={[styles.subtitle, muted]}>The checksum and clock note authenticate the buffer copy and its timing; the media-lab comparison finds no recorder-specific fingerprint.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_058_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_058_GAME.proof}</Text></View>
