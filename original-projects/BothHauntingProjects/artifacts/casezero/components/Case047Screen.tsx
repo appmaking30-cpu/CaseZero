@@ -114,7 +114,7 @@ export default function Case047Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase047DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The carbon slip contains initials, but no authenticated specimen links those marks to a named person.`);
+      setMessage(`The carbon slip contains M.P., but no verified specimen or witness identifies the writer.`);
       return;
     }
     archiveLock.current = true;
@@ -143,7 +143,7 @@ export default function Case047Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_047_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_047_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 044–045 established a shared badge event and a role-level tray pickup. This file identifies the scheduled PICKUP DESK team and desk duty without assuming who physically carried D-17.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Earlier files established the shared badge trail. This file tests a newly recovered carbon slip without assuming who wrote its initials.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>PICKUP DESK PERSONNEL</Text>
@@ -155,8 +155,8 @@ export default function Case047Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 047 · EVIDENCE REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the signed pickup slip, independent desk allocation and shared console audit. Establish what the duty records can—and cannot—prove.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all four records: signed PICKUP DESK pickup record, independent desk board, shared console audit and corridor observation note.</Text>
+      <Text style={[styles.hero, text]}>Compare the counter register, carbon initials, correction note and return seal. Establish what each record can—and cannot—prove.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all four records: D-17 pickup carbon, bound counter register, carbon correction note and return-envelope seal log.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 4 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/4 records logged</Text>
       {CASE_047_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
