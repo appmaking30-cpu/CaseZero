@@ -15,7 +15,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
 
   try {
     await page.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
-    await page.getByText('Detective Bureau', { exact: true }).waitFor();
+    await page.getByText('THE INVESTIGATION DIVISION', { exact: true }).waitFor();
     await page.getByText('The Last Train Home', { exact: true }).first().waitFor();
     const lockedCaseButton = page.getByRole('button', { name: 'Complete Case 001 to unlock' });
     await lockedCaseButton.waitFor();
