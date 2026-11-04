@@ -107,7 +107,7 @@ export default function Case063Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 6 && !isCase063TimelineCorrect(next)
-      ? 'That sequence conflicts with the records. Check the exception export, hardware baseline, maintenance rota, incident access event, later hardware profile inspection and independent reconciliation.'
+      ? 'That sequence conflicts with the records. Check the signed hardware baseline, maintenance exception export, independent access-control digest, field-provenance note and reconciliation sheet.'
       : '');
   };
   const submit = () => {
@@ -143,7 +143,7 @@ export default function Case063Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_063_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_063_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 054–061 established Rowan’s relay assignment and the North Annex access trail. This file tests whether the service records establish completed hardware profile work or a physical replacement.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 054–062 narrowed the relay, access, key and cylinder trail. This file tests whether independent system indexes corroborate one North Annex exception, without assuming a named person was present.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>THE CROSS-INDEX REVIEW</Text>
@@ -155,8 +155,8 @@ export default function Case063Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 063 · THE NORTH ANNEX CROSS-INDEX REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the original hardware baseline, pending exception export, maintenance rota, access-control digest and audit note. A request is not proof that work was completed.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all five records: the hardware baseline, maintenance exception, maintenance rota, later inspection and work-order/parts reconciliation.</Text>
+      <Text style={[styles.hero, text]}>Compare the signed hardware baseline, maintenance exception export, independent access-control digest, field-provenance note and reconciliation sheet. A system event is not proof of a person's physical action.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all five records: the signed hardware baseline, maintenance exception export, independent access-control digest, field-provenance note and reconciliation sheet.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
       {CASE_063_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -171,7 +171,7 @@ export default function Case063Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'interviews' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 063 · THE NORTH ANNEX CROSS-INDEX INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What do the hardware profile service records actually prove?</Text>
+      <Text style={[styles.hero, text]}>What do the North Annex cross-index records actually prove?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and preserved in the archived report.</Text>
       {CASE_063_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -188,13 +188,13 @@ export default function Case063Screen({ archive, bureauTeamBoard, onArchive, onR
         })}
       </View>)}
       <Text style={[styles.note, muted]}>{heardWitnesses}/3 witnesses heard · {unanswered.length} optional follow-ups remaining</Text>
-      <Action title="Reconstruct the hardware profile service timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
+      <Action title="Reconstruct the North Annex exception timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
       <Action title="Back to evidence" colors={colors} onPress={() => setPhase('evidence')} ghost />
     </>}
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 063 · THE NORTH ANNEX CROSS-INDEX TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the original installation, pending exception export, maintenance rota, incident access event, later hardware profile inspection and independent reconciliation in chronological order.</Text>
+      <Text style={[styles.hero, text]}>Put the signed hardware baseline, maintenance exception export, independent access-control digest, field-provenance review and independent reconciliation in chronological order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the six events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -236,7 +236,7 @@ export default function Case063Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 063</Text></View>
       <Text style={[styles.hero, text]}>Two independent system indexes corroborate event NX-7714 against hardware profile NX-C2-04, but neither identifies a person or proves physical handling.</Text>
-      <Text style={[styles.subtitle, muted]}>The signed baseline maps C-2 to NX-C2-04. The maintenance exception export and independent access-control digest both record NX-7714 against that profile at the same minute. The provenance note confirms these are machine-generated fields. The match corroborates a system exception window, not an individual's identity or physical actions.</Text>
+      <Text style={[styles.subtitle, muted]}>The signed baseline maps C-2 to NX-C2-04. The maintenance exception export and independently retained access-control digest both record NX-7714 against that profile at the same minute. The field-provenance note confirms the event ID, hardware profile and timestamp are machine-generated. The match corroborates one system exception window, not an individual's identity or physical actions.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_063_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_063_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_063_GAME.outcome}</Text></View>
@@ -262,7 +262,7 @@ function Choice({ title, note, selected, colors, onPress }: { title: string; not
 }
 
 function Action({ title, colors, onPress, disabled = false, ghost = false }: { title: string; colors: ReturnType<typeof useColors>; onPress: () => void; disabled?: boolean; ghost?: boolean }) {
-  return <Pressable accessibilityRole="button" disabled={disabled} onPress={onPress} style={({ pressed }) => [styles.action, { backgroundColor: ghost ? 'tranhardware profilent' : colors.primary, borderColor: ghost ? colors.border : colors.primary, opacity: disabled ? 0.4 : pressed ? 0.75 : 1 }]}>
+  return <Pressable accessibilityRole="button" disabled={disabled} onPress={onPress} style={({ pressed }) => [styles.action, { backgroundColor: ghost ? 'transparent' : colors.primary, borderColor: ghost ? colors.border : colors.primary, opacity: disabled ? 0.4 : pressed ? 0.75 : 1 }]}>
     <Text style={[styles.actionText, { color: ghost ? colors.foreground : colors.primaryForeground }]}>{title}</Text>
   </Pressable>;
 }
