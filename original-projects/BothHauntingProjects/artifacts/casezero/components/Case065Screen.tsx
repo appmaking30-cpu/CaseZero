@@ -133,30 +133,30 @@ export default function Case065Screen({ archive, bureauTeamBoard, onArchive, onR
     setPhase('review');
   };
 
-  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING THE EXCEPTION WINDOW…</Text></View>;
+  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING THE RECORDER PACKET…</Text></View>;
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 065 · THE EXCEPTION WINDOW</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 065 · THE RECORDER PACKET</Text>
       <Text style={[styles.hero, text]}>{CASE_065_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_065_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_065_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_065_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 054–061 established Rowan’s relay assignment and the Central Records access trail. This file tests whether the custody records establish the last corroborated repository and unresolved custody gap.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 063–064 established the cross-index exception and witnessed retrieval. This file tests what the recovered recorder can establish about the device, its data and Rowan’s last verified assignment.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>THE RECORDER REVIEW</Text>
         {CASE_065_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
-      <Action title="Open the exception window" colors={colors} onPress={() => setPhase('evidence')} />
+      <Action title="Open the recorder packet" colors={colors} onPress={() => setPhase('evidence')} />
       <Action title="Back to Bureau" colors={colors} onPress={onReturn} ghost />
     </>}
 
     {phase === 'evidence' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 065 · THE EXCEPTION WINDOW REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the original accession label, recorder metadata export, neutral receiving scan, independent seal report and custody reconciliation. A request is not proof that work was completed.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all five records: the original accession label, recorder metadata export, receiving-desk scan, independent seal report and custody reconciliation.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 065 · THE RECORDER PACKET EVIDENCE</Text>
+      <Text style={[styles.hero, text]}>Compare the witnessed intake photograph, recorder inventory, read-only metadata export, independent checksum receipt and review log. Device authenticity and file integrity do not establish speaker identity.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all five records: witnessed intake photograph, recorder inventory card, read-only metadata export, independent checksum receipt and forensic review log.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
       {CASE_065_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -165,13 +165,13 @@ export default function Case065Screen({ archive, bureauTeamBoard, onArchive, onR
         <Text style={[styles.note, muted]}>{clue.label}</Text>
         {activeClue === clue.id && <Text style={[styles.body, text, styles.divider]}>{clue.detail}</Text>}
       </Pressable>)}
-      <Action title="Interview the archive, dispatch and records witnesses" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
+      <Action title="Interview the evidence custodian, forensic technician and audit reviewer" colors={colors} onPress={() => setPhase('interviews')} disabled={!allClues} />
       <Action title="Back to briefing" colors={colors} onPress={() => setPhase('briefing')} ghost />
     </>}
 
     {phase === 'interviews' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 065 · THE EXCEPTION WINDOW INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What do the recorder packet custody records actually prove?</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 065 · THE RECORDER PACKET INTERVIEWS</Text>
+      <Text style={[styles.hero, text]}>What does the recovered recorder establish about its data and Rowan’s last verified assignment?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and preserved in the archived report.</Text>
       {CASE_065_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -193,8 +193,8 @@ export default function Case065Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 065 · THE EXCEPTION WINDOW TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the original packet accession, recorder metadata export, receiving-desk scan, independent seal report, custody reconciliation and witnessed-retrieval authorization in chronological order.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 065 · THE RECORDER PACKET TIMELINE</Text>
+      <Text style={[styles.hero, text]}>Put the inventory record, witnessed retrieval, evidence-desk intake, read-only image export, independent checksum and forensic limitation review in chronological order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the six events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -219,7 +219,7 @@ export default function Case065Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 065 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>What can the recorder evidence establish, and what remains unknown about its source?</Text>
-      <Text style={[styles.subtitle, muted]}>Separate a pending recorder metadata export from completed work, a physical packet accession change and proof of who handled the packet.</Text>
+      <Text style={[styles.subtitle, muted]}>Separate device identification, post-intake image integrity and the recorder’s limited metadata from claims about speaker identity, local time or Rowan’s location.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>RESPONSE TYPE REVIEW</Text>
         {CASE_065_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
@@ -234,7 +234,7 @@ export default function Case065Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'review' && <>
-      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 064</Text></View>
+      <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 065</Text></View>
       <Text style={[styles.hero, text]}>The checksum supports integrity of the read-only image from receipt onward. It does not identify a speaker, establish local time or prove the original recording history.</Text>
       <Text style={[styles.subtitle, muted]}>The recorder inventory identifies R-17 and M-4. The read-only export contains three segments with device-local timestamps and no timezone. The independent checksum matches the received image; speaker identity and original recording context remain unverified.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_065_GAME.truth}</Text></View>
@@ -262,7 +262,7 @@ function Choice({ title, note, selected, colors, onPress }: { title: string; not
 }
 
 function Action({ title, colors, onPress, disabled = false, ghost = false }: { title: string; colors: ReturnType<typeof useColors>; onPress: () => void; disabled?: boolean; ghost?: boolean }) {
-  return <Pressable accessibilityRole="button" disabled={disabled} onPress={onPress} style={({ pressed }) => [styles.action, { backgroundColor: ghost ? 'tranpacket accessionnt' : colors.primary, borderColor: ghost ? colors.border : colors.primary, opacity: disabled ? 0.4 : pressed ? 0.75 : 1 }]}>
+  return <Pressable accessibilityRole="button" disabled={disabled} onPress={onPress} style={({ pressed }) => [styles.action, { backgroundColor: ghost ? 'transparent' : colors.primary, borderColor: ghost ? colors.border : colors.primary, opacity: disabled ? 0.4 : pressed ? 0.75 : 1 }]}>
     <Text style={[styles.actionText, { color: ghost ? colors.foreground : colors.primaryForeground }]}>{title}</Text>
   </Pressable>;
 }
