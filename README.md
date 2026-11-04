@@ -30,24 +30,24 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 ### Implemented in the canonical app
 
 - Dark-first Detective Bureau home screen and sequential campaign file routing.
-- **46 campaign investigations in development (001–046)** with case-specific data modules, integrated React Native screens and individual case-rule tests.
+- **62 campaign investigations in development (001–062)** with case-specific data modules, integrated React Native screens and individual case-rule tests.
 - **Case 001 — The Last Train Home:** the tutorial has five inspectable records, three witnesses/six questions, a four-event timeline, person-plus-motive deduction, retryable wrong answers, and separate Truth / Proof / Outcome review. Progress can be resumed locally.
 - **Cases 002–004:** connected opening investigations; Case 002 receives Case 001 findings and unanswered questions, and the Missing Detective thread unlocks after the opening cases. Case 004 follows Rowan Vale’s missing recorder to North Quay.
 - **Cases 005–006:** the M-2 transfer/recorder trail and transcript reconstruction. Case 006 deliberately attributes the recording to an upstream authority rather than inventing a speaker identity.
-- **Cases 007–046:** each has a case-specific evidence/interview/timeline/deduction data module, integrated React Native screen, local progress, archive carryover and a dedicated unit-test file.
+- **Cases 007–062:** each has a case-specific evidence/interview/timeline/deduction data module, integrated React Native screen, local progress, archive carryover and a dedicated unit-test file.
 - **Cases 037–040** extend the dispatch/transfer investigation chain: the Missing Movement Ledger, The Queue Before Arrival, The Station Without an Operator, and a shift-handover investigation. Their tests check evidence structure, chronology, careful attribution where individual identity is not established, and carryover from earlier files.
 - **Investigation memory:** completed conclusions, inspected clues, asked questions and unanswered questions are kept in a shared local archive and used by later cases.
-- **Missing Detective arc:** the first dossier unlocks after Cases 001–002; a four-file convergence report unlocks after Cases 001–004. The connected investigation continues beyond Case 036, but the final revelation/ending is not implemented yet.
+- **Missing Detective arc:** the first dossier unlocks after Cases 001–002; a four-file convergence report unlocks after Cases 001–004. The Missing Detective investigation now continues through Case 062, but the recorder’s final recovery, Rowan’s fate and the campaign ending are not implemented yet.
 - **Daily Case Bulletin:** seven standalone cases rotate deterministically by the device’s local calendar date. Each has three inspectable records, a person-and-motive deduction, retryable choices and separate local progress; daily files do not change the campaign archive.
 - **Bureau Team:** three specialists unlock at campaign milestones. The board supports one specialist per file and one file per specialist, saved assignments, case-closure/daily XP, two rank-up steps and evidence-gated insights. These insights support analysis; they do not reveal uninspected evidence or auto-solve cases.
 - **Local persistence:** case progress, the investigation archive, daily progress and Bureau assignments/ranks use AsyncStorage on the device.
 
 ### Verification coverage — what the checks actually prove
 
-- Unit tests cover the case rules for Cases 001–046, campaign/archive behavior, the Missing Detective unlock/convergence, daily rotation and Bureau assignment/progression.
-- The Playwright mobile-viewport walkthrough runs at **390×844** and completes Cases 001–006, checks retry paths, then checks the Daily Case Bulletin and Bureau assignment flow.
+- Unit tests cover the case rules through Case 062, campaign/archive behavior, the Missing Detective unlock/convergence/recorder-transfer gate, daily rotation and Bureau assignment/progression.
+- The Playwright mobile-viewport walkthrough runs at **390×844** and completes Cases 001–006 and 041–062, checks retry paths, then checks the Daily Case Bulletin and Bureau assignment flow.
 - The 3 November 2026 GitHub Actions run (workflow run 41636052524) passed dependency installation, Expo TypeScript checking, the full unit-test suite through Case 046, Android-friendly Expo web export, Chromium installation, the mobile campaign browser walkthrough for Cases 001–006 and 041–046, and screenshot upload.
-- A passing browser walkthrough is **not** a physical Android-device test. Cases 007–040 have unit/type/export validation but are not yet individually completed in the browser walkthrough. Dedicated walkthroughs now cover Cases 041–046.
+- A passing browser walkthrough is **not** a physical Android-device test. Cases 007–040 have unit/type/export validation but are not yet individually completed in the browser walkthrough. Dedicated walkthrough coverage now includes Cases 041–062.
 - No signed APK/AAB, Play Store release, real-device compatibility pass, crash/analytics service, or production backend has been completed.
 
 ### Case 041 — The Missing Signature — 2 November 2026
@@ -94,7 +94,7 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 
 ### Not implemented yet
 
-- The final Missing Detective reveal and campaign ending; the current campaign’s latest investigation is Case 046; the Missing Detective arc remains unresolved.
+- The final Missing Detective reveal and campaign ending; the latest investigation is Case 062, and the recorder/Rowan resolution remains open.
 - Full detective HQ facilities/building upgrades and a deeper team-management layer beyond the current roster, assignments, XP/ranks and evidence insights.
 - Cloud accounts, cross-device sync, multiplayer, online/community case publishing or a live backend.
 - Monetization, paid features or ad integration.
@@ -122,3 +122,31 @@ The app uses Expo Router, React Native, TypeScript and AsyncStorage for on-devic
 ## Quality bar
 
 A case is not release-ready merely because a screen exists. Its clues must support the intended conclusion; timeline and deduction rules must reject incomplete/wrong solutions while allowing retries; local progress and archive carryover must be reliable; and the case must pass relevant unit, typecheck, export and browser/device checks. Keep Truth (what happened), Proof (what the evidence establishes) and Outcome (what follows) distinct.
+
+
+## Current checkpoint — 4 November 2026
+
+### Case 062 — The Cylinder Service Report
+
+- Added the C-2 cylinder installation register, pending service request, maintenance rota, independent later inspection, and work-order/removed-parts reconciliation.
+- Includes three witnesses/six questions, a six-event timeline, a retryable evidence-based deduction, local save/restore, investigation-archive carryover, and Bureau specialist support.
+- The fair finding is limited: the original and later inspection both identify CY-8841, while the searched records do not verify a completed replacement. This does not rule out undocumented handling or identify a person who touched the lock.
+- Fixed a mobile walkthrough selector mismatch and a transparent-choice styling typo.
+- **Verified in GitHub Actions run [41828287084](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41828287084):** Expo TypeScript check, full unit suite through Case 062, Expo web export, mobile browser walkthrough through Case 062, and screenshot artifact upload all passed.
+
+### Preservation and workflow checkpoint
+
+- The existing Replit app remains **BothHauntingProjects** at https://replit.com/@appmaking30/BothHauntingProjects. It was not edited during this work, and Replit Agent was not used.
+- The original Replit archive remains unchanged on `replit-original-backup-2026-10-31`; the ZIP is 7,167,701 bytes. The extracted source snapshot is on `casezero-original-work`.
+- The active source is `casezero-development`. A separate safety checkpoint branch is maintained for rollback. GitHub commits do not automatically sync back to the Replit workspace.
+- Continue with small GitHub commits and the existing GitHub Actions checks. No paid builds, hosting, APIs, analytics, publishing or monetization have been enabled.
+- The web export and 390×844 browser walkthrough are previews, not a signed Android APK/AAB or a physical-device compatibility test.
+
+### Remaining master-plan work
+
+1. Complete the Missing Detective endgame. Cases 001–004 establish the altered-file route; Cases 048–053 unlock the recorder-transfer index; Cases 054–062 narrow Rowan’s assignment, relay activity and the North Annex hardware trail. Rowan’s fate and the recorder’s final recovery are still unresolved. Plan a finite ending rather than adding cases indefinitely.
+2. Add targeted browser walkthroughs for Cases 007–040; their unit/type/export checks do not replace end-to-end mobile coverage.
+3. Deepen HQ/team progression only where it adds meaningful choices; keep the existing three-specialist roster, assignments, XP/ranks and evidence insights stable.
+4. Finish accessibility, save migration, small-screen polish, audio/notification decisions and performance checks.
+5. Build and test an installable Android package on a real device. Use a free workflow where possible; ask before any paid build or service.
+6. Consider optional hints/case packs/rewarded ads only after the free core campaign and ending are complete. Never make the core story pay-to-win.
