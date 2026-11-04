@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
+import CaseProgressHeader from '@/components/CaseProgressHeader';
 import { getBureauSpecialistInsight } from '@/game/bureauTeam';
 import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
 import {
@@ -126,6 +127,7 @@ export default function Case004Screen({ archive, assignedSpecialistId, assignedS
 
   return (
     <>
+      <CaseProgressHeader caseNumber="004" phase={phase} />
       {phase === 'briefing' && (
         <>
           <Text style={[styles.label, { color: colors.primary }]}>CASE 004 · MISSING DETECTIVE TRAIL</Text>
