@@ -1,0 +1,72 @@
+name: CaseZero Android debug APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [casezero-development]
+    paths:
+      - ".github/workflows/android-debug-apk.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: casezero-android-debug-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-debug-apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: original-projects/BothHauntingProjects
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install pnpm 10
+        run: npm install --global pnpm@10
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK platform and build tools
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Install locked workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck the Expo app
+        run: pnpm --filter @workspace/casezero run typecheck
+
+      - name: Run the CaseZero unit-test suite
+        run: pnpm --filter @workspace/scripts test
+
+      - name: Generate the Android native project
+        run: pnpm --filter @workspace/casezero exec expo prebuild --platform android --non-interactive
+        env:
+          EXPO_NO_TELEMETRY: 1
+
+      - name: Build unsigned debug APK
+        working-directory: original-projects/BothHauntingProjects/artifacts/casezero/android
+        run: |
+          chmod +x ./gradlew
+          ./gradlew --no-daemon --stacktrace assembleDebug
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: casezero-debug-apk
+          path: original-projects/BothHauntingProjects/artifacts/casezero/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
