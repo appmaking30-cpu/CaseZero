@@ -67,7 +67,7 @@ Important limits:
 2. Treat `casezero-development` as the only active source branch.
 3. Make small, reviewable GitHub commits: update the relevant screen/data module and tests together.
 4. Let GitHub Actions run typecheck, unit tests, Expo web export and the mobile browser walkthrough. Fix a failing check before moving on.
-5. Use the browser preview on an Android phone for quick visual checks. For an interactive Expo Go session, the existing Expo dev server must be running on a development machine; if that is unavailable, the GitHub-hosted web preview remains the no-cost fallback for viewport checks.
+5. The current GitHub Actions workflow exports the app, runs a 390×844 Playwright walkthrough and uploads screenshots; it does not publish an interactive preview URL. An interactive Expo Go session still requires the Expo dev server on a development machine. A manual unsigned Android debug-APK workflow has been added; its first Gradle build is still being verified, so no APK is claimed ready yet.
 6. Do not trigger paid cloud builds, paid APIs, paid hosting, analytics, public publishing or monetization without explicit approval.
 7. Before release, build an Android package with a verified free/local path and test it on an actual Android device. Do not call the browser export an APK.
 
