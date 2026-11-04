@@ -107,7 +107,7 @@ export default function Case066Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 6 && !isCase066TimelineCorrect(next)
-      ? 'That sequence conflicts with the records. Check the original accession, final record metadata export, receiving scan, independent seal report, custody reconciliation and retrieval authorization.'
+      ? 'That sequence conflicts with the records. Check the recorder inventory, dual-witness custody, signed statement, independent status register, limitation review and report authorization.'
       : '');
   };
   const submit = () => {
@@ -143,7 +143,7 @@ export default function Case066Screen({ archive, bureauTeamBoard, onArchive, onR
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_066_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_066_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 063–064 established the cross-index exception and witnessed retrieval. This file tests what the recovered final record can establish about the device, its data and Rowan’s last verified assignment.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 063–065 established the cross-index, witnessed retrieval and recorder identity. This final file authenticates Rowan’s statement against an independent status register.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>THE FINAL RECORD REVIEW</Text>
@@ -155,8 +155,8 @@ export default function Case066Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'evidence' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 066 · THE FINAL RECORD EVIDENCE</Text>
-      <Text style={[styles.hero, text]}>Compare the witnessed intake photograph, final record inventory, read-only metadata export, independent checksum receipt and review log. Device authenticity and file integrity do not establish speaker identity.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all five records: witnessed intake photograph, final record inventory card, read-only metadata export, independent checksum receipt and forensic review log.</Text>
+      <Text style={[styles.hero, text]}>Compare the recorder identity, dual-witness custody log, signed statement, independent confidential-review register and limitation memo. Device identity alone is not enough to authenticate a status.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all five records: recorder identity reconciliation, dual-witness custody log, signed final statement, independent status register and limitation memo.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
       {CASE_066_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -171,7 +171,7 @@ export default function Case066Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'interviews' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 066 · THE FINAL RECORD INTERVIEWS</Text>
-      <Text style={[styles.hero, text]}>What does the recovered final record establish about its data and Rowan’s last verified assignment?</Text>
+      <Text style={[styles.hero, text]}>What do the authenticated records establish about Rowan’s status, and what remains private or unknown?</Text>
       <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and preserved in the archived report.</Text>
       {CASE_066_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
@@ -194,7 +194,7 @@ export default function Case066Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 066 · THE FINAL RECORD TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the inventory record, witnessed retrieval, evidence-desk intake, read-only image export, independent checksum and forensic limitation review in chronological order.</Text>
+      <Text style={[styles.hero, text]}>Put the recorder inventory, dual-witness custody, signed statement, independent status-register match, limitation review and final report authorization in chronological order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the six events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
@@ -219,7 +219,7 @@ export default function Case066Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 066 · FINAL DEDUCTION</Text>
       <Text style={[styles.hero, text]}>What can the final record evidence establish, and what remains unknown about its source?</Text>
-      <Text style={[styles.subtitle, muted]}>Separate device identification, post-intake image integrity and the final record’s limited metadata from claims about speaker identity, local time or Rowan’s location.</Text>
+      <Text style={[styles.subtitle, muted]}>Separate the verified protected-separation status from unsupported claims about location, wrongdoing or a guaranteed return.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>RESPONSE TYPE REVIEW</Text>
         {CASE_066_GAME.suspects.map((person) => <Choice key={person.id} title={person.name} note={person.role} selected={progress.selectedSuspect === person.id} colors={colors} onPress={() => setProgress((current) => ({ ...current, selectedSuspect: person.id }))} />)}
