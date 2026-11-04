@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
+import CaseProgressHeader from '@/components/CaseProgressHeader';
 import { CASE_006_GAME, CASE_006_EMPTY_PROGRESS, isCase006OrderCorrect, isCase006SourceCorrect } from '@/game/case006Game';
 import { archiveCompletedCase } from '@/game/investigationArchive';
 
@@ -91,6 +92,7 @@ export default function Case006Screen({ onArchive, onReturn }: Props) {
   if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING RECORDER REVIEW…</Text></View>;
 
   return <>
+    <CaseProgressHeader caseNumber="006" phase={phase} />
     {phase === 'briefing' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 006 · CLASSIFIED AUDIO REVIEW</Text>
       <Text style={[styles.hero, text]}>{CASE_006_GAME.title}</Text>
