@@ -194,7 +194,7 @@ export default function Case064Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'timeline' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 064 · THE EXCEPTION WINDOW TIMELINE</Text>
-      <Text style={[styles.hero, text]}>Put the original installation, pending exception export, maintenance rota, incident access event, later packet accession inspection and independent reconciliation in chronological order.</Text>
+      <Text style={[styles.hero, text]}>Put the original packet accession, dispatch manifest, receiving-desk scan, independent seal report, custody reconciliation and witnessed-retrieval authorization in chronological order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the six events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>YOUR TIMELINE</Text>
