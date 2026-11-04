@@ -114,7 +114,7 @@ export default function Case065Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase065DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records corroborate accession AR-2048 in tray TR-6 and seal S-118 intact at indexing. They do not identify a named carrier. Recheck the unset timezone field and custody reconciliation.`);
+      setMessage(`The received image checksum matches, but the timezone is unset and no speaker is attributed. Recheck the metadata export, checksum receipt and audit limitations.`);
       return;
     }
     archiveLock.current = true;
@@ -218,7 +218,7 @@ export default function Case065Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 065 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Where was packet AR-2048 last independently corroborated, and what remains unknown about its custody?</Text>
+      <Text style={[styles.hero, text]}>What can the recorder evidence establish, and what remains unknown about its source?</Text>
       <Text style={[styles.subtitle, muted]}>Separate a pending recorder metadata export from completed work, a physical packet accession change and proof of who handled the packet.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>RESPONSE TYPE REVIEW</Text>
@@ -235,8 +235,8 @@ export default function Case065Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 064</Text></View>
-      <Text style={[styles.hero, text]}>The neutral receiving scan and independent seal report corroborate accession AR-2048 in tray TR-6 with seal S-118 intact. Neither identifies a carrier.</Text>
-      <Text style={[styles.subtitle, muted]}>The recorder metadata export routes accession AR-2048 to Central Records but has an unset timezone field. A neutral scan places it in tray TR-6, and an independent report confirms seal S-118 intact. The last corroborated repository is tray TR-6; custody afterward is unresolved.</Text>
+      <Text style={[styles.hero, text]}>The checksum supports integrity of the read-only image from receipt onward. It does not identify a speaker, establish local time or prove the original recording history.</Text>
+      <Text style={[styles.subtitle, muted]}>The recorder inventory identifies R-17 and M-4. The read-only export contains three segments with device-local timestamps and no timezone. The independent checksum matches the received image; speaker identity and original recording context remain unverified.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_065_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_065_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_065_GAME.outcome}</Text></View>
