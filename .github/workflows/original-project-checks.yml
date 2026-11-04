@@ -37,7 +37,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Typecheck the CaseZero Expo app
         run: pnpm --filter @workspace/casezero run typecheck
-      - name: Run full CaseZero unit-test suite (Cases 001–064 and systems)
+      - name: Run full CaseZero unit-test suite (Cases 001–065 and systems)
         run: pnpm --filter @workspace/scripts test
       - name: Export Android-friendly web preview
         run: pnpm --filter @workspace/casezero exec expo export --platform web
