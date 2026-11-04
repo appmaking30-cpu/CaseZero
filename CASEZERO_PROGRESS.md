@@ -21,7 +21,7 @@
 - Dark cinematic direction: midnight-navy surfaces, evidence-gold accents and restrained red alerts.
 - **Case 001 — The Last Train Home** is the tutorial mystery. It has five inspectable records, three witnesses/six questions, a four-event timeline, person-plus-motive deduction, retryable incorrect answers, separate Truth / Proof / Outcome review, and local progress.
 - Cases 002–003 are integrated into the main Bureau flow; Case 004 onward use dedicated React Native case screens.
-- The repository currently contains campaign case data for **Cases 001–063**, dedicated screen components for Cases 004–063, and dedicated case-rule tests for Case 001 and Cases 005–063. Case 063 has been added to Bureau routing after Case 062; its first automated validation is pending. Additional system tests cover connected progression and the shared systems.
+- The repository currently contains campaign case data for **Cases 001–064**, dedicated screen components for Cases 004–064, and dedicated case-rule tests for Case 001 and Cases 005–064. Cases 063 and 064 are integrated sequentially into Bureau routing after Cases 062 and 063 respectively; their newest validation is pending. Additional system tests cover connected progression and the shared systems.
 
 ### Connected campaign and systems
 
@@ -37,6 +37,12 @@
 - Bureau Team: three specialists, one-specialist-per-file assignments, saved assignments, case/daily XP, rank progression and evidence-gated insights.
 - Local persistence covers case progress, investigation archive, daily progress and Bureau assignments/ranks.
 
+### Case 064 — The Exception Window (new; validation pending)
+
+- Added five case-specific custody records, three witnesses/six questions, six chronological events, a retryable deduction, local save/restore, archive carryover and Bureau specialist insight.
+- Finding: accession AR-2048 is independently corroborated in Central Records intake tray TR-6; seal S-118 is recorded intact at indexing. The dispatch manifest has an incomplete recipient field, so no named carrier or later recipient is established.
+- Case 064 unlocks from the Bureau after Case 063 is archived. Its unit tests and the app typecheck/export/browser walkthrough are awaiting the newest CI run.
+
 ### Case 063 — The North Annex Cross-Index (new; validation pending)\n\n- Added a five-record cross-index investigation, three witnesses/six questions, six chronology events, a retryable evidence-based deduction, local save/restore, archive carryover and Bureau specialist insight.\n- The intended finding is limited to one machine-generated event ID and hardware profile corroborated by two independent indexes. It does not identify a person or prove physical handling.\n- Integrated into the Bureau as the next classified file after Case 062. Typecheck, unit tests and browser walkthrough have not yet completed for this addition.\n\n### Case 062 — The Cylinder Service Report
 
 - Five evidence records, three witnesses/six questions, six timeline events, a person/records-finding plus motive-style deduction, local save/restore, archive carryover and Bureau specialist insight.
@@ -49,7 +55,7 @@ GitHub Actions run [41828287084](https://github.com/appmaking30-cpu/CaseZero/act
 
 - Dependency installation.
 - Expo TypeScript check.
-- Full unit-test suite through Case 062 and system tests (the new Case 063 test is awaiting its first completed run).
+- Full unit-test suite through Case 063 and systems passed in run [41908500899](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41908500899). The new Case 064 test is included in the next queued run.
 - Expo web export.
 - Playwright mobile-viewport walkthrough at 390×844 for Cases 001–006 and 041–062, including retry paths, Daily Case Bulletin and Bureau Team assignment flow.
 - Screenshot artifact upload.
@@ -73,7 +79,7 @@ Important limits:
 
 ## 5. Next work, in priority order
 
-1. **Finish the Missing Detective arc.** Case 062’s next lead is the independent cross-index of North Annex hardware identifiers and access-control maintenance exceptions. A finite four-case endgame (Cases 063–066) is now documented in [MISSING_DETECTIVE_ENDGAME_PLAN.md](MISSING_DETECTIVE_ENDGAME_PLAN.md); Cases 063 now has its first playable-screen/data integration; Cases 064–066 remain design-only. Case 063 still needs CI and browser walkthrough validation.
+1. **Finish the Missing Detective arc.** Case 062’s next lead is the independent cross-index of North Annex hardware identifiers and access-control maintenance exceptions. A finite four-case endgame (Cases 063–066) is now documented in [MISSING_DETECTIVE_ENDGAME_PLAN.md](MISSING_DETECTIVE_ENDGAME_PLAN.md); Cases 063 and 064 now have first-pass playable screen/data integrations and sequential Bureau routing. Case 064 needs its first completed CI validation; Cases 065–066 remain design-only. Browser smoke coverage currently stops at Case 062.
 2. Add targeted mobile-browser walkthroughs for Cases 007–040 in manageable groups.
 3. Review connected-case continuity, evidence fairness, archive carryover and small-screen navigation.
 4. Improve HQ/team depth only where it creates meaningful investigation choices; preserve the existing roster/assignment/XP system.
