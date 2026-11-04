@@ -1409,8 +1409,21 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
 
     // Case 066 must leave a durable completed archive record after a reload.
     await page.reload({ waitUntil: 'networkidle' });
-    await page.getByText('The Detective Who Left a Record', { exact: true }).waitFor();
-    await page.getByText(/CASE066|Case 066/i).first().waitFor();
+    const archivedEndgame = await page.evaluate(() => {
+      const raw = window.localStorage.getItem('casezero.investigation.archive.v1');
+      if (!raw) return [];
+      try {
+        const archive = JSON.parse(raw);
+        return (archive.completedCases || []).map((record) => record.caseId);
+      } catch {
+        return [];
+      }
+    });
+    for (const caseId of ['case063', 'case064', 'case065', 'case066']) {
+      if (!archivedEndgame.includes(caseId)) {
+        throw new Error(`Expected ${caseId} to remain in the saved investigation archive after reload`);
+      }
+    }
 
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: mobile Case 001–006, 041–066 campaign investigations, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
