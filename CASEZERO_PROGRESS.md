@@ -73,12 +73,12 @@ Important limits:
 
 ## 5. Next work, in priority order
 
-1. **Finish the Missing Detective arc.** Case 062’s next lead is the independent cross-index of North Annex hardware identifiers and access-control maintenance exceptions. Map the remaining evidence to a finite endgame and earned conclusion before creating an endless new chain.
+1. **Finish the Missing Detective arc.** Case 062’s next lead is the independent cross-index of North Annex hardware identifiers and access-control maintenance exceptions. A finite four-case endgame (Cases 063–066) is now documented in [MISSING_DETECTIVE_ENDGAME_PLAN.md](MISSING_DETECTIVE_ENDGAME_PLAN.md); this is a design plan, not playable implementation.
 2. Add targeted mobile-browser walkthroughs for Cases 007–040 in manageable groups.
 3. Review connected-case continuity, evidence fairness, archive carryover and small-screen navigation.
 4. Improve HQ/team depth only where it creates meaningful investigation choices; preserve the existing roster/assignment/XP system.
 5. Polish accessibility, save migration, performance, audio and notification behavior.
-6. Complete real Android package/device testing.
+6. Complete real Android package/device testing. The first unsigned Android debug APK workflow has now completed successfully and uploaded artifact `casezero-debug-apk` (about 80.7 MB). This proves an APK was built and packaged; it has not yet been installed or tested on a physical phone. The artifact is available from [workflow run 41829628152](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41829628152) until 4 December 2026.
 7. Consider optional hints, case packs or rewarded ads only after the free core story is complete. Keep the main campaign fair and playable without payment.
 
 ## Quality bar
