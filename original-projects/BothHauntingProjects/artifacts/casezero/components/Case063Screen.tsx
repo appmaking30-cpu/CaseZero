@@ -114,7 +114,7 @@ export default function Case063Screen({ archive, bureauTeamBoard, onArchive, onR
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase063DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records establish a matching hardware profile identifier, but no completed service or replacement is verified in the searched records. Recheck the maintenance exception, later inspection and limits of the completion and audit notes.`);
+      setMessage(`The records corroborate one system exception across two indexes, but they do not identify an individual or prove a physical action. Recheck the event ID, hardware profile and provenance note.`);
       return;
     }
     archiveLock.current = true;
@@ -146,7 +146,7 @@ export default function Case063Screen({ archive, bureauTeamBoard, onArchive, onR
         <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 054–061 established Rowan’s relay assignment and the North Annex access trail. This file tests whether the service records establish completed hardware profile work or a physical replacement.</Text>
       </View>
       <View style={[styles.card, card]}>
-        <Text style={[styles.label, { color: colors.primary }]}>THE CYLINDER SERVICE REVIEW</Text>
+        <Text style={[styles.label, { color: colors.primary }]}>THE CROSS-INDEX REVIEW</Text>
         {CASE_063_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
       <Action title="Open the North Annex cross-index" colors={colors} onPress={() => setPhase('evidence')} />
@@ -235,8 +235,8 @@ export default function Case063Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 063</Text></View>
-      <Text style={[styles.hero, text]}>The hardware baseline and later inspection both identify NX-C2-04, but no completed service or replacement is verified in the searched records.</Text>
-      <Text style={[styles.subtitle, muted]}>The hardware baseline records NX-C2-04 at C-2; the exception export remained awaiting scheduling; the later inspection records the same identifier; and the completion and audit notes contain no signed replacement trail. These records do not rule out undocumented handling or identify anyone who touched the lock.</Text>
+      <Text style={[styles.hero, text]}>Two independent system indexes corroborate event NX-7714 against hardware profile NX-C2-04, but neither identifies a person or proves physical handling.</Text>
+      <Text style={[styles.subtitle, muted]}>The signed baseline maps C-2 to NX-C2-04. The maintenance exception export and independent access-control digest both record NX-7714 against that profile at the same minute. The provenance note confirms these are machine-generated fields. The match corroborates a system exception window, not an individual's identity or physical actions.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_063_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_063_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_063_GAME.outcome}</Text></View>
