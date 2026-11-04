@@ -107,14 +107,14 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 6 && !isCase062TimelineCorrect(next)
-      ? 'That sequence conflicts with the records. Check the service request, installation register, maintenance rota, incident incident access event, later cylinder inspection and independent reconciliation.'
+      ? 'That sequence conflicts with the records. Check the service request, installation register, maintenance rota, incident access event, later cylinder inspection and independent reconciliation.'
       : '');
   };
   const submit = () => {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase062DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records establish a documented cylinder identifier, not incident-time use. Recheck the service request, later cylinder inspection, parts archive and limits of the searched completion and parts records.`);
+      setMessage(`The records establish a matching cylinder identifier, but no completed service or replacement is verified in the searched records. Recheck the pending request, later inspection and limits of the completion and parts archives.`);
       return;
     }
     archiveLock.current = true;
@@ -188,7 +188,7 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
         })}
       </View>)}
       <Text style={[styles.note, muted]}>{heardWitnesses}/3 witnesses heard · {unanswered.length} optional follow-ups remaining</Text>
-      <Action title="Reconstruct the cylinder-service timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
+      <Action title="Reconstruct the cylinder service timeline" colors={colors} onPress={() => setPhase('timeline')} disabled={!allWitnessesHeard} />
       <Action title="Back to evidence" colors={colors} onPress={() => setPhase('evidence')} ghost />
     </>}
 
@@ -255,7 +255,7 @@ export default function Case062Screen({ archive, bureauTeamBoard, onArchive, onR
 }
 
 function Choice({ title, note, selected, colors, onPress }: { title: string; note: string; selected: boolean; colors: ReturnType<typeof useColors>; onPress: () => void }) {
-  return <Pressable onPress={onPress} style={[styles.choice, { borderColor: selected ? colors.primary : colors.border, backgroundColor: selected ? colors.secondary : 'trancylindernt' }]}>
+  return <Pressable onPress={onPress} style={[styles.choice, { borderColor: selected ? colors.primary : colors.border, backgroundColor: selected ? colors.secondary : 'transparent' }]}>
     <Text style={[styles.cardTitle, { color: colors.foreground }]}>{title}</Text>
     <Text style={[styles.note, { color: colors.mutedForeground }]}>{note}</Text>
   </Pressable>;
