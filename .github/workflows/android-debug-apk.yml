@@ -6,6 +6,9 @@ on:
     branches: [casezero-development]
     paths:
       - ".github/workflows/android-debug-apk.yml"
+      - "original-projects/BothHauntingProjects/artifacts/casezero/**"
+      - "original-projects/BothHauntingProjects/pnpm-lock.yaml"
+      - "original-projects/BothHauntingProjects/pnpm-workspace.yaml"
 
 permissions:
   contents: read
