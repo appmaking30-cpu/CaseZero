@@ -1,4 +1,4 @@
-name: CaseZero Android debug APK
+name: CaseZero Android standalone APK
 
 on:
   workflow_dispatch:
@@ -11,11 +11,11 @@ permissions:
   contents: read
 
 concurrency:
-  group: casezero-android-debug-${{ github.ref }}
+  group: casezero-android-standalone-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-debug-apk:
+  build-standalone-apk:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     defaults:
@@ -58,16 +58,16 @@ jobs:
         env:
           EXPO_NO_TELEMETRY: 1
 
-      - name: Build unsigned debug APK
+      - name: Build standalone release APK with embedded JavaScript bundle
         working-directory: original-projects/BothHauntingProjects/artifacts/casezero/android
         run: |
           chmod +x ./gradlew
-          ./gradlew --no-daemon --stacktrace assembleDebug
+          ./gradlew --no-daemon --stacktrace assembleRelease
 
-      - name: Upload debug APK
+      - name: Upload standalone APK
         uses: actions/upload-artifact@v4
         with:
-          name: casezero-debug-apk
-          path: original-projects/BothHauntingProjects/artifacts/casezero/android/app/build/outputs/apk/debug/app-debug.apk
+          name: casezero-standalone-apk
+          path: original-projects/BothHauntingProjects/artifacts/casezero/android/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
           retention-days: 30
