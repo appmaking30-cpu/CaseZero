@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
+import CaseProgressHeader from '@/components/CaseProgressHeader';
 import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
 import { getBureauSpecialistInsight, getBureauSpecialistProgress, type BureauTeamBoard } from '@/game/bureauTeam';
 import { CASE_049_GAME, CASE_049_EMPTY_PROGRESS, getCase049Carryover, isCase049DeductionCorrect, isCase049TimelineCorrect } from '@/game/case049Game';
@@ -136,6 +137,7 @@ export default function Case049Screen({ archive, bureauTeamBoard, onArchive, onR
   if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING DOCUMENT-CONTROL FILE…</Text></View>;
 
   return <>
+    <CaseProgressHeader caseNumber="049" phase={phase} />
     {phase === 'briefing' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 049 · MISSING AUTHORIZATION REVIEW</Text>
       <Text style={[styles.hero, text]}>{CASE_049_GAME.title}</Text>
