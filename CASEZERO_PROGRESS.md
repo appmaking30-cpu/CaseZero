@@ -21,7 +21,7 @@
 - Dark cinematic direction: midnight-navy surfaces, evidence-gold accents and restrained red alerts.
 - **Case 001 — The Last Train Home** is the tutorial mystery. It has five inspectable records, three witnesses/six questions, a four-event timeline, person-plus-motive deduction, retryable incorrect answers, separate Truth / Proof / Outcome review, and local progress.
 - Cases 002–003 are integrated into the main Bureau flow; Case 004 onward use dedicated React Native case screens.
-- The repository currently contains campaign case data for **Cases 001–062**, dedicated screen components for Cases 004–062, and dedicated case-rule tests for Case 001 and Cases 005–062. Additional system tests cover connected progression and the shared systems.
+- The repository currently contains campaign case data for **Cases 001–063**, dedicated screen components for Cases 004–063, and dedicated case-rule tests for Case 001 and Cases 005–063. Case 063 has been added to Bureau routing after Case 062; its first automated validation is pending. Additional system tests cover connected progression and the shared systems.
 
 ### Connected campaign and systems
 
@@ -37,7 +37,7 @@
 - Bureau Team: three specialists, one-specialist-per-file assignments, saved assignments, case/daily XP, rank progression and evidence-gated insights.
 - Local persistence covers case progress, investigation archive, daily progress and Bureau assignments/ranks.
 
-### Case 062 — The Cylinder Service Report
+### Case 063 — The North Annex Cross-Index (new; validation pending)\n\n- Added a five-record cross-index investigation, three witnesses/six questions, six chronology events, a retryable evidence-based deduction, local save/restore, archive carryover and Bureau specialist insight.\n- The intended finding is limited to one machine-generated event ID and hardware profile corroborated by two independent indexes. It does not identify a person or prove physical handling.\n- Integrated into the Bureau as the next classified file after Case 062. Typecheck, unit tests and browser walkthrough have not yet completed for this addition.\n\n### Case 062 — The Cylinder Service Report
 
 - Five evidence records, three witnesses/six questions, six timeline events, a person/records-finding plus motive-style deduction, local save/restore, archive carryover and Bureau specialist insight.
 - Finding: the installation register and later independent inspection both identify CY-8841; the pending service request and searched completion/parts archives do not verify a replacement. The case does not claim that undocumented handling was impossible or identify a person at the lock.
@@ -49,7 +49,7 @@ GitHub Actions run [41828287084](https://github.com/appmaking30-cpu/CaseZero/act
 
 - Dependency installation.
 - Expo TypeScript check.
-- Full unit-test suite through Case 062 and system tests.
+- Full unit-test suite through Case 062 and system tests (the new Case 063 test is awaiting its first completed run).
 - Expo web export.
 - Playwright mobile-viewport walkthrough at 390×844 for Cases 001–006 and 041–062, including retry paths, Daily Case Bulletin and Bureau Team assignment flow.
 - Screenshot artifact upload.
@@ -67,18 +67,18 @@ Important limits:
 2. Treat `casezero-development` as the only active source branch.
 3. Make small, reviewable GitHub commits: update the relevant screen/data module and tests together.
 4. Let GitHub Actions run typecheck, unit tests, Expo web export and the mobile browser walkthrough. Fix a failing check before moving on.
-5. The current GitHub Actions workflow exports the app, runs a 390×844 Playwright walkthrough and uploads screenshots; it does not publish an interactive preview URL. An interactive Expo Go session still requires the Expo dev server on a development machine. A manual unsigned Android debug-APK workflow has been added; its first Gradle build is still being verified, so no APK is claimed ready yet.
+5. The current GitHub Actions workflow exports the app, runs a 390×844 Playwright walkthrough and uploads screenshots; it does not publish an interactive preview URL. An interactive Expo Go session still requires the Expo dev server on a development machine. A Android APK workflow has been changed to a standalone release build to embed the JavaScript bundle. The release Gradle step is still running in GitHub Actions; no corrected APK is available yet. The earlier debug APK was missing its JS bundle and is not usable.
 6. Do not trigger paid cloud builds, paid APIs, paid hosting, analytics, public publishing or monetization without explicit approval.
 7. Before release, build an Android package with a verified free/local path and test it on an actual Android device. Do not call the browser export an APK.
 
 ## 5. Next work, in priority order
 
-1. **Finish the Missing Detective arc.** Case 062’s next lead is the independent cross-index of North Annex hardware identifiers and access-control maintenance exceptions. A finite four-case endgame (Cases 063–066) is now documented in [MISSING_DETECTIVE_ENDGAME_PLAN.md](MISSING_DETECTIVE_ENDGAME_PLAN.md); this is a design plan, not playable implementation.
+1. **Finish the Missing Detective arc.** Case 062’s next lead is the independent cross-index of North Annex hardware identifiers and access-control maintenance exceptions. A finite four-case endgame (Cases 063–066) is now documented in [MISSING_DETECTIVE_ENDGAME_PLAN.md](MISSING_DETECTIVE_ENDGAME_PLAN.md); Cases 063 now has its first playable-screen/data integration; Cases 064–066 remain design-only. Case 063 still needs CI and browser walkthrough validation.
 2. Add targeted mobile-browser walkthroughs for Cases 007–040 in manageable groups.
 3. Review connected-case continuity, evidence fairness, archive carryover and small-screen navigation.
 4. Improve HQ/team depth only where it creates meaningful investigation choices; preserve the existing roster/assignment/XP system.
 5. Polish accessibility, save migration, performance, audio and notification behavior.
-6. Complete real Android package/device testing. The first unsigned Android debug APK workflow has now completed successfully and uploaded artifact `casezero-debug-apk` (about 80.7 MB). This proves an APK was built and packaged; it has not yet been installed or tested on a physical phone. The artifact is available from [workflow run 41829628152](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41829628152) until 4 December 2026.
+6. Complete real Android package/device testing. The first unsigned debug APK workflow completed, but that APK failed on-device because its JavaScript bundle was not packaged. A corrected standalone release APK workflow is still running; no replacement artifact has been uploaded or tested yet.
 7. Consider optional hints, case packs or rewarded ads only after the free core story is complete. Keep the main campaign fair and playable without payment.
 
 ## Quality bar
