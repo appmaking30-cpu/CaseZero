@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
+import CaseProgressHeader from '@/components/CaseProgressHeader';
 import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
 import { getBureauSpecialistInsight, getBureauSpecialistProgress, type BureauTeamBoard } from '@/game/bureauTeam';
 import { CASE_061_GAME, CASE_061_EMPTY_PROGRESS, getCase061Carryover, isCase061DeductionCorrect, isCase061TimelineCorrect } from '@/game/case061Game';
@@ -136,6 +137,7 @@ export default function Case061Screen({ archive, bureauTeamBoard, onArchive, onR
   if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING THE DUPLICATE KEY LEDGER…</Text></View>;
 
   return <>
+    <CaseProgressHeader caseNumber="061" phase={phase} />
     {phase === 'briefing' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 061 · THE DUPLICATE KEY LEDGER</Text>
       <Text style={[styles.hero, text]}>{CASE_061_GAME.title}</Text>
