@@ -21,7 +21,7 @@
 - Dark cinematic direction: midnight-navy surfaces, evidence-gold accents and restrained red alerts.
 - **Case 001 — The Last Train Home** is the tutorial mystery. It has five inspectable records, three witnesses/six questions, a four-event timeline, person-plus-motive deduction, retryable incorrect answers, separate Truth / Proof / Outcome review, and local progress.
 - Cases 002–003 are integrated into the main Bureau flow; Case 004 onward use dedicated React Native case screens.
-- The repository currently contains campaign case data for **Cases 001–065**, dedicated screen components for Cases 004–065, and dedicated case-rule tests for Case 001 and Cases 005–065. Cases 063–065 are integrated sequentially into Bureau routing after Cases 062–064 respectively; validation for the newest additions is pending. Additional system tests cover connected progression and the shared systems.
+- The repository currently contains campaign case data for **Cases 001–066**, dedicated screen components for Cases 004–066, and dedicated case-rule tests for Case 001 and Cases 005–066. Cases 063–066 are integrated sequentially into Bureau routing after Cases 062–065 respectively; Case 066 validation is pending. Additional system tests cover connected progression and the shared systems.
 
 ### Connected campaign and systems
 
@@ -32,12 +32,19 @@
   - Four-file convergence report unlocks after Cases 001–004.
   - Recorder-transfer index unlocks after Cases 048–053.
   - Cases 054–062 continue the assignment, relay, buffer, access, key and cylinder trail.
-  - **Not finished:** final recorder recovery, Rowan Vale’s fate, the final explanation and the campaign ending.
+  - Cases 063–066 form the finite endgame. Case 066 now provides the final evidence-led status finding and closes the arc without inventing Rowan’s location or future.
 - Daily Case Bulletin: seven standalone cases rotate deterministically by device-local calendar date; daily progress is separate from the main campaign archive.
 - Bureau Team: three specialists, one-specialist-per-file assignments, saved assignments, case/daily XP, rank progression and evidence-gated insights.
 - Local persistence covers case progress, investigation archive, daily progress and Bureau assignments/ranks.
 
-### Case 065 — The Recorder Packet (new; validation pending)
+### Case 066 — The Detective Who Left a Record (new; validation pending)
+
+- Added a five-record final investigation, three witnesses/six questions, six-event chronology, retryable deduction, local progress, archive carryover and Bureau specialist insight.
+- The recovered recorder identity and dual-witness custody log connect the signed statement to the packet. A separately administered confidential-review register independently matches its reference and digest and confirms a voluntary protected separation from active duty.
+- The evidence does not establish Rowan’s current location, future plans or a return date. The Bureau’s report is deliberately limited and protects private details.
+- Case 066 unlocks after Case 065 is archived. Dedicated unit tests and CI scope have been added; validation is pending.
+
+### Case 065 — The Recorder Packet (new; validated on 4 November 2026)
 
 - Added a dedicated five-record evidence investigation, three witnesses/six questions, six chronology events, retryable deduction, local progress persistence, archive carryover and Bureau specialist insight.
 - The packet is retrieved under dual-witness custody. The read-only image contains three segments; an independent checksum matches the received image. The timezone is unset and no speaker attribution is validated, so the case does not claim to identify the missing detective's voice or establish local time.
@@ -57,11 +64,11 @@
 
 ## 3. What has actually passed
 
-GitHub Actions run [41828287084](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41828287084) passed:
+GitHub Actions run [41910194292](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41910194292) passed on commit `523b6a2ff67e642caa1a28c7632816770da300c3`:
 
 - Dependency installation.
 - Expo TypeScript check.
-- Full unit-test suite through Case 063 and systems passed in run [41908500899](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41908500899). The Case 065 test is included in the newest queued run; no pass is claimed until it completes.
+- Full unit-test suite through Cases 001–065 and systems passed.
 - Expo web export.
 - Playwright mobile-viewport walkthrough at 390×844 for Cases 001–006 and 041–062, including retry paths, Daily Case Bulletin and Bureau Team assignment flow.
 - Screenshot artifact upload.
@@ -85,7 +92,7 @@ Important limits:
 
 ## 5. Next work, in priority order
 
-1. **Finish the Missing Detective arc.** Case 062’s next lead is the independent cross-index of North Annex hardware identifiers and access-control maintenance exceptions. A finite four-case endgame (Cases 063–066) is now documented in [MISSING_DETECTIVE_ENDGAME_PLAN.md](MISSING_DETECTIVE_ENDGAME_PLAN.md); Cases 063–065 now have first-pass playable screen/data integrations and sequential Bureau routing. Case 065's first CI validation is pending; Case 066 remains design-only. Browser smoke coverage currently stops at Case 062.
+1. **Validate and polish the Missing Detective finale.** Cases 063–066 now have first-pass playable screen/data integrations and sequential Bureau routing. Case 065 passed the latest CI run. Case 066 has dedicated tests and expanded workflow scope; its CI and finale browser walkthrough are pending.
 2. Add targeted mobile-browser walkthroughs for Cases 007–040 in manageable groups.
 3. Review connected-case continuity, evidence fairness, archive carryover and small-screen navigation.
 4. Improve HQ/team depth only where it creates meaningful investigation choices; preserve the existing roster/assignment/XP system.
