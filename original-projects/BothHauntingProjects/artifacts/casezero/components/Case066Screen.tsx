@@ -236,7 +236,7 @@ export default function Case066Screen({ archive, bureauTeamBoard, onArchive, onR
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 066</Text></View>
       <Text style={[styles.hero, text]}>The signed statement and independent register establish Rowan’s protected separation from active duty. They do not reveal Rowan’s location or future plans.</Text>
-      <Text style={[styles.subtitle, muted]}>The final record inventory identifies R-17 and M-4. The read-only export contains three segments with device-local timestamps and no timezone. The independent checksum matches the received image; speaker identity and original recording context remain unverified.</Text>
+      <Text style={[styles.subtitle, muted]}>The recorder identity, dual-witness custody log, signed statement and independent status register corroborate Rowan’s protected separation from active duty. The evidence does not establish Rowan’s location or future plans.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_066_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_066_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_066_GAME.outcome}</Text></View>
