@@ -759,10 +759,43 @@ export default function HomeScreen() {
 
         {phase === 'hq' && (
           <>
-            <Text style={[styles.heroTitle, textStyle]}>Detective Bureau</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>
-              Truth is what happened. Proof is what you can show.
-            </Text>
+            <View style={styles.commandHero}>
+              <View style={styles.commandTopline}>
+                <View style={styles.commandLive}><View style={styles.commandLiveDot} /><Text style={styles.commandLiveText}>BUREAU NETWORK · ONLINE</Text></View>
+                <Text style={styles.commandEdition}>CASEZERO / 01</Text>
+              </View>
+              <Text style={styles.commandEyebrow}>THE INVESTIGATION DIVISION</Text>
+              <Text style={styles.commandTitle}>Every clue has a story.</Text>
+              <Text style={styles.commandSubtitle}>Read the evidence. Challenge the timeline. Find what the record can prove.</Text>
+              <View style={styles.commandDivider} />
+              <View style={styles.commandStats}>
+                <View style={styles.commandStat}>
+                  <Text style={styles.commandStatValue}>{investigationArchive.completedCases.length + (caseCompleted ? 1 : 0)}</Text>
+                  <Text style={styles.commandStatLabel}>FILES CLOSED</Text>
+                </View>
+                <View style={styles.commandStatRule} />
+                <View style={styles.commandStat}>
+                  <Text style={styles.commandStatValue}>{investigationArchive.completedCases.reduce((sum, record) => sum + record.inspectedClues.length, cluesFound.length)}</Text>
+                  <Text style={styles.commandStatLabel}>CLUES LOGGED</Text>
+                </View>
+                <View style={styles.commandStatRule} />
+                <View style={styles.commandStat}>
+                  <Text style={styles.commandStatValue}>66</Text>
+                  <Text style={styles.commandStatLabel}>CAMPAIGN FILES</Text>
+                </View>
+              </View>
+              <View style={styles.commandBoard}>
+                <View style={styles.commandBoardLine} />
+                <View style={[styles.commandPin, styles.commandPinOne]} />
+                <View style={[styles.commandPin, styles.commandPinTwo]} />
+                <View style={[styles.commandPin, styles.commandPinThree]} />
+                <View style={styles.commandBoardCard}>
+                  <Text style={styles.commandBoardLabel}>PRIORITY FILE · 001</Text>
+                  <Text style={styles.commandBoardTitle}>The Last Train Home</Text>
+                  <Text style={styles.commandBoardMeta}>{caseCompleted ? 'CLOSED · REVIEW AVAILABLE' : cluesFound.length > 0 ? 'ACTIVE · INVESTIGATION IN PROGRESS' : 'READY · AWAITING YOUR REVIEW'}</Text>
+                </View>
+              </View>
+            </View>
 
             <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>Active case file</SectionLabel>
@@ -2879,6 +2912,32 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
+  commandHero: { backgroundColor: '#101C2A', borderColor: '#34475B', borderWidth: 1, borderRadius: 22, padding: 19, marginBottom: 18, overflow: 'hidden' },
+  commandTopline: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 27 },
+  commandLive: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1B302F', borderColor: '#35544B', borderWidth: 1, borderRadius: 20, paddingHorizontal: 10, paddingVertical: 6 },
+  commandLiveDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#79C49A', marginRight: 7 },
+  commandLiveText: { color: '#A9D8BA', fontSize: 8, fontWeight: '900', letterSpacing: 1.1 },
+  commandEdition: { color: '#8191A3', fontSize: 9, fontWeight: '800', letterSpacing: 1.4 },
+  commandEyebrow: { color: '#D6B46A', fontSize: 9, fontWeight: '900', letterSpacing: 2.2, marginBottom: 9 },
+  commandTitle: { color: '#F4EFE4', fontSize: 29, lineHeight: 34, fontWeight: '900', letterSpacing: -0.6 },
+  commandSubtitle: { color: '#AAB7C5', fontSize: 12, lineHeight: 19, marginTop: 8, maxWidth: 310 },
+  commandDivider: { height: 1, backgroundColor: '#344354', marginTop: 18, marginBottom: 15 },
+  commandStats: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  commandStat: { flex: 1 },
+  commandStatValue: { color: '#F0D18A', fontSize: 21, fontWeight: '900' },
+  commandStatLabel: { color: '#8798AA', fontSize: 8, fontWeight: '900', letterSpacing: 1.05, marginTop: 3 },
+  commandStatRule: { width: 1, height: 29, backgroundColor: '#344354', marginHorizontal: 10 },
+  commandBoard: { height: 106, backgroundColor: '#172638', borderColor: '#3B4B5B', borderWidth: 1, borderRadius: 14, marginTop: 18, justifyContent: 'center', paddingHorizontal: 13, overflow: 'hidden' },
+  commandBoardLine: { position: 'absolute', width: 210, height: 1, backgroundColor: '#9B7650', opacity: 0.8, left: 34, top: 51, transform: [{ rotate: '-12deg' }] },
+  commandPin: { position: 'absolute', width: 7, height: 7, borderRadius: 4, backgroundColor: '#D6B46A', borderWidth: 1, borderColor: '#F5DCA3' },
+  commandPinOne: { left: 27, top: 26 },
+  commandPinTwo: { left: 116, top: 55 },
+  commandPinThree: { right: 28, top: 29 },
+  commandBoardCard: { alignSelf: 'flex-start', backgroundColor: '#202F40', borderColor: '#536173', borderWidth: 1, borderRadius: 9, paddingHorizontal: 12, paddingVertical: 9 },
+  commandBoardLabel: { color: '#D6B46A', fontSize: 8, fontWeight: '900', letterSpacing: 1.3 },
+  commandBoardTitle: { color: '#F1EBDD', fontSize: 15, fontWeight: '900', marginTop: 4 },
+  commandBoardMeta: { color: '#A5B2BF', fontSize: 8, fontWeight: '800', letterSpacing: 0.7, marginTop: 4 },
+
   content: {
     width: '100%',
     maxWidth: 720,
