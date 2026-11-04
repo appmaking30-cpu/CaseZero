@@ -107,14 +107,14 @@ export default function Case064Screen({ archive, bureauTeamBoard, onArchive, onR
     const next = [...progress.timelineOrder, id];
     setProgress((current) => ({ ...current, timelineOrder: next }));
     setMessage(next.length === 6 && !isCase064TimelineCorrect(next)
-      ? 'That sequence conflicts with the records. Check the exception export, original accession label, maintenance rota, incident access event, later packet accession inspection and independent reconciliation.'
+      ? 'That sequence conflicts with the records. Check the original accession, dispatch manifest, receiving scan, independent seal report, custody reconciliation and retrieval authorization.'
       : '');
   };
   const submit = () => {
     if (archiveLock.current || progress.completed) return;
     if (!allClues || !allWitnessesHeard || !timelineSolved) return;
     if (!isCase064DeductionCorrect(progress.selectedSuspect, progress.selectedMotive)) {
-      setMessage(`The records corroborate one custody record across two indexes, but they do not identify an individual or prove a physical action. Recheck the event ID, packet accession and provenance note.`);
+      setMessage(`The records corroborate accession AR-2048 in tray TR-6 and seal S-118 intact at indexing. They do not identify a named carrier. Recheck the incomplete recipient field and custody reconciliation.`);
       return;
     }
     archiveLock.current = true;
@@ -133,30 +133,30 @@ export default function Case064Screen({ archive, bureauTeamBoard, onArchive, onR
     setPhase('review');
   };
 
-  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING THE THE EXCEPTION WINDOW…</Text></View>;
+  if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING THE EXCEPTION WINDOW…</Text></View>;
 
   return <>
     {phase === 'briefing' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 064 · THE THE EXCEPTION WINDOW</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 064 · THE EXCEPTION WINDOW</Text>
       <Text style={[styles.hero, text]}>{CASE_064_GAME.title}</Text>
       <Text style={[styles.subtitle, muted]}>{CASE_064_GAME.subtitle}</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>{CASE_064_GAME.location}</Text>
         <Text style={[styles.body, text]}>{CASE_064_GAME.briefing}</Text>
-        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 054–061 established Rowan’s relay assignment and the Central Records access trail. This file tests whether the custody records establish completed packet accession work or a physical replacement.</Text>
+        <Text style={[styles.note, muted]}>Prior investigations remembered: {carryover.priorFiles.map((record) => record.caseTitle).join(' · ')} · {carryover.clueCount} clues preserved. Cases 054–061 established Rowan’s relay assignment and the Central Records access trail. This file tests whether the custody records establish the last corroborated repository and unresolved custody gap.</Text>
       </View>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>THE CUSTODY REVIEW</Text>
         {CASE_064_GAME.suspects.map((person) => <View key={person.id} style={styles.person}><Text style={[styles.cardTitle, text]}>{person.name}</Text><Text style={[styles.note, { color: colors.primary }]}>{person.role}</Text><Text style={[styles.note, muted]}>{person.note}</Text></View>)}
       </View>
-      <Action title="Open the Exception window" colors={colors} onPress={() => setPhase('evidence')} />
+      <Action title="Open the exception window" colors={colors} onPress={() => setPhase('evidence')} />
       <Action title="Back to Bureau" colors={colors} onPress={onReturn} ghost />
     </>}
 
     {phase === 'evidence' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 064 · THE THE EXCEPTION WINDOW REVIEW</Text>
-      <Text style={[styles.hero, text]}>Compare the original original accession label, dispatch manifest, neutral receiving scan, independent seal report and custody reconciliation. A request is not proof that work was completed.</Text>
-      <Text style={[styles.subtitle, muted]}>Inspect all five records: the original accession label, maintenance exception, maintenance rota, later inspection and work-order/parts reconciliation.</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 064 · THE EXCEPTION WINDOW REVIEW</Text>
+      <Text style={[styles.hero, text]}>Compare the original accession label, dispatch manifest, neutral receiving scan, independent seal report and custody reconciliation. A request is not proof that work was completed.</Text>
+      <Text style={[styles.subtitle, muted]}>Inspect all five records: the original accession label, dispatch manifest, receiving-desk scan, independent seal report and custody reconciliation.</Text>
       <View style={styles.track}><View style={[styles.fill, { width: (progress.cluesFound.length / 5 * 100) + '%', backgroundColor: colors.primary }]} /></View>
       <Text style={[styles.note, muted]}>{progress.cluesFound.length}/5 records logged</Text>
       {CASE_064_GAME.clues.map((clue, index) => <Pressable key={clue.id} onPress={() => inspect(clue.id)} style={[styles.card, card, { borderColor: progress.cluesFound.includes(clue.id) ? colors.primary : colors.border }]}>
@@ -170,9 +170,9 @@ export default function Case064Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'interviews' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 064 · THE THE EXCEPTION WINDOW INTERVIEWS</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 064 · THE EXCEPTION WINDOW INTERVIEWS</Text>
       <Text style={[styles.hero, text]}>What do the recorder packet custody records actually prove?</Text>
-      <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unpacket the timeline. Follow-ups are optional and preserved in the archived report.</Text>
+      <Text style={[styles.subtitle, muted]}>Ask at least one question to each staff member to unlock the timeline. Follow-ups are optional and preserved in the archived report.</Text>
       {CASE_064_GAME.witnesses.map((witness, index) => <View key={witness.id} style={[styles.card, card]}>
         <Text style={[styles.cardTitle, text]}>{witness.name}</Text>
         <Text style={[styles.note, muted]}>{witness.role} · {witness.questions.some((question) => progress.askedQuestions.includes(witness.id + ':' + question.id)) ? 'HEARD' : 'WITNESS 0' + (index + 1)}</Text>
@@ -193,7 +193,7 @@ export default function Case064Screen({ archive, bureauTeamBoard, onArchive, onR
     </>}
 
     {phase === 'timeline' && <>
-      <Text style={[styles.label, { color: colors.primary }]}>CASE 064 · THE THE EXCEPTION WINDOW TIMELINE</Text>
+      <Text style={[styles.label, { color: colors.primary }]}>CASE 064 · THE EXCEPTION WINDOW TIMELINE</Text>
       <Text style={[styles.hero, text]}>Put the original installation, pending exception export, maintenance rota, incident access event, later packet accession inspection and independent reconciliation in chronological order.</Text>
       <Text style={[styles.subtitle, muted]}>Select the six events from earliest to latest. The options are deliberately shuffled.</Text>
       <View style={[styles.card, card]}>
@@ -218,7 +218,7 @@ export default function Case064Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'deduction' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 064 · FINAL DEDUCTION</Text>
-      <Text style={[styles.hero, text]}>Do the records prove AR-2048 was serviced or replaced during the incident?</Text>
+      <Text style={[styles.hero, text]}>Where was packet AR-2048 last independently corroborated, and what remains unknown about its custody?</Text>
       <Text style={[styles.subtitle, muted]}>Separate a pending dispatch manifest from completed work, a physical packet accession change and proof of who handled the packet.</Text>
       <View style={[styles.card, card]}>
         <Text style={[styles.label, { color: colors.primary }]}>RESPONSE TYPE REVIEW</Text>
@@ -235,8 +235,8 @@ export default function Case064Screen({ archive, bureauTeamBoard, onArchive, onR
 
     {phase === 'review' && <>
       <View style={[styles.stamp, { borderColor: colors.primary }]}><Text style={[styles.label, { color: colors.primary }]}>CASE CLOSED · 064</Text></View>
-      <Text style={[styles.hero, text]}>Two independent system indexes corroborate event TR-6 against packet accession AR-2048, but neither identifies a person or proves physical handling.</Text>
-      <Text style={[styles.subtitle, muted]}>The signed baseline maps Central Records tray to AR-2048. The dispatch manifest and neutral receiving-desk scan both record TR-6 against that profile at the same minute. The provenance note confirms these are machine-generated fields. The match corroborates a custody record window, not an individual's identity or physical actions.</Text>
+      <Text style={[styles.hero, text]}>The neutral receiving scan and independent seal report corroborate accession AR-2048 in tray TR-6 with seal S-118 intact. Neither identifies a carrier.</Text>
+      <Text style={[styles.subtitle, muted]}>The dispatch manifest routes accession AR-2048 to Central Records but has an incomplete recipient field. A neutral scan places it in tray TR-6, and an independent report confirms seal S-118 intact. The last corroborated repository is tray TR-6; custody afterward is unresolved.</Text>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>FINDING</Text><Text style={[styles.body, text]}>{CASE_064_GAME.truth}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>PROOF</Text><Text style={[styles.body, text]}>{CASE_064_GAME.proof}</Text></View>
       <View style={[styles.card, card]}><Text style={[styles.label, { color: colors.primary }]}>OUTCOME</Text><Text style={[styles.body, text]}>{CASE_064_GAME.outcome}</Text></View>
