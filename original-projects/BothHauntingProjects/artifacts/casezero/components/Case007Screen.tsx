@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
+import CaseProgressHeader from '@/components/CaseProgressHeader';
 import { archiveCompletedCase, type InvestigationArchive } from '@/game/investigationArchive';
 import { CASE_007_GAME, CASE_007_EMPTY_PROGRESS, getCase007Carryover, isCase007DeductionCorrect, isCase007TimelineCorrect } from '@/game/case007Game';
 
@@ -125,6 +126,7 @@ export default function Case007Screen({ archive, onArchive, onReturn }: Props) {
   if (!loaded) return <View style={styles.loading}><Text style={[styles.label, { color: colors.primary }]}>RESTORING STATION THREE FILE…</Text></View>;
 
   return <>
+    <CaseProgressHeader caseNumber="007" phase={phase} />
     {phase === 'briefing' && <>
       <Text style={[styles.label, { color: colors.primary }]}>CASE 007 · MISSING DETECTIVE TRAIL</Text>
       <Text style={[styles.hero, text]}>{CASE_007_GAME.title}</Text>
