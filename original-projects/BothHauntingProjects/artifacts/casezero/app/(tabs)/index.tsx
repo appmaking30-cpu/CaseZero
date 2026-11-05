@@ -803,9 +803,6 @@ export default function HomeScreen() {
                   </View>
                 </View>
               </View>
-
-
-                  </View>
                 </ImageBackground>
               </View>
               <View style={styles.hqCasePane}>
