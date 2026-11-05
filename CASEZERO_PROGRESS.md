@@ -5,15 +5,15 @@ This section supersedes older pending-status notes further below wherever they c
 ## Latest verified build and checks
 
 - Active branch: `casezero-development`.
-- Latest code-and-test checkpoint: `afb121d62703744ee999c6111be45b03cdf79b3b` — “Expand mobile campaign smoke coverage and verify APK payload”.
-- Project checks run [42027241481](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42027241481) completed successfully on `afb121d`:
+- Latest code-and-test checkpoint: `8135e514714d55cce52fa6a4827fdd304c2e94e6` — “Record dark-mode campaign smoke validation”.
+- Project checks run [42028048150](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42028048150) completed successfully on `8135e51`:
   - Expo TypeScript check passed.
   - Full CaseZero unit-test suite for Cases 001–066 and shared systems passed.
   - Expo web export passed.
   - Playwright 390×844 dark mobile-viewport smoke passed for full Cases 001–006 and 041–066 walkthroughs, plus Cases 007–040 screen navigation and save/restore smoke.
   - Daily Case Bulletin and Bureau Team assignment flow passed.
-  - Actual dark-mode screenshot artifact uploaded, including the Bureau, Case 007 and Case 040.
-- The prior Android standalone APK run [41925948379](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41925948379) completed successfully. A fresh APK build for `afb121d` is running as [42027241306](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42027241306), now with an explicit payload-verification step.
+  - Actual dark-mode screenshot artifact [13415216178](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42028048150) uploaded, including the Bureau, Case 007 and Case 040.
+- The prior Android standalone APK run [41925948379](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41925948379) completed successfully. A fresh APK build for the same app-source snapshot (`afb121d`; no app files changed in the later documentation/workflow-label commit) is running as [42027241306](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42027241306), now with an explicit payload-verification step.
 - Artifact: `casezero-standalone-apk`, 47,448,404-byte ZIP; extracted `app-release.apk` is 115,050,688 bytes.
 - APK inspection confirms `assets/index.android.bundle` is embedded (5,662,804 bytes), AndroidManifest.xml is present, and arm64-v8a native libraries are included. This is a standalone Android test-build candidate, not a Play Store release.
 - The APK's embedded Expo config reports the generated default package ID `com.anonymous.casezero`. Source `app.json` still has an empty `android` object, so a permanent application ID has deliberately not been chosen.
