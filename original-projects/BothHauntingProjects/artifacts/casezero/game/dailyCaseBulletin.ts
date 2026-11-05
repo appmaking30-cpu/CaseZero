@@ -203,3 +203,43 @@ export function isDailyCaseSolutionCorrect(
 ): boolean {
   return suspectId === dailyCase.correctSuspectId && motiveId === dailyCase.correctMotiveId;
 }
+
+
+export type DailyBulletinProgress = {
+  inspectedClues: string[];
+  selectedSuspect: string | null;
+  selectedMotive: string | null;
+  completed: boolean;
+  phase: 'evidence' | 'deduction' | 'review';
+};
+
+/**
+ * Treat device storage as untrusted input. Keep only identifiers belonging to
+ * today's actual bulletin and never restore a "completed" state unless the
+ * complete evidence set and correct deduction are both present.
+ */
+export function restoreDailyBulletinProgress(
+  dailyCase: DailyBulletinCase,
+  saved: unknown,
+): DailyBulletinProgress {
+  const value = saved && typeof saved === 'object' ? saved as Record<string, unknown> : {};
+  const allowedClues = new Set(dailyCase.clues.map((clue) => clue.id));
+  const inspectedClues = Array.isArray(value.inspectedClues)
+    ? [...new Set(value.inspectedClues.filter((id): id is string => typeof id === 'string' && allowedClues.has(id)))]
+    : [];
+  const suspectIds = new Set(dailyCase.suspects.map((suspect) => suspect.id));
+  const motiveIds = new Set(dailyCase.motives.map((motive) => motive.id));
+  const selectedSuspect = typeof value.selectedSuspect === 'string' && suspectIds.has(value.selectedSuspect)
+    ? value.selectedSuspect : null;
+  const selectedMotive = typeof value.selectedMotive === 'string' && motiveIds.has(value.selectedMotive)
+    ? value.selectedMotive : null;
+  const completed = value.completed === true &&
+    inspectedClues.length === dailyCase.clues.length &&
+    isDailyCaseSolutionCorrect(dailyCase, selectedSuspect, selectedMotive);
+  const phase = completed
+    ? 'review'
+    : value.phase === 'deduction' && inspectedClues.length === dailyCase.clues.length
+      ? 'deduction'
+      : 'evidence';
+  return { inspectedClues, selectedSuspect, selectedMotive, completed, phase };
+}
