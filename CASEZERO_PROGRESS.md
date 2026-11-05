@@ -5,14 +5,15 @@ This section supersedes older pending-status notes further below wherever they c
 ## Latest verified build and checks
 
 - Active branch: `casezero-development`.
-- Latest verified commit before this checkpoint: `14892fd228498a0528ed05421bb138276925041a` — “Add branded dark loading splash screen”.
-- Project checks run [41925948401](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41925948401) completed successfully:
+- Latest code-and-test checkpoint: `afb121d62703744ee999c6111be45b03cdf79b3b` — “Expand mobile campaign smoke coverage and verify APK payload”.
+- Project checks run [42027241481](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42027241481) completed successfully on `afb121d`:
   - Expo TypeScript check passed.
   - Full CaseZero unit-test suite for Cases 001–066 and shared systems passed.
   - Expo web export passed.
-  - Playwright 390×844 mobile-viewport smoke passed for Cases 001–006 and 041–066, Daily Case Bulletin and Bureau Team assignment flow.
-  - Mobile screenshot artifact uploaded.
-- Android standalone APK run [41925948379](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41925948379) completed successfully.
+  - Playwright 390×844 dark mobile-viewport smoke passed for full Cases 001–006 and 041–066 walkthroughs, plus Cases 007–040 screen navigation and save/restore smoke.
+  - Daily Case Bulletin and Bureau Team assignment flow passed.
+  - Actual dark-mode screenshot artifact uploaded, including the Bureau, Case 007 and Case 040.
+- The prior Android standalone APK run [41925948379](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41925948379) completed successfully. A fresh APK build for `afb121d` is running as [42027241306](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42027241306), now with an explicit payload-verification step.
 - Artifact: `casezero-standalone-apk`, 47,448,404-byte ZIP; extracted `app-release.apk` is 115,050,688 bytes.
 - APK inspection confirms `assets/index.android.bundle` is embedded (5,662,804 bytes), AndroidManifest.xml is present, and arm64-v8a native libraries are included. This is a standalone Android test-build candidate, not a Play Store release.
 - The APK's embedded Expo config reports the generated default package ID `com.anonymous.casezero`. Source `app.json` still has an empty `android` object, so a permanent application ID has deliberately not been chosen.
@@ -23,14 +24,14 @@ This section supersedes older pending-status notes further below wherever they c
 
 - Cases 001–006: end-to-end browser campaign smoke, including Case 001 wrong-answer retry, timeline retry, archive carryover, reload persistence, Missing Detective unlock and Cases 002–006.
 - Cases 041–066: end-to-end browser campaign walkthrough, including final archive persistence for Cases 063–066.
-- Cases 007–040: unit-test coverage exists, but they have not all been individually completed in the browser. A separate navigation/save smoke is being added; it must not be described as a full case playthrough.
-- All browser screenshots are captured at 390×844. The browser test is being configured to emulate the app's dark appearance, matching `userInterfaceStyle: "dark"`; screenshots captured before that adjustment used the browser's default light color scheme and are not a faithful dark-mode preview.
+- Cases 007–040: all case-rule unit tests pass; every screen also passed a shallow browser navigation and one-clue save/restore check. They have NOT all been individually completed as full mysteries in the browser. This smoke must not be described as a full case playthrough.
+- All current browser screenshots are captured at 390×844 with `colorScheme: 'dark'`, matching the app's `userInterfaceStyle: "dark"`. The new HQ and case screenshots were visually checked and show the midnight-navy palette.
 - Daily Case Bulletin is in-app and device-date based; automatic push notifications are not implemented.
 - Monetization and a production backend remain out of the MVP; no paid usage is authorized.
 
 ---
 
-# CaseZero development checkpoint — 4 November 2026
+# Historical CaseZero development checkpoint — 4 November 2026
 
 ## 1. Preservation and source of truth
 
@@ -69,7 +70,7 @@ This section supersedes older pending-status notes further below wherever they c
 - Bureau Team: three specialists, one-specialist-per-file assignments, saved assignments, case/daily XP, rank progression and evidence-gated insights.
 - Local persistence covers case progress, investigation archive, daily progress and Bureau assignments/ranks.
 
-### Case 066 — The Detective Who Left a Record (new; validation pending)
+### Case 066 — The Detective Who Left a Record (automated validation passed 5 November; physical-device validation pending)
 
 - Added a five-record final investigation, three witnesses/six questions, six-event chronology, retryable deduction, local progress, archive carryover and Bureau specialist insight.
 - The recovered recorder identity and dual-witness custody log connect the signed statement to the packet. A separately administered confidential-review register independently matches its reference and digest and confirms a voluntary protected separation from active duty.
@@ -82,19 +83,19 @@ This section supersedes older pending-status notes further below wherever they c
 - The packet is retrieved under dual-witness custody. The read-only image contains three segments; an independent checksum matches the received image. The timezone is unset and no speaker attribution is validated, so the case does not claim to identify the missing detective's voice or establish local time.
 - Case 065 unlocks after Case 064 is archived. Unit tests are included in the newest CI run. A final copy review corrected prompts that had retained Case 064's custody language.
 
-### Case 064 — The Exception Window (new; validation pending)
+### Case 064 — The Exception Window (automated validation passed 5 November; physical-device validation pending)
 
 - Added five case-specific custody records, three witnesses/six questions, six chronological events, a retryable deduction, local save/restore, archive carryover and Bureau specialist insight.
 - Finding: accession AR-2048 is independently corroborated in Central Records intake tray TR-6; seal S-118 is recorded intact at indexing. The dispatch manifest has an incomplete recipient field, so no named carrier or later recipient is established.
 - Case 064 unlocks from the Bureau after Case 063 is archived. Its unit tests and the app typecheck/export/browser walkthrough are awaiting the newest CI run.
 
-### Case 063 — The North Annex Cross-Index (new; validation pending)\n\n- Added a five-record cross-index investigation, three witnesses/six questions, six chronology events, a retryable evidence-based deduction, local save/restore, archive carryover and Bureau specialist insight.\n- The intended finding is limited to one machine-generated event ID and hardware profile corroborated by two independent indexes. It does not identify a person or prove physical handling.\n- Integrated into the Bureau as the next classified file after Case 062. Typecheck, unit tests and browser walkthrough have not yet completed for this addition.\n\n### Case 062 — The Cylinder Service Report
+### Case 063 — The North Annex Cross-Index (automated validation passed 5 November; physical-device validation pending)\n\n- Added a five-record cross-index investigation, three witnesses/six questions, six chronology events, a retryable evidence-based deduction, local save/restore, archive carryover and Bureau specialist insight.\n- The intended finding is limited to one machine-generated event ID and hardware profile corroborated by two independent indexes. It does not identify a person or prove physical handling.\n- Integrated into the Bureau as the next classified file after Case 062. Typecheck, unit tests and browser walkthrough have not yet completed for this addition.\n\n### Case 062 — The Cylinder Service Report
 
 - Five evidence records, three witnesses/six questions, six timeline events, a person/records-finding plus motive-style deduction, local save/restore, archive carryover and Bureau specialist insight.
 - Finding: the installation register and later independent inspection both identify CY-8841; the pending service request and searched completion/parts archives do not verify a replacement. The case does not claim that undocumented handling was impossible or identify a person at the lock.
 - A mobile browser selector mismatch and a transparent-choice styling typo were fixed.
 
-## 3. What has actually passed
+## 3. Historical validation snapshot — 4 November 2026
 
 GitHub Actions run [41910194292](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41910194292) passed on commit `523b6a2ff67e642caa1a28c7632816770da300c3`:
 
@@ -118,11 +119,11 @@ Important limits:
 2. Treat `casezero-development` as the only active source branch.
 3. Make small, reviewable GitHub commits: update the relevant screen/data module and tests together.
 4. Let GitHub Actions run typecheck, unit tests, Expo web export and the mobile browser walkthrough. Fix a failing check before moving on.
-5. The current GitHub Actions workflow exports the app, runs a 390×844 Playwright walkthrough and uploads screenshots; it does not publish an interactive preview URL. An interactive Expo Go session still requires the Expo dev server on a development machine. A Android APK workflow has been changed to a standalone release build to embed the JavaScript bundle. The release Gradle step is still running in GitHub Actions; no corrected APK is available yet. The earlier debug APK was missing its JS bundle and is not usable.
+5. GitHub Actions exports the app, runs a 390×844 dark Playwright walkthrough and uploads screenshots; it does not publish an interactive preview URL. The Android workflow builds a standalone APK with the JavaScript bundle embedded and now checks that the manifest, bundle and arm64-v8a native libraries exist before upload. An interactive Expo Go session still requires the Expo dev server on a development machine. The earlier debug APK was missing its JS bundle and is not usable.
 6. Do not trigger paid cloud builds, paid APIs, paid hosting, analytics, public publishing or monetization without explicit approval.
 7. Before release, build an Android package with a verified free/local path and test it on an actual Android device. Do not call the browser export an APK.
 
-## 5. Next work, in priority order
+## 5. Historical next-work list — 4 November 2026
 
 1. **Validate and polish the Missing Detective finale.** Cases 063–066 now have first-pass playable screen/data integrations and sequential Bureau routing. Case 065 passed the latest CI run. Case 066 has dedicated tests and expanded workflow scope; its CI and finale browser walkthrough are pending.
 2. Add targeted mobile-browser walkthroughs for Cases 007–040 in manageable groups.
