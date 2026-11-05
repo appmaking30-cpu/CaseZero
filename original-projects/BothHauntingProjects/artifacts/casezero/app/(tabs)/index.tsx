@@ -1857,6 +1857,7 @@ export default function HomeScreen() {
               <View style={[styles.progressFill, { backgroundColor: colors.primary, width: `${(cluesFound.length / CASE_001.clues.length) * 100}%` }]} />
             </View>
             <Text style={[styles.progressText, mutedStyle]}>{cluesFound.length} of 5 records logged</Text>
+            <View style={wideLayout ? styles.evidenceGrid : undefined}>
             {CASE_001.clues.map((clue, index) => {
               const found = cluesFound.includes(clue.id);
               const expanded = activeClue === clue.id;
@@ -1869,6 +1870,7 @@ export default function HomeScreen() {
                     styles.card,
                     cardStyle,
                     styles.inspectCard,
+                    wideLayout && styles.inspectCardWide,
                     { opacity: pressed ? 0.82 : 1, borderColor: found ? colors.primary : colors.border },
                   ]}
                 >
@@ -1886,6 +1888,7 @@ export default function HomeScreen() {
                 </Pressable>
               );
             })}
+            </View>
             <ActionButton
               title="Question the witnesses"
               onPress={() => setPhase('interviews')}
@@ -2994,7 +2997,9 @@ const styles = StyleSheet.create({
   personCopy: { flex: 1 },
   flexCopy: { flex: 1 },
   index: { fontSize: 12, fontWeight: '900', marginRight: 12 },
+  evidenceGrid: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'stretch', gap: 12, marginTop: 8 },
   inspectCard: { padding: 15 },
+  inspectCardWide: { width: '48%', flexGrow: 1, marginTop: 0, minHeight: 108 },
   detail: { borderTopWidth: 1, borderTopColor: '#344052', marginTop: 13, paddingTop: 12 },
   progressTrack: { height: 5, borderRadius: 4, overflow: 'hidden', marginTop: 14 },
   progressFill: { height: 5, borderRadius: 4 },
