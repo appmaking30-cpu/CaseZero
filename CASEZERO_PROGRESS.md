@@ -1,3 +1,35 @@
+# Current development status — 5 November 2026
+
+This section supersedes older pending-status notes further below wherever they conflict.
+
+## Latest verified build and checks
+
+- Active branch: `casezero-development`.
+- Latest verified commit before this checkpoint: `14892fd228498a0528ed05421bb138276925041a` — “Add branded dark loading splash screen”.
+- Project checks run [41925948401](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41925948401) completed successfully:
+  - Expo TypeScript check passed.
+  - Full CaseZero unit-test suite for Cases 001–066 and shared systems passed.
+  - Expo web export passed.
+  - Playwright 390×844 mobile-viewport smoke passed for Cases 001–006 and 041–066, Daily Case Bulletin and Bureau Team assignment flow.
+  - Mobile screenshot artifact uploaded.
+- Android standalone APK run [41925948379](https://github.com/appmaking30-cpu/CaseZero/actions/runs/41925948379) completed successfully.
+- Artifact: `casezero-standalone-apk`, 47,448,404-byte ZIP; extracted `app-release.apk` is 115,050,688 bytes.
+- APK inspection confirms `assets/index.android.bundle` is embedded (5,662,804 bytes), AndroidManifest.xml is present, and arm64-v8a native libraries are included. This is a standalone Android test-build candidate, not a Play Store release.
+- The APK's embedded Expo config reports the generated default package ID `com.anonymous.casezero`. Source `app.json` still has an empty `android` object, so a permanent application ID has deliberately not been chosen.
+- No physical Android installation or playthrough has been completed. Automated browser testing is not a substitute for the user's Samsung/Tecno device test.
+- No Play Store AAB, production signing, privacy-policy review, store listing, Data Safety submission or publishing action has been completed.
+
+## Test coverage boundary
+
+- Cases 001–006: end-to-end browser campaign smoke, including Case 001 wrong-answer retry, timeline retry, archive carryover, reload persistence, Missing Detective unlock and Cases 002–006.
+- Cases 041–066: end-to-end browser campaign walkthrough, including final archive persistence for Cases 063–066.
+- Cases 007–040: unit-test coverage exists, but they have not all been individually completed in the browser. A separate navigation/save smoke is being added; it must not be described as a full case playthrough.
+- All browser screenshots are captured at 390×844. The browser test is being configured to emulate the app's dark appearance, matching `userInterfaceStyle: "dark"`; screenshots captured before that adjustment used the browser's default light color scheme and are not a faithful dark-mode preview.
+- Daily Case Bulletin is in-app and device-date based; automatic push notifications are not implemented.
+- Monetization and a production backend remain out of the MVP; no paid usage is authorized.
+
+---
+
 # CaseZero development checkpoint — 4 November 2026
 
 ## 1. Preservation and source of truth

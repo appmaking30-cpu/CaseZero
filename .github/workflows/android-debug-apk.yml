@@ -67,6 +67,26 @@ jobs:
           chmod +x ./gradlew
           ./gradlew --no-daemon --stacktrace assembleRelease
 
+      - name: Verify standalone APK payload
+        working-directory: original-projects/BothHauntingProjects/artifacts/casezero/android
+        run: |
+          APK="app/build/outputs/apk/release/app-release.apk"
+          test -s "$APK"
+          unzip -Z1 "$APK" | grep -Fxq "AndroidManifest.xml"
+          unzip -Z1 "$APK" | grep -Fxq "assets/index.android.bundle"
+          unzip -Z1 "$APK" | grep -q "^lib/arm64-v8a/"
+          BUNDLE_BYTES=$(unzip -p "$APK" assets/index.android.bundle | wc -c)
+          APK_BYTES=$(stat -c%s "$APK")
+          test "$BUNDLE_BYTES" -gt 1000000
+          {
+            echo "### Standalone APK payload verification"
+            echo "- APK bytes: $APK_BYTES"
+            echo "- Embedded JavaScript bundle bytes: $BUNDLE_BYTES"
+            echo "- Android manifest: present"
+            echo "- arm64-v8a native libraries: present"
+            echo "- Package ID: temporary Expo default until a permanent ID is selected"
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload standalone APK
         uses: actions/upload-artifact@v4
         with:

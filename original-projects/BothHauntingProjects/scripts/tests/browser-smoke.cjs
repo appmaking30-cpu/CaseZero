@@ -7,6 +7,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     viewport: { width: 390, height: 844 },
     isMobile: true,
     hasTouch: true,
+    colorScheme: 'dark',
     deviceScaleFactor: 1,
   });
   const page = await context.newPage();
@@ -331,6 +332,59 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('The voice has no name. The order does.', { exact: true }).waitFor();
     await page.screenshot({ path: '/tmp/casezero-case006-review.png', fullPage: true });
     await page.getByRole('button', { name: 'Return to Detective Bureau' }).click();
+
+    // Cases 007–040 receive a middle-campaign navigation and save/restore smoke pass.
+    // This intentionally does NOT claim a full playthrough; rule-level unit tests cover their deductions.
+    for (let caseNumber = 7; caseNumber <= 40; caseNumber += 1) {
+      const number = String(caseNumber).padStart(3, '0');
+      const completedBefore = Array.from({ length: caseNumber - 1 }, (_, index) => {
+        const prior = String(index + 1).padStart(3, '0');
+        return {
+          caseId: `case${prior}`,
+          caseTitle: `Campaign case ${prior} (navigation fixture)`,
+          closedAt: '2026-11-04T00:00:00.000Z',
+          selectedSuspectId: 'test-fixture',
+          selectedMotiveId: 'test-fixture',
+          inspectedClues: [],
+          askedQuestions: [],
+          unansweredQuestions: [],
+        };
+      });
+      await page.evaluate((records) => {
+        localStorage.setItem('casezero.investigation.archive.v1', JSON.stringify({
+          version: 1,
+          completedCases: records,
+        }));
+      }, completedBefore);
+      await page.reload({ waitUntil: 'networkidle' });
+
+      const openCase = page.getByRole('button', { name: `Open Case ${number}` });
+      await openCase.waitFor();
+      await openCase.click();
+      await page.getByText(new RegExp(`CASE ${number} ·`)).waitFor();
+
+      const beginInvestigation = page.getByRole('button').filter({
+        hasText: /^(Enter|Review|Open|Begin)/,
+      }).first();
+      await beginInvestigation.waitFor();
+      await beginInvestigation.click();
+      await page.getByText(new RegExp(`CASE ${number} · EVIDENCE REVIEW`)).waitFor();
+
+      const firstUninspectedRecord = page.getByText(/0[1-5] · INSPECT/).first();
+      await firstUninspectedRecord.waitFor();
+      await firstUninspectedRecord.click();
+      await page.getByText(/1\/[45] records logged/).waitFor();
+
+      if (caseNumber === 7 || caseNumber === 40) {
+        await page.screenshot({ path: `/tmp/casezero-case${number}-evidence.png`, fullPage: true });
+      }
+
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.getByText(new RegExp(`CASE ${number} · EVIDENCE REVIEW`)).waitFor();
+      await page.getByText(/1\/[45] records logged/).waitFor();
+      await page.getByRole('button', { name: /Back to briefing/i }).click();
+      await page.getByRole('button', { name: /Back to (Detective )?Bureau/i }).click();
+    }
 
 
     // The Daily Case Bulletin is a separate short investigation and does not change the campaign archive.
@@ -1426,7 +1480,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     }
 
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
-    console.log('PASS: mobile Case 001–006, 041–066 campaign investigations, evidence memory, timelines, deductions, daily bulletin and Bureau assignment');
+    console.log('PASS: dark mobile viewport; Case 001–006 and 041–066 investigations; Case 007–040 screen navigation and save/restore smoke; evidence memory, daily bulletin and Bureau assignment');
   } finally {
     await browser.close();
   }
