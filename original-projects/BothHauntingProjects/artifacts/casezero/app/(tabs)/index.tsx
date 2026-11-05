@@ -1,8 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useMemo, useState } from 'react';
 import {
+  ImageBackground,
   Pressable,
   ScrollView,
+  useWindowDimensions,
   StatusBar,
   StyleSheet,
   Text,
@@ -261,6 +263,8 @@ function SectionLabel({
 
 export default function HomeScreen() {
   const colors = useColors();
+  const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
+  const wideLayout = viewportWidth > viewportHeight;
   const [loaded, setLoaded] = useState(false);
   const [archiveLoaded, setArchiveLoaded] = useState(false);
   const [investigationArchive, setInvestigationArchive] = useState<InvestigationArchive>(EMPTY_INVESTIGATION_ARCHIVE);
@@ -744,7 +748,7 @@ export default function HomeScreen() {
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
       <StatusBar barStyle="light-content" />
       <ScrollView
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, wideLayout && styles.contentWide]}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.topline}>
@@ -759,69 +763,79 @@ export default function HomeScreen() {
 
         {phase === 'hq' && (
           <>
-            <View style={styles.commandHero}>
-              <View style={styles.commandTopline}>
-                <View style={styles.commandLive}><View style={styles.commandLiveDot} /><Text style={styles.commandLiveText}>BUREAU NETWORK · ONLINE</Text></View>
-                <Text style={styles.commandEdition}>CASEZERO / 01</Text>
+            <View style={styles.hqTopGrid}>
+              <View style={styles.commandHeroPane}>
+                <ImageBackground source={require('../../assets/images/observatory.jpg')} resizeMode="cover" imageStyle={styles.commandHeroImageStyle} style={styles.commandHeroImage}>
+                  <View style={styles.commandHero}>
+                <View style={styles.commandTopline}>
+                  <View style={styles.commandLive}><View style={styles.commandLiveDot} /><Text style={styles.commandLiveText}>BUREAU NETWORK · ONLINE</Text></View>
+                  <Text style={styles.commandEdition}>CASEZERO / 01</Text>
+                </View>
+                <Text style={styles.commandEyebrow}>THE INVESTIGATION DIVISION</Text>
+                <Text style={styles.commandTitle}>Every clue has a story.</Text>
+                <Text style={styles.commandSubtitle}>Read the evidence. Challenge the timeline. Find what the record can prove.</Text>
+                <View style={styles.commandDivider} />
+                <View style={styles.commandStats}>
+                  <View style={styles.commandStat}>
+                    <Text style={styles.commandStatValue}>{investigationArchive.completedCases.length + (caseCompleted ? 1 : 0)}</Text>
+                    <Text style={styles.commandStatLabel}>FILES CLOSED</Text>
+                  </View>
+                  <View style={styles.commandStatRule} />
+                  <View style={styles.commandStat}>
+                    <Text style={styles.commandStatValue}>{investigationArchive.completedCases.reduce((sum, record) => sum + record.inspectedClues.length, cluesFound.length)}</Text>
+                    <Text style={styles.commandStatLabel}>CLUES LOGGED</Text>
+                  </View>
+                  <View style={styles.commandStatRule} />
+                  <View style={styles.commandStat}>
+                    <Text style={styles.commandStatValue}>66</Text>
+                    <Text style={styles.commandStatLabel}>CAMPAIGN FILES</Text>
+                  </View>
+                </View>
+                <View style={styles.commandBoard}>
+                  <View style={styles.commandBoardLine} />
+                  <View style={[styles.commandPin, styles.commandPinOne]} />
+                  <View style={[styles.commandPin, styles.commandPinTwo]} />
+                  <View style={[styles.commandPin, styles.commandPinThree]} />
+                  <View style={styles.commandBoardCard}>
+                    <Text style={styles.commandBoardLabel}>PRIORITY FILE · 001</Text>
+                    <Text style={styles.commandBoardTitle}>The Last Train Home</Text>
+                    <Text style={styles.commandBoardMeta}>{caseCompleted ? 'CLOSED · REVIEW AVAILABLE' : cluesFound.length > 0 ? 'ACTIVE · INVESTIGATION IN PROGRESS' : 'READY · AWAITING YOUR REVIEW'}</Text>
+                  </View>
+                </View>
               </View>
-              <Text style={styles.commandEyebrow}>THE INVESTIGATION DIVISION</Text>
-              <Text style={styles.commandTitle}>Every clue has a story.</Text>
-              <Text style={styles.commandSubtitle}>Read the evidence. Challenge the timeline. Find what the record can prove.</Text>
-              <View style={styles.commandDivider} />
-              <View style={styles.commandStats}>
-                <View style={styles.commandStat}>
-                  <Text style={styles.commandStatValue}>{investigationArchive.completedCases.length + (caseCompleted ? 1 : 0)}</Text>
-                  <Text style={styles.commandStatLabel}>FILES CLOSED</Text>
-                </View>
-                <View style={styles.commandStatRule} />
-                <View style={styles.commandStat}>
-                  <Text style={styles.commandStatValue}>{investigationArchive.completedCases.reduce((sum, record) => sum + record.inspectedClues.length, cluesFound.length)}</Text>
-                  <Text style={styles.commandStatLabel}>CLUES LOGGED</Text>
-                </View>
-                <View style={styles.commandStatRule} />
-                <View style={styles.commandStat}>
-                  <Text style={styles.commandStatValue}>66</Text>
-                  <Text style={styles.commandStatLabel}>CAMPAIGN FILES</Text>
-                </View>
-              </View>
-              <View style={styles.commandBoard}>
-                <View style={styles.commandBoardLine} />
-                <View style={[styles.commandPin, styles.commandPinOne]} />
-                <View style={[styles.commandPin, styles.commandPinTwo]} />
-                <View style={[styles.commandPin, styles.commandPinThree]} />
-                <View style={styles.commandBoardCard}>
-                  <Text style={styles.commandBoardLabel}>PRIORITY FILE · 001</Text>
-                  <Text style={styles.commandBoardTitle}>The Last Train Home</Text>
-                  <Text style={styles.commandBoardMeta}>{caseCompleted ? 'CLOSED · REVIEW AVAILABLE' : cluesFound.length > 0 ? 'ACTIVE · INVESTIGATION IN PROGRESS' : 'READY · AWAITING YOUR REVIEW'}</Text>
-                </View>
-              </View>
-            </View>
 
-            <View style={[styles.card, cardStyle]}>
-              <SectionLabel colors={colors}>Active case file</SectionLabel>
-              <Text style={[styles.caseTitle, textStyle]}>{CASE_001.title}</Text>
-              <Text style={[styles.body, mutedStyle]}>{CASE_001.subtitle}</Text>
-              <View style={styles.statusRow}>
-                <Text style={[styles.statusText, { color: caseCompleted ? colors.primary : colors.mutedForeground }]}>
-                  {caseCompleted ? 'CASE CLOSED' : cluesFound.length > 0 ? 'IN PROGRESS' : 'NEW FILE'}
-                </Text>
-                <Text style={[styles.statusText, mutedStyle]}>
-                  {cluesFound.length}/5 records
-                </Text>
+
+                  </View>
+                </ImageBackground>
               </View>
-              <ActionButton
-                title={caseCompleted ? 'Review closed file' : cluesFound.length > 0 ? 'Resume investigation' : 'Open case file'}
-                onPress={openCase}
-                colors={colors}
-              />
-              {caseCompleted && (
-                <ActionButton
-                  title="Replay from the beginning"
-                  onPress={resetCase}
-                  colors={colors}
-                  variant="ghost"
-                />
-              )}
+              <View style={styles.hqCasePane}>
+                <View style={[styles.card, cardStyle]}>
+                  <SectionLabel colors={colors}>Active case file</SectionLabel>
+                  <Text style={[styles.caseTitle, textStyle]}>{CASE_001.title}</Text>
+                  <Text style={[styles.body, mutedStyle]}>{CASE_001.subtitle}</Text>
+                  <View style={styles.statusRow}>
+                    <Text style={[styles.statusText, { color: caseCompleted ? colors.primary : colors.mutedForeground }]}>
+                      {caseCompleted ? 'CASE CLOSED' : cluesFound.length > 0 ? 'IN PROGRESS' : 'NEW FILE'}
+                    </Text>
+                    <Text style={[styles.statusText, mutedStyle]}>
+                      {cluesFound.length}/5 records
+                    </Text>
+                  </View>
+                  <ActionButton
+                    title={caseCompleted ? 'Review closed file' : cluesFound.length > 0 ? 'Resume investigation' : 'Open case file'}
+                    onPress={openCase}
+                    colors={colors}
+                  />
+                  {caseCompleted && (
+                    <ActionButton
+                      title="Replay from the beginning"
+                      onPress={resetCase}
+                      colors={colors}
+                      variant="ghost"
+                    />
+                  )}
+                </View>
+              </View>
             </View>
 
             <View style={[styles.card, cardStyle]}>
@@ -2912,7 +2926,12 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  commandHero: { backgroundColor: '#101C2A', borderColor: '#34475B', borderWidth: 1, borderRadius: 22, padding: 19, marginBottom: 18, overflow: 'hidden' },
+  commandHeroImage: { flex: 1, minHeight: 390, borderRadius: 22, overflow: 'hidden', justifyContent: 'flex-end' },
+  commandHeroImageStyle: { opacity: 0.72 },
+  commandHeroPane: { flex: 1.25, minWidth: 0 },
+  hqCasePane: { flex: 0.85, minWidth: 0, justifyContent: 'center' },
+  hqTopGrid: { flexDirection: 'row', alignItems: 'stretch', gap: 18, minHeight: 390, marginBottom: 18 },
+  commandHero: { flex: 1, backgroundColor: 'rgba(8, 15, 27, 0.78)', borderColor: '#526174', borderWidth: 1, borderRadius: 22, padding: 22, overflow: 'hidden', justifyContent: 'center' },
   commandTopline: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 27 },
   commandLive: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1B302F', borderColor: '#35544B', borderWidth: 1, borderRadius: 20, paddingHorizontal: 10, paddingVertical: 6 },
   commandLiveDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#79C49A', marginRight: 7 },
@@ -2940,12 +2959,14 @@ const styles = StyleSheet.create({
 
   content: {
     width: '100%',
-    maxWidth: 720,
+    width: '100%',
+    maxWidth: 1320,
     alignSelf: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 16,
+    paddingHorizontal: 26,
+    paddingTop: 18,
     paddingBottom: 48,
   },
+  contentWide: { paddingHorizontal: 34, paddingTop: 10, paddingBottom: 24 },
   loading: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   topline: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 30 },
   brand: { fontSize: 13, fontWeight: '900', letterSpacing: 4 },
