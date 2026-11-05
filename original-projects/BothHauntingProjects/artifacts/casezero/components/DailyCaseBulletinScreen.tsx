@@ -5,6 +5,7 @@ import { useColors } from '@/hooks/useColors';
 import {
   getDailyCaseForDate,
   isDailyCaseSolutionCorrect,
+  restoreDailyBulletinProgress,
 } from '@/game/dailyCaseBulletin';
 
 const SAVE_PREFIX = 'casezero.daily-bulletin.v1.';
@@ -41,15 +42,8 @@ export default function DailyCaseBulletinScreen({ onReturn, onComplete, assigned
     AsyncStorage.getItem(SAVE_PREFIX + dateKey).then((raw) => {
       if (!active) return;
       if (raw) {
-        const saved = JSON.parse(raw) as Partial<DailyProgress>;
-        const next: DailyProgress = {
-          inspectedClues: Array.isArray(saved.inspectedClues) ? saved.inspectedClues.filter((id): id is string => typeof id === 'string') : [],
-          selectedSuspect: typeof saved.selectedSuspect === 'string' ? saved.selectedSuspect : null,
-          selectedMotive: typeof saved.selectedMotive === 'string' ? saved.selectedMotive : null,
-          completed: saved.completed === true,
-          phase: saved.phase === 'deduction' || saved.phase === 'review' ? saved.phase : 'evidence',
-        };
-        setProgress(next);
+        const saved: unknown = JSON.parse(raw);
+        setProgress(restoreDailyBulletinProgress(dailyCase, saved));
       }
     }).catch(() => undefined).finally(() => { if (active) setLoaded(true); });
     return () => { active = false; };
