@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useColors } from '@/hooks/useColors';
 import Case004Screen from '@/components/Case004Screen';
 import Case005Screen from '@/components/Case005Screen';
@@ -258,6 +259,29 @@ function SectionLabel({
     <Text style={[styles.sectionLabel, { color: colors.primary }]}>
       {children}
     </Text>
+  );
+}
+
+function InvestigationBanner({ eyebrow, title, subtitle, step, progress }: { eyebrow: string; title: string; subtitle: string; step: string; progress: string }) {
+  return (
+    <LinearGradient
+      colors={['#182A3B', '#101A29', '#0B111C']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.investigationBanner}
+    >
+      <View style={styles.bannerTopline}>
+        <Text style={styles.bannerEyebrow}>{eyebrow}</Text>
+        <Text style={styles.bannerStep}>{step}</Text>
+      </View>
+      <Text style={styles.bannerTitle}>{title}</Text>
+      <Text style={styles.bannerSubtitle}>{subtitle}</Text>
+      <View style={styles.bannerBottomline}>
+        <View style={styles.bannerRule} />
+        <Text style={styles.bannerProgress}>{progress}</Text>
+      </View>
+      <View style={styles.bannerAccent} />
+    </LinearGradient>
   );
 }
 
@@ -1702,7 +1726,7 @@ export default function HomeScreen() {
             <Text style={[styles.heroTitle, textStyle]}>Who moved the ledger?</Text>
             <Text style={[styles.subtitle, mutedStyle]}>Hear from each witness. Previous case notes can change what the Bureau asks you to notice.</Text>
             {CASE_002_GAME.witnesses.map((witness, index) => (
-              <View key={witness.id} style={[styles.card, cardStyle]}>
+              <View key={witness.id} style={[styles.card, cardStyle, wideLayout && styles.witnessCardWide]}>
                 <View style={styles.row}>
                   <View style={styles.flexCopy}>
                     <Text style={[styles.cardTitle, textStyle]}>{witness.name}</Text>
@@ -1821,8 +1845,8 @@ export default function HomeScreen() {
 
         {phase === 'briefing' && (
           <>
-            <SectionLabel colors={colors}>Case 001 · Briefing</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>{CASE_001.title}</Text>
+            <InvestigationBanner eyebrow="PRIORITY FILE · 001" title={CASE_001.title} subtitle="THE LAST TRAIN HOME · An envelope disappeared before the final train left the station." step="01 / BRIEFING" progress="PERSONS OF INTEREST IDENTIFIED" />
+            <Text style={[styles.subtitle, mutedStyle]}>{CASE_001.briefing}</Text>
             <Text style={[styles.subtitle, mutedStyle]}>{CASE_001.briefing}</Text>
             <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>Persons of interest</SectionLabel>
@@ -1848,11 +1872,7 @@ export default function HomeScreen() {
 
         {phase === 'evidence' && (
           <>
-            <SectionLabel colors={colors}>Investigation · Evidence</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>Inspect the records.</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>
-              Tap each record to inspect it. You need all five before the witness interviews.
-            </Text>
+            <InvestigationBanner eyebrow="EVIDENCE ROOM · FILE 001" title="Every detail matters." subtitle="Inspect the recovered records. Match the small inconsistencies before you question the witnesses." step="02 / EVIDENCE" progress={`${cluesFound.length} OF 5 RECORDS LOGGED`} />
             <View style={[styles.progressTrack, { backgroundColor: colors.secondary }]}>
               <View style={[styles.progressFill, { backgroundColor: colors.primary, width: `${(cluesFound.length / CASE_001.clues.length) * 100}%` }]} />
             </View>
@@ -1901,11 +1921,8 @@ export default function HomeScreen() {
 
         {phase === 'interviews' && (
           <>
-            <SectionLabel colors={colors}>Investigation · Interviews</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>Ask the right questions.</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>
-              Ask at least one question to each witness. Follow-ups are optional, but THE MEMORY keeps track of what you leave unasked.
-            </Text>
+            <InvestigationBanner eyebrow="INTERVIEW ROOM · FILE 001" title="Three accounts. One timeline." subtitle="Ask each witness at least one question. Follow the details that do not fit." step="03 / INTERVIEWS" progress={`${witnessCount} OF 3 WITNESSES HEARD`} />
+            <View style={wideLayout ? styles.witnessGrid : undefined}>
             {CASE_001.witnesses.map((witness, index) => (
               <View key={witness.id} style={[styles.card, cardStyle]}>
                 <View style={styles.row}>
@@ -1940,6 +1957,7 @@ export default function HomeScreen() {
                 })}
               </View>
             ))}
+            </View>
             <Text style={[styles.progressText, mutedStyle]}>
               {witnessCount}/3 witnesses heard · {unansweredQuestions} optional questions left unasked
             </Text>
@@ -1955,11 +1973,7 @@ export default function HomeScreen() {
 
         {phase === 'timeline' && (
           <>
-            <SectionLabel colors={colors}>Investigation · Timeline</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>Put the night in order.</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>
-              Select the four records from earliest to latest. The timestamps are evidence too.
-            </Text>
+            <InvestigationBanner eyebrow="TIMELINE ANALYSIS · FILE 001" title="Rebuild the final hour." subtitle="Arrange the verified events from earliest to latest. The timestamps are evidence too." step="04 / RECONSTRUCTION" progress={`${timelineOrder.length} OF 4 EVENTS PLACED`} />
             <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>Your sequence</SectionLabel>
               {timelineOrder.length === 0 ? (
@@ -1975,6 +1989,7 @@ export default function HomeScreen() {
                 })
               )}
             </View>
+            <View style={wideLayout ? styles.timelineGrid : undefined}>
             {CASE_001.timelineEvents.map((event) => {
               const selected = timelineOrder.includes(event.id);
               return (
@@ -1985,6 +2000,7 @@ export default function HomeScreen() {
                   onPress={() => selectTimelineEvent(event.id)}
                   style={({ pressed }) => [
                     styles.optionCard,
+                    wideLayout && styles.timelineCardWide,
                     { backgroundColor: colors.card, borderColor: selected ? colors.primary : colors.border, opacity: selected ? 0.48 : pressed ? 0.8 : 1 },
                   ]}
                 >
@@ -1994,6 +2010,7 @@ export default function HomeScreen() {
                 </Pressable>
               );
             })}
+            </View>
             {!!timelineMessage && (
               <Text style={[styles.notice, { color: timelineSolved ? colors.primary : colors.destructive }]}>
                 {timelineMessage}
@@ -2012,12 +2029,9 @@ export default function HomeScreen() {
 
         {phase === 'deduction' && (
           <>
-            <SectionLabel colors={colors}>Final review · Deduction</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>What does the evidence prove?</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>
-              Choose who moved the envelope and why. A correct guess is not enough; your theory must fit the records.
-            </Text>
-            <View style={[styles.card, cardStyle]}>
+            <InvestigationBanner eyebrow="FINAL REVIEW · FILE 001" title="Build your case." subtitle="Choose the person and motive that explain every verified clue. An unsupported guess will not close the file." step="05 / DEDUCTION" progress="ALL EVIDENCE MUST AGREE" />
+            <View style={wideLayout ? styles.deductionGrid : undefined}>
+            <View style={[styles.card, cardStyle, wideLayout && styles.deductionPane]}>
               <SectionLabel colors={colors}>Who moved it?</SectionLabel>
               {CASE_001.suspects.map((suspect) => {
                 const selected = selectedSuspect === suspect.id;
@@ -2034,7 +2048,7 @@ export default function HomeScreen() {
                 );
               })}
             </View>
-            <View style={[styles.card, cardStyle]}>
+            <View style={[styles.card, cardStyle, wideLayout && styles.deductionPane]}>
               <SectionLabel colors={colors}>Why did they move it?</SectionLabel>
               {CASE_001.motives.map((motive) => {
                 const selected = selectedMotive === motive.id;
@@ -2050,6 +2064,7 @@ export default function HomeScreen() {
                   </Pressable>
                 );
               })}
+            </View>
             </View>
             {!!deductionMessage && <Text style={[styles.notice, { color: colors.destructive }]}>{deductionMessage}</Text>}
             <ActionButton
@@ -2926,6 +2941,20 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
+  investigationBanner: { minHeight: 190, borderWidth: 1, borderColor: '#34475B', borderRadius: 20, paddingHorizontal: 24, paddingVertical: 20, marginBottom: 14, overflow: 'hidden', justifyContent: 'center' },
+  bannerTopline: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 },
+  bannerEyebrow: { color: '#D7B873', fontSize: 9, fontWeight: '900', letterSpacing: 2 },
+  bannerStep: { color: '#8294A8', fontSize: 9, fontWeight: '900', letterSpacing: 1.4 },
+  bannerTitle: { color: '#F4EFE4', fontSize: 29, lineHeight: 34, fontWeight: '900', letterSpacing: -0.6 },
+  bannerSubtitle: { color: '#B1BECC', fontSize: 12, lineHeight: 19, marginTop: 8, maxWidth: 680 },
+  bannerBottomline: { flexDirection: 'row', alignItems: 'center', marginTop: 18 },
+  bannerRule: { width: 44, height: 2, backgroundColor: '#D7B873', marginRight: 10 },
+  bannerProgress: { color: '#D7B873', fontSize: 8, fontWeight: '900', letterSpacing: 1.2 },
+  bannerAccent: { position: 'absolute', width: 180, height: 180, borderWidth: 1, borderColor: 'rgba(215,184,115,0.15)', borderRadius: 90, right: -50, top: -70 },
+  witnessGrid: { flexDirection: 'row', alignItems: 'stretch', gap: 12 },
+  timelineGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  deductionGrid: { flexDirection: 'row', alignItems: 'stretch', gap: 14 },
+  deductionPane: { flex: 1, minWidth: 0, marginTop: 0 },
   commandHeroImage: { flex: 1, minHeight: 390, borderRadius: 22, overflow: 'hidden', justifyContent: 'flex-end' },
   commandHeroImageStyle: { opacity: 0.72 },
   commandHeroPane: { flex: 1.25, minWidth: 0 },
@@ -2966,6 +2995,7 @@ const styles = StyleSheet.create({
     paddingBottom: 48,
   },
   contentWide: { paddingHorizontal: 34, paddingTop: 10, paddingBottom: 24 },
+  content: { gap: 0 },
   loading: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   topline: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 30 },
   brand: { fontSize: 13, fontWeight: '900', letterSpacing: 4 },
@@ -2999,6 +3029,8 @@ const styles = StyleSheet.create({
   evidenceGrid: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'stretch', gap: 12, marginTop: 8 },
   inspectCard: { padding: 15 },
   inspectCardWide: { width: '48%', flexGrow: 1, marginTop: 0, minHeight: 108 },
+  timelineCardWide: { width: '48%', flexGrow: 1, marginTop: 0 },
+  witnessCardWide: { flex: 1, minWidth: 0, marginTop: 0 },
   detail: { borderTopWidth: 1, borderTopColor: '#344052', marginTop: 13, paddingTop: 12 },
   progressTrack: { height: 5, borderRadius: 4, overflow: 'hidden', marginTop: 14 },
   progressFill: { height: 5, borderRadius: 4 },
