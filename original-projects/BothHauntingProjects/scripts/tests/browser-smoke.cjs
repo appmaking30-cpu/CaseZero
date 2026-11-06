@@ -23,6 +23,34 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     assert.equal(await lockedCaseButton.isDisabled(), true, 'Case 002 must remain locked until the tutorial is closed');
     await page.screenshot({ path: '/tmp/casezero-hq-before.png', fullPage: true });
 
+    // Also verify the requested 16:9 landscape presentation independently of the
+    // portrait touch walkthrough. This is a browser layout check, not a device test.
+    const landscapeContext = await browser.newContext({
+      viewport: { width: 1280, height: 720 },
+      isMobile: false,
+      hasTouch: false,
+      colorScheme: 'dark',
+      deviceScaleFactor: 1,
+    });
+    const landscapePage = await landscapeContext.newPage();
+    landscapePage.on('pageerror', (error) => pageErrors.push(error.message));
+    await landscapePage.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
+    await landscapePage.getByText('THE INVESTIGATION DIVISION', { exact: true }).waitFor();
+    const landscapeHero = await landscapePage.getByText('THE INVESTIGATION DIVISION', { exact: true }).boundingBox();
+    const landscapeCase = await landscapePage.getByText('Active case file', { exact: true }).boundingBox();
+    assert.ok(landscapeHero && landscapeCase && landscapeCase.x > landscapeHero.x + 200,
+      'the active case panel should sit beside the cinematic Bureau hero at 16:9');
+    await landscapePage.screenshot({ path: '/tmp/casezero-hq-landscape-16x9.png', fullPage: true });
+
+    await landscapePage.getByRole('button', { name: 'Open case file' }).click();
+    await landscapePage.getByRole('button', { name: 'Begin evidence review' }).click();
+    const firstLandscapeClue = await landscapePage.getByText('The ceiling stain', { exact: true }).boundingBox();
+    const secondLandscapeClue = await landscapePage.getByText('The chipped cart wheel', { exact: true }).boundingBox();
+    assert.ok(firstLandscapeClue && secondLandscapeClue && secondLandscapeClue.x > firstLandscapeClue.x + 200,
+      'the tutorial evidence records should form a two-column board in landscape');
+    await landscapePage.screenshot({ path: '/tmp/casezero-evidence-landscape-16x9.png', fullPage: true });
+    await landscapeContext.close();
+
     await page.getByRole('button', { name: 'Open case file' }).click();
     await page.getByText('Case 001 · Briefing').waitFor();
     await page.getByRole('button', { name: 'Begin evidence review' }).click();
