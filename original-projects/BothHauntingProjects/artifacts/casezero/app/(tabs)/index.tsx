@@ -1654,7 +1654,8 @@ export default function HomeScreen() {
         {phase === 'case002Briefing' && (
           <>
             <InvestigationBanner eyebrow="INCOMING FILE · 002" title={CASE_002_GAME.title} subtitle={CASE_002_GAME.subtitle} step="01 / BRIEFING" progress="NEW LOCATION · HOTEL ARCHIVE" scene="hotel" />
-            <View style={[styles.card, cardStyle]}>
+            <View style={wideLayout ? styles.briefingGrid : undefined}>
+            <View style={[styles.card, cardStyle, wideLayout && styles.briefingPane]}>
               <SectionLabel colors={colors}>The incident</SectionLabel>
               <Text style={[styles.body, textStyle]}>{CASE_002_GAME.briefing}</Text>
               <View style={[styles.detail, { borderTopColor: colors.border }]}>
@@ -1665,7 +1666,7 @@ export default function HomeScreen() {
                 {case002Carryover.inspectedEvidence.length > 0 && <Text style={[styles.memoryNote, mutedStyle]}>Evidence you noticed before: {case002Carryover.inspectedEvidence.join(' · ')}</Text>}
               </View>
             </View>
-            <View style={[styles.card, cardStyle]}>
+            <View style={[styles.card, cardStyle, wideLayout && styles.briefingPane]}>
               <SectionLabel colors={colors}>Persons of interest</SectionLabel>
               {CASE_002_GAME.suspects.map((suspect) => (
                 <View key={suspect.id} style={styles.personRow}>
@@ -1677,6 +1678,7 @@ export default function HomeScreen() {
                   </View>
                 </View>
               ))}
+            </View>
             </View>
             <ActionButton title="Begin evidence review" onPress={() => setPhase('case002Evidence')} colors={colors} />
             <ActionButton title="Back to Bureau" onPress={() => setPhase('hq')} colors={colors} variant="ghost" />
@@ -2121,7 +2123,8 @@ export default function HomeScreen() {
         {phase === 'case003Briefing' && (
           <>
             <InvestigationBanner eyebrow="CLASSIFIED FILE · 003" title={CASE_003_GAME.title} subtitle={CASE_003_GAME.subtitle} step="01 / BRIEFING" progress="BUREAU INTEGRITY REVIEW" scene="archive" />
-            <View style={[styles.card, cardStyle]}>
+            <View style={wideLayout ? styles.briefingGrid : undefined}>
+            <View style={[styles.card, cardStyle, wideLayout && styles.briefingPane]}>
               <SectionLabel colors={colors}>The integrity review</SectionLabel>
               <Text style={[styles.body, textStyle]}>{CASE_003_GAME.briefing}</Text>
               <View style={[styles.detail, { borderTopColor: colors.border }]}>
@@ -2132,7 +2135,7 @@ export default function HomeScreen() {
                 {case003Carryover.unansweredFromPrior.length > 0 && <Text style={[styles.memoryNote, { color: colors.primary }]}>Unanswered questions carried forward: {case003Carryover.unansweredFromPrior.join(' · ')}</Text>}
               </View>
             </View>
-            <View style={[styles.card, cardStyle]}>
+            <View style={[styles.card, cardStyle, wideLayout && styles.briefingPane]}>
               <SectionLabel colors={colors}>Persons under review</SectionLabel>
               {CASE_003_GAME.suspects.map((suspect) => (
                 <View key={suspect.id} style={styles.personRow}>
@@ -2144,6 +2147,7 @@ export default function HomeScreen() {
                   </View>
                 </View>
               ))}
+            </View>
             </View>
             <ActionButton title="Begin evidence review" onPress={() => setPhase('case003Evidence')} colors={colors} />
             <ActionButton title="Back to Bureau" onPress={() => setPhase('hq')} colors={colors} variant="ghost" />
@@ -2948,6 +2952,8 @@ const styles = StyleSheet.create({
   bannerRule: { width: 44, height: 2, backgroundColor: '#D7B873', marginRight: 10 },
   bannerProgress: { color: '#D7B873', fontSize: 8, fontWeight: '900', letterSpacing: 1.2 },
   bannerAccent: { position: 'absolute', width: 180, height: 180, borderWidth: 1, borderColor: 'rgba(215,184,115,0.15)', borderRadius: 90, right: -50, top: -70 },
+  briefingGrid: { flexDirection: 'row', alignItems: 'stretch', gap: 14 },
+  briefingPane: { flex: 1, minWidth: 0, marginTop: 0 },
   witnessGrid: { flexDirection: 'row', alignItems: 'stretch', gap: 12 },
   timelineGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   deductionGrid: { flexDirection: 'row', alignItems: 'stretch', gap: 14 },
