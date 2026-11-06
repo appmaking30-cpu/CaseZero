@@ -52,7 +52,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await landscapeContext.close();
 
     await page.getByRole('button', { name: 'Open case file' }).click();
-    await page.getByText('Case 001 · Briefing').waitFor();
+    await page.getByText('PRIORITY FILE · 001', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Begin evidence review' }).click();
 
     await page.getByText('The ceiling stain', { exact: true }).click();
