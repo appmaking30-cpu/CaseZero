@@ -133,7 +133,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('The access-panel printout', { exact: true }).click();
     await page.getByText('1 of 4 records logged', { exact: true }).waitFor();
     await page.reload({ waitUntil: 'networkidle' });
-    await page.getByText('Case 002 · Evidence').waitFor();
+    await page.getByText('HOTEL ARCHIVE · FILE 002', { exact: true }).waitFor();
     await page.getByText('1 of 4 records logged', { exact: true }).waitFor();
 
     for (const clue of [
