@@ -13,6 +13,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import TrainStationScene from '@/components/TrainStationScene';
+import HotelNightScene from '@/components/HotelNightScene';
+import RecordsAnnexScene from '@/components/RecordsAnnexScene';
 import { useColors } from '@/hooks/useColors';
 import Case004Screen from '@/components/Case004Screen';
 import Case005Screen from '@/components/Case005Screen';
@@ -263,10 +265,12 @@ function SectionLabel({
   );
 }
 
-function InvestigationBanner({ eyebrow, title, subtitle, step, progress, scene = false }: { eyebrow: string; title: string; subtitle: string; step: string; progress: string; scene?: boolean }) {
+function InvestigationBanner({ eyebrow, title, subtitle, step, progress, scene = false }: { eyebrow: string; title: string; subtitle: string; step: string; progress: string; scene?: 'station' | 'hotel' | 'archive' | false }) {
   return (
     <View style={styles.investigationBanner}>
-      {scene && <View style={styles.bannerArtwork}><TrainStationScene height={230} /></View>}
+      {scene === 'station' && <View style={styles.bannerArtwork}><TrainStationScene height={230} /></View>}
+      {scene === 'hotel' && <View style={styles.bannerArtwork}><HotelNightScene height={230} /></View>}
+      {scene === 'archive' && <View style={styles.bannerArtwork}><RecordsAnnexScene height={230} /></View>}
       <LinearGradient colors={['rgba(24,42,59,0.70)', 'rgba(16,26,41,0.84)', 'rgba(11,17,28,0.96)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.bannerOverlay}>
         <View style={styles.bannerTopline}>
           <Text style={styles.bannerEyebrow}>{eyebrow}</Text>
@@ -1648,9 +1652,7 @@ export default function HomeScreen() {
 
         {phase === 'case002Briefing' && (
           <>
-            <SectionLabel colors={colors}>Case 002 · Incoming file</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>{CASE_002_GAME.title}</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>{CASE_002_GAME.subtitle}</Text>
+            <InvestigationBanner eyebrow="INCOMING FILE · 002" title={CASE_002_GAME.title} subtitle={CASE_002_GAME.subtitle} step="01 / BRIEFING" progress="NEW LOCATION · HOTEL ARCHIVE" scene="hotel" />
             <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>The incident</SectionLabel>
               <Text style={[styles.body, textStyle]}>{CASE_002_GAME.briefing}</Text>
@@ -1682,19 +1684,18 @@ export default function HomeScreen() {
 
         {phase === 'case002Evidence' && (
           <>
-            <SectionLabel colors={colors}>Case 002 · Evidence</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>A locked room. An empty shelf.</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>Inspect all four records. The sequence matters more than the blackout itself.</Text>
+            <InvestigationBanner eyebrow="HOTEL ARCHIVE · FILE 002" title="A locked room. An empty shelf." subtitle="Inspect all four records. The sequence matters more than the blackout itself." step="02 / EVIDENCE" progress={`${case002Progress.cluesFound.length} OF 4 RECORDS LOGGED`} scene="hotel" />
             <View style={[styles.progressTrack, { backgroundColor: colors.secondary }]}>
               <View style={[styles.progressFill, { backgroundColor: colors.primary, width: `${(case002Progress.cluesFound.length / CASE_002_GAME.clues.length) * 100}%` }]} />
             </View>
             <Text style={[styles.progressText, mutedStyle]}>{case002Progress.cluesFound.length} of 4 records logged</Text>
+            <View style={wideLayout ? styles.evidenceGrid : undefined}>
             {CASE_002_GAME.clues.map((clue, index) => {
               const found = case002Progress.cluesFound.includes(clue.id);
               const expanded = case002ActiveClue === clue.id;
               return (
                 <Pressable key={clue.id} accessibilityRole="button" onPress={() => inspectCase002Clue(clue.id)}
-                  style={({ pressed }) => [styles.card, cardStyle, styles.inspectCard, { opacity: pressed ? 0.82 : 1, borderColor: found ? colors.primary : colors.border }]}>
+                  style={({ pressed }) => [styles.card, cardStyle, styles.inspectCard, wideLayout && styles.inspectCardWide, { opacity: pressed ? 0.82 : 1, borderColor: found ? colors.primary : colors.border }]}>
                   <View style={styles.row}>
                     <Text style={[styles.index, { color: colors.primary }]}>0{index + 1}</Text>
                     <View style={styles.flexCopy}>
@@ -1707,6 +1708,7 @@ export default function HomeScreen() {
                 </Pressable>
               );
             })}
+            </View>
             {case002SpecialistInsight && (
               <View style={[styles.card, cardStyle]}>
                 <SectionLabel colors={colors}>{case002SpecialistInsight.title}</SectionLabel>
@@ -1844,7 +1846,7 @@ export default function HomeScreen() {
 
         {phase === 'briefing' && (
           <>
-            <InvestigationBanner eyebrow="PRIORITY FILE · 001" title={CASE_001.title} subtitle="THE LAST TRAIN HOME · An envelope disappeared before the final train left the station." step="01 / BRIEFING" progress="PERSONS OF INTEREST IDENTIFIED" scene />
+            <InvestigationBanner eyebrow="PRIORITY FILE · 001" title={CASE_001.title} subtitle="THE LAST TRAIN HOME · An envelope disappeared before the final train left the station." step="01 / BRIEFING" progress="PERSONS OF INTEREST IDENTIFIED" scene="station" />
             <Text style={[styles.subtitle, mutedStyle]}>{CASE_001.briefing}</Text>
             <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>Persons of interest</SectionLabel>
@@ -1870,7 +1872,7 @@ export default function HomeScreen() {
 
         {phase === 'evidence' && (
           <>
-            <InvestigationBanner eyebrow="EVIDENCE ROOM · FILE 001" title="Every detail matters." subtitle="Inspect the recovered records. Match the small inconsistencies before you question the witnesses." step="02 / EVIDENCE" progress={`${cluesFound.length} OF 5 RECORDS LOGGED`} scene />
+            <InvestigationBanner eyebrow="EVIDENCE ROOM · FILE 001" title="Every detail matters." subtitle="Inspect the recovered records. Match the small inconsistencies before you question the witnesses." step="02 / EVIDENCE" progress={`${cluesFound.length} OF 5 RECORDS LOGGED`} scene="station" />
             <View style={[styles.progressTrack, { backgroundColor: colors.secondary }]}>
               <View style={[styles.progressFill, { backgroundColor: colors.primary, width: `${(cluesFound.length / CASE_001.clues.length) * 100}%` }]} />
             </View>
@@ -2121,9 +2123,7 @@ export default function HomeScreen() {
 
         {phase === 'case003Briefing' && (
           <>
-            <SectionLabel colors={colors}>Case 003 · Classified investigation</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>{CASE_003_GAME.title}</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>{CASE_003_GAME.subtitle}</Text>
+            <InvestigationBanner eyebrow="CLASSIFIED FILE · 003" title={CASE_003_GAME.title} subtitle={CASE_003_GAME.subtitle} step="01 / BRIEFING" progress="BUREAU INTEGRITY REVIEW" scene="archive" />
             <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>The integrity review</SectionLabel>
               <Text style={[styles.body, textStyle]}>{CASE_003_GAME.briefing}</Text>
@@ -2155,19 +2155,18 @@ export default function HomeScreen() {
 
         {phase === 'case003Evidence' && (
           <>
-            <SectionLabel colors={colors}>Case 003 · Evidence</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>Who changed the closed files?</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>Inspect every record. The mark matters, but the chain of custody matters more.</Text>
+            <InvestigationBanner eyebrow="RECORDS ANNEX · FILE 003" title="Who changed the closed files?" subtitle="Inspect every record. The mark matters, but the chain of custody matters more." step="02 / EVIDENCE" progress={`${case003Progress.cluesFound.length} OF 4 RECORDS LOGGED`} scene="archive" />
             <View style={[styles.progressTrack, { backgroundColor: colors.secondary }]}>
               <View style={[styles.progressFill, { backgroundColor: colors.primary, width: `${(case003Progress.cluesFound.length / CASE_003_GAME.clues.length) * 100}%` }]} />
             </View>
             <Text style={[styles.progressText, mutedStyle]}>{case003Progress.cluesFound.length} of 4 records logged</Text>
+            <View style={wideLayout ? styles.evidenceGrid : undefined}>
             {CASE_003_GAME.clues.map((clue, index) => {
               const found = case003Progress.cluesFound.includes(clue.id);
               const expanded = case003ActiveClue === clue.id;
               return (
                 <Pressable key={clue.id} accessibilityRole="button" onPress={() => inspectCase003Clue(clue.id)}
-                  style={({ pressed }) => [styles.card, cardStyle, styles.inspectCard, { opacity: pressed ? 0.82 : 1, borderColor: found ? colors.primary : colors.border }]}>
+                  style={({ pressed }) => [styles.card, cardStyle, styles.inspectCard, wideLayout && styles.inspectCardWide, { opacity: pressed ? 0.82 : 1, borderColor: found ? colors.primary : colors.border }]}>
                   <View style={styles.row}>
                     <Text style={[styles.index, { color: colors.primary }]}>0{index + 1}</Text>
                     <View style={styles.flexCopy}>
@@ -2180,6 +2179,7 @@ export default function HomeScreen() {
                 </Pressable>
               );
             })}
+            </View>
             <ActionButton title="Question the witnesses" onPress={() => setPhase('case003Interviews')} colors={colors} disabled={!case003AllCluesFound} />
             <ActionButton title="Back to briefing" onPress={() => setPhase('case003Briefing')} colors={colors} variant="ghost" />
           </>
