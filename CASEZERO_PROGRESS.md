@@ -1,4 +1,52 @@
-# Current development status — 5 November 2026
+# Current development checkpoint — 6 November 2026
+
+## Preservation and workflow
+
+- Existing Replit app: **BothHauntingProjects** — https://replit.com/@appmaking30/BothHauntingProjects. It remains unchanged; Replit Agent was not used.
+- Original Replit archive: `BothHauntingProjects.zip`, 7,167,701 bytes, preserved on `replit-original-backup-2026-10-31`.
+- Extracted source snapshot: `casezero-original-work`.
+- Active source: `casezero-development`. The separate rollback/reference branches remain untouched.
+- A dated safety checkpoint branch, `casezero-safety-checkpoint-2026-11-06`, preserves the pre-fix state at commit `09e57b36`.
+- GitHub is the working source of truth for small ChatGPT-assisted changes. GitHub commits do not automatically sync to the Replit workspace.
+
+## Current implementation audit
+
+- Canonical stack: Expo Router, React Native, TypeScript and AsyncStorage.
+- Case 001 remains the first fully structured tutorial: five inspectable records, three witnesses/six questions, four-event chronology, suspect-plus-motive deduction, retryable wrong answers, separate Truth / Proof / Outcome review and local save/restore.
+- Cases 002–066 exist in the campaign data. Cases 002–003 are integrated into the main Bureau screen; Cases 004–066 have dedicated React Native screen components.
+- Repository inventory: 67 case data modules, 63 dedicated case screens (004–066), and 63 dedicated case test files (Case 001 plus Cases 005–066). The opening-case integration tests also cover Cases 002–004.
+- Investigation archive, Missing Detective arc through Case 066, Daily Case Bulletin and Bureau Team are implemented in the source. Their individual validation coverage is described below and must not be confused with a full physical-device playthrough.
+- Local save data is stored with AsyncStorage. Cross-device/cloud sync is not implemented.
+
+## 16:9 presentation and current fixes
+
+- Expo orientation changed to landscape.
+- Detective Bureau home now uses a full-bleed observatory image and side-by-side hero / active-case panels on wide screens.
+- The tutorial evidence list uses a two-column board on wide screens.
+- The first landscape UI commit introduced a duplicate `width` style key. GitHub Actions caught it with TypeScript error TS1117; the duplicate was removed in commit `33c1bca2`.
+- A separate 1280×720 (16:9) browser smoke was added for the Bureau panel geometry and tutorial evidence grid in commit `e50a90ef`. That new landscape smoke is pending CI verification at this checkpoint.
+
+## Latest validation
+
+- Commit `33c1bca2`: GitHub Actions run [42220815160](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42220815160) has passed TypeScript, the full Cases 001–066/system unit suite, Expo web export and the dark mobile browser smoke through Cases 001–006 and 041–066, with Cases 007–040 receiving navigation/save-restore smoke. Screenshot upload was still finishing when this checkpoint was written.
+- Android standalone APK workflow [42220815135](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42220815135) passed TypeScript, unit tests and Expo native prebuild; Gradle APK assembly was still running. No APK artifact is claimed until payload verification and upload succeed.
+- Commit `e50a90ef` adds the 16:9-specific browser assertions. Its workflow [42221174813](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42221174813) is queued/pending at this checkpoint.
+- The 390×844 browser run and 1280×720 landscape smoke are browser checks, not a real Android phone test.
+- No signed Play Store bundle, production signing, Play Store release, public deployment, paid service, monetization or production backend is enabled.
+
+## Next priorities
+
+1. Finish the 16:9 CI run and inspect the landscape screenshots; correct any layout regressions before adding more UI.
+2. Confirm the standalone APK payload checks and then test installation and the tutorial on a real Android device.
+3. Review Case 001 end-to-end for fair evidence presentation and make it the polished, stable tutorial.
+4. Review connected-case continuity and targeted full walkthrough coverage for Cases 007–040.
+5. Keep the finite Missing Detective ending intact; do not add endless cases in place of validating the ending.
+6. Improve HQ/team, accessibility, save migration, performance, sound and notification behavior only after core playability is stable.
+7. Consider optional hints, cases or rewarded ads only after the free core story is complete, and only with explicit approval.
+
+---
+
+# Historical development status — 5 November 2026
 
 This section supersedes older pending-status notes further below wherever they conflict.
 
