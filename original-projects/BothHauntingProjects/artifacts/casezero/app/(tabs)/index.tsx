@@ -1847,7 +1847,6 @@ export default function HomeScreen() {
           <>
             <InvestigationBanner eyebrow="PRIORITY FILE · 001" title={CASE_001.title} subtitle="THE LAST TRAIN HOME · An envelope disappeared before the final train left the station." step="01 / BRIEFING" progress="PERSONS OF INTEREST IDENTIFIED" />
             <Text style={[styles.subtitle, mutedStyle]}>{CASE_001.briefing}</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>{CASE_001.briefing}</Text>
             <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>Persons of interest</SectionLabel>
               {CASE_001.suspects.map((suspect) => (
@@ -1924,7 +1923,7 @@ export default function HomeScreen() {
             <InvestigationBanner eyebrow="INTERVIEW ROOM · FILE 001" title="Three accounts. One timeline." subtitle="Ask each witness at least one question. Follow the details that do not fit." step="03 / INTERVIEWS" progress={`${witnessCount} OF 3 WITNESSES HEARD`} />
             <View style={wideLayout ? styles.witnessGrid : undefined}>
             {CASE_001.witnesses.map((witness, index) => (
-              <View key={witness.id} style={[styles.card, cardStyle]}>
+              <View key={witness.id} style={[styles.card, cardStyle, wideLayout && styles.witnessCardWide]}>
                 <View style={styles.row}>
                   <View style={styles.flexCopy}>
                     <Text style={[styles.cardTitle, textStyle]}>{witness.name}</Text>
@@ -2995,7 +2994,6 @@ const styles = StyleSheet.create({
     paddingBottom: 48,
   },
   contentWide: { paddingHorizontal: 34, paddingTop: 10, paddingBottom: 24 },
-  content: { gap: 0 },
   loading: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   topline: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 30 },
   brand: { fontSize: 13, fontWeight: '900', letterSpacing: 4 },
