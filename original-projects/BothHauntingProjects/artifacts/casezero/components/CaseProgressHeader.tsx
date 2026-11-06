@@ -58,7 +58,7 @@ export default function CaseProgressHeader({ caseNumber, phase }: { caseNumber: 
 
 const styles = StyleSheet.create({
   shell: { borderWidth: 1, borderColor: '#3A4B5D', borderRadius: 18, marginBottom: 18, minHeight: 120, overflow: 'hidden', backgroundColor: '#101A29' },
-  artwork: { ...StyleSheet.absoluteFillObject, opacity: 0.88 },
+  artwork: { ...StyleSheet.absoluteFill, opacity: 0.88 },
   overlay: { flex: 1, minHeight: 120, paddingHorizontal: 20, paddingVertical: 16, justifyContent: 'center' },
   topline: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   kicker: { color: '#D9BB7A', fontSize: 10, fontWeight: '900', letterSpacing: 2 },
