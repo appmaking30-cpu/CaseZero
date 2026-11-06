@@ -762,12 +762,18 @@ export default function HomeScreen() {
 
   if (!loaded) {
     return (
-      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.safe, { backgroundColor: '#080D18' }]}>
         <StatusBar barStyle="light-content" />
-        <View style={styles.loading}>
-          <Text style={[styles.brand, { color: colors.primary }]}>CASEZERO</Text>
-          <Text style={[styles.body, mutedStyle]}>Restoring THE MEMORY…</Text>
-        </View>
+        <ImageBackground source={require('../../assets/images/observatory.jpg')} resizeMode="cover" imageStyle={styles.loadingImage} style={styles.loadingBackdrop}>
+          <LinearGradient colors={['rgba(5,10,18,0.38)', 'rgba(5,10,18,0.82)', '#080D18']} style={styles.loadingOverlay}>
+            <Text style={styles.loadingEdition}>THE INVESTIGATION DIVISION PRESENTS</Text>
+            <Text style={styles.loadingTitle}>CASEZERO</Text>
+            <Text style={styles.loadingTagline}>BEYOND THE EVIDENCE</Text>
+            <View style={styles.loadingRule} />
+            <Text style={styles.loadingStatus}>THE BUREAU IS COMING ONLINE</Text>
+            <Text style={styles.loadingSubstatus}>Restoring THE MEMORY · Preparing your case files</Text>
+          </LinearGradient>
+        </ImageBackground>
       </SafeAreaView>
     );
   }
@@ -2999,6 +3005,15 @@ const styles = StyleSheet.create({
   },
   contentWide: { paddingHorizontal: 34, paddingTop: 10, paddingBottom: 24 },
   loading: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
+  loadingBackdrop: { flex: 1, width: '100%', justifyContent: 'center' },
+  loadingImage: { opacity: 0.82 },
+  loadingOverlay: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28 },
+  loadingEdition: { color: '#D7B873', fontSize: 9, fontWeight: '900', letterSpacing: 3, textAlign: 'center' },
+  loadingTitle: { color: '#F3EBDD', fontSize: 54, lineHeight: 62, fontWeight: '900', letterSpacing: 7, marginTop: 16 },
+  loadingTagline: { color: '#AEBAC6', fontSize: 10, fontWeight: '800', letterSpacing: 4, marginTop: 7 },
+  loadingRule: { width: 72, height: 2, backgroundColor: '#D7B873', marginTop: 28, marginBottom: 22 },
+  loadingStatus: { color: '#E9D5A5', fontSize: 9, fontWeight: '900', letterSpacing: 2, textAlign: 'center' },
+  loadingSubstatus: { color: '#94A2B1', fontSize: 11, marginTop: 9, textAlign: 'center' },
   topline: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 30 },
   brand: { fontSize: 13, fontWeight: '900', letterSpacing: 4 },
   kicker: { fontSize: 9, fontWeight: '700', letterSpacing: 2, marginTop: 4 },
