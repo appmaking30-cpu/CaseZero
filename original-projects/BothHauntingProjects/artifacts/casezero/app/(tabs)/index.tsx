@@ -297,7 +297,7 @@ export default function HomeScreen() {
   const [archiveLoaded, setArchiveLoaded] = useState(false);
   const [investigationArchive, setInvestigationArchive] = useState<InvestigationArchive>(EMPTY_INVESTIGATION_ARCHIVE);
   const [bureauTeamBoard, setBureauTeamBoard] = useState<BureauTeamBoard>(EMPTY_BUREAU_TEAM_BOARD);
-  const [phase, setPhase] = useState<AppPhase>('hq');
+  const [phase, setPhase] = useState<AppPhase>('briefing');
   const [case002Progress, setCase002Progress] = useState<Case002Progress>(EMPTY_CASE002_PROGRESS);
   const [case003Progress, setCase003Progress] = useState<Case003Progress>(EMPTY_CASE003_PROGRESS);
   const [case003ActiveClue, setCase003ActiveClue] = useState<string | null>(null);
@@ -398,7 +398,15 @@ export default function HomeScreen() {
             setSelectedMotive(saved.selectedMotive ?? null);
           }
           if (typeof saved.caseCompleted === 'boolean') setCaseCompleted(saved.caseCompleted);
-          if (saved.phase) setPhase(saved.phase);
+          if (saved.phase) {
+            // New players should enter the playable investigation, not stop at the Bureau dashboard.
+            // Preserve an existing investigation or completed-file review exactly as saved.
+            const hasStartedInvestigation =
+              (Array.isArray(saved.cluesFound) && saved.cluesFound.length > 0) ||
+              (Array.isArray(saved.askedQuestions) && saved.askedQuestions.length > 0) ||
+              saved.caseCompleted === true;
+            setPhase(saved.phase === 'hq' && !hasStartedInvestigation ? 'briefing' : saved.phase);
+          }
         }
       })
       .catch(() => undefined)
