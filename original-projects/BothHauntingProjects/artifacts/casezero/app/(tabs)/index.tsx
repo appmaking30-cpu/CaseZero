@@ -1723,9 +1723,8 @@ export default function HomeScreen() {
 
         {phase === 'case002Interviews' && (
           <>
-            <SectionLabel colors={colors}>Case 002 · Interviews</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>Who moved the ledger?</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>Hear from each witness. Previous case notes can change what the Bureau asks you to notice.</Text>
+            <InvestigationBanner eyebrow="HOTEL ARCHIVE · FILE 002" title="Who moved the ledger?" subtitle="Hear from each witness. Previous case notes can change what the Bureau asks you to notice." step="03 / INTERVIEWS" progress={`${case002WitnessCount} OF 3 WITNESSES HEARD`} />
+            <View style={wideLayout ? styles.witnessGrid : undefined}>
             {CASE_002_GAME.witnesses.map((witness, index) => (
               <View key={witness.id} style={[styles.card, cardStyle, wideLayout && styles.witnessCardWide]}>
                 <View style={styles.row}>
@@ -1754,6 +1753,7 @@ export default function HomeScreen() {
                 })}
               </View>
             ))}
+            </View>
             <Text style={[styles.progressText, mutedStyle]}>{case002WitnessCount}/3 witnesses heard · {case002Unanswered.length} questions left unasked</Text>
             <ActionButton title="Reconstruct the timeline" onPress={() => setPhase('case002Timeline')} colors={colors} disabled={!case002AllWitnessesHeard} />
             <ActionButton title="Back to evidence" onPress={() => setPhase('case002Evidence')} colors={colors} variant="ghost" />
@@ -1762,9 +1762,7 @@ export default function HomeScreen() {
 
         {phase === 'case002Timeline' && (
           <>
-            <SectionLabel colors={colors}>Case 002 · Timeline</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>Did the blackout hide the move?</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>Put the four records in chronological order. Watch when the door actually closed.</Text>
+            <InvestigationBanner eyebrow="HOTEL ARCHIVE · FILE 002" title="Did the blackout hide the move?" subtitle="Put the four records in chronological order. Watch when the door actually closed." step="04 / RECONSTRUCTION" progress={`${case002Progress.timelineOrder.length} OF 4 EVENTS PLACED`} />
             <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>Your sequence</SectionLabel>
               {case002Progress.timelineOrder.length === 0 ? <Text style={[styles.body, mutedStyle]}>No events selected yet.</Text> : case002Progress.timelineOrder.map((id, index) => {
@@ -1772,17 +1770,19 @@ export default function HomeScreen() {
                 return <Text key={id} style={[styles.sequenceItem, textStyle]}>{index + 1}. {event?.time} — {event?.title}</Text>;
               })}
             </View>
+            <View style={wideLayout ? styles.timelineGrid : undefined}>
             {CASE_002_GAME.timelineEvents.map((event) => {
               const selected = case002Progress.timelineOrder.includes(event.id);
               return (
                 <Pressable key={event.id} accessibilityRole="button" disabled={selected || case002Progress.timelineSolved} onPress={() => selectCase002TimelineEvent(event.id)}
-                  style={({ pressed }) => [styles.optionCard, { backgroundColor: colors.card, borderColor: selected ? colors.primary : colors.border, opacity: selected ? 0.48 : pressed ? 0.8 : 1 }]}>
+                  style={({ pressed }) => [styles.optionCard, wideLayout && styles.timelineCardWide, { backgroundColor: colors.card, borderColor: selected ? colors.primary : colors.border, opacity: selected ? 0.48 : pressed ? 0.8 : 1 }]}>
                   <Text style={[styles.small, { color: colors.primary }]}>{event.time}</Text>
                   <Text style={[styles.cardTitle, textStyle]}>{event.title}</Text>
                   <Text style={[styles.small, mutedStyle]}>{event.detail}</Text>
                 </Pressable>
               );
             })}
+            </View>
             {!!case002TimelineMessage && <Text style={[styles.notice, { color: case002Progress.timelineSolved ? colors.primary : colors.destructive }]}>{case002TimelineMessage}</Text>}
             {case002Progress.timelineSolved
               ? <ActionButton title="Make your deduction" onPress={() => setPhase('case002Deduction')} colors={colors} />
@@ -1795,10 +1795,9 @@ export default function HomeScreen() {
 
         {phase === 'case002Deduction' && (
           <>
-            <SectionLabel colors={colors}>Case 002 · Final deduction</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>The room was locked. Was it a theft?</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>Choose who moved the ledger and why. Your theory must fit the entry log, the water evidence and the timeline.</Text>
-            <View style={[styles.card, cardStyle]}>
+            <InvestigationBanner eyebrow="FINAL REVIEW · FILE 002" title="The room was locked. Was it a theft?" subtitle="Choose who moved the ledger and why. Your theory must fit the entry log, the water evidence and the timeline." step="05 / DEDUCTION" progress="ALL RECORDS MUST AGREE" />
+            <View style={wideLayout ? styles.deductionGrid : undefined}>
+            <View style={[styles.card, cardStyle, wideLayout && styles.deductionPane]}>
               <SectionLabel colors={colors}>Who moved it?</SectionLabel>
               {CASE_002_GAME.suspects.map((suspect) => {
                 const selected = case002Progress.selectedSuspect === suspect.id;
@@ -1808,7 +1807,7 @@ export default function HomeScreen() {
                 </Pressable>;
               })}
             </View>
-            <View style={[styles.card, cardStyle]}>
+            <View style={[styles.card, cardStyle, wideLayout && styles.deductionPane]}>
               <SectionLabel colors={colors}>Why?</SectionLabel>
               {CASE_002_GAME.motives.map((motive) => {
                 const selected = case002Progress.selectedMotive === motive.id;
@@ -1817,6 +1816,7 @@ export default function HomeScreen() {
                   <Text style={[styles.cardTitle, textStyle]}>{motive.label}</Text><Text style={[styles.small, mutedStyle]}>{motive.note}</Text>
                 </Pressable>;
               })}
+            </View>
             </View>
             {!!case002DeductionMessage && <Text style={[styles.notice, { color: colors.destructive }]}>{case002DeductionMessage}</Text>}
             <ActionButton title="Submit evidence-based conclusion" onPress={submitCase002Deduction} colors={colors}
@@ -2187,11 +2187,10 @@ export default function HomeScreen() {
 
         {phase === 'case003Interviews' && (
           <>
-            <SectionLabel colors={colors}>Case 003 · Interviews</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>Who had the authority to alter the record?</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>Compare each statement with the physical and digital records. Your earlier investigations shape what the Bureau asks next.</Text>
+            <InvestigationBanner eyebrow="RECORDS ANNEX · FILE 003" title="Who had authority to alter the record?" subtitle="Compare each statement with the physical and digital records. Your earlier investigations shape what the Bureau asks next." step="03 / INTERVIEWS" progress={`${case003WitnessCount} OF 3 WITNESSES HEARD`} />
+            <View style={wideLayout ? styles.witnessGrid : undefined}>
             {CASE_003_GAME.witnesses.map((witness, index) => (
-              <View key={witness.id} style={[styles.card, cardStyle]}>
+              <View key={witness.id} style={[styles.card, cardStyle, wideLayout && styles.witnessCardWide]}>
                 <View style={styles.row}>
                   <View style={styles.flexCopy}>
                     <Text style={[styles.cardTitle, textStyle]}>{witness.name}</Text>
@@ -2218,6 +2217,7 @@ export default function HomeScreen() {
                 })}
               </View>
             ))}
+            </View>
             {case003SpecialistInsight && (
               <View style={[styles.card, cardStyle]}>
                 <SectionLabel colors={colors}>{case003SpecialistInsight.title}</SectionLabel>
@@ -2233,9 +2233,7 @@ export default function HomeScreen() {
 
         {phase === 'case003Timeline' && (
           <>
-            <SectionLabel colors={colors}>Case 003 · Timeline</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>When was the file changed?</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>Place the four events in chronological order. Watch the difference between the cabinet opening and dispatch delivery.</Text>
+            <InvestigationBanner eyebrow="RECORDS ANNEX · FILE 003" title="When was the file changed?" subtitle="Place the four events in chronological order. Watch the difference between the cabinet opening and dispatch delivery." step="04 / RECONSTRUCTION" progress={`${case003Progress.timelineOrder.length} OF 4 EVENTS PLACED`} />
             <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>Your sequence</SectionLabel>
               {case003Progress.timelineOrder.length === 0 ? <Text style={[styles.body, mutedStyle]}>No events selected yet.</Text> : case003Progress.timelineOrder.map((id, index) => {
@@ -2243,6 +2241,7 @@ export default function HomeScreen() {
                 return <Text key={id} style={[styles.sequenceItem, textStyle]}>{index + 1}. {event?.time} — {event?.title}</Text>;
               })}
             </View>
+            <View style={wideLayout ? styles.timelineGrid : undefined}>
             {CASE_003_GAME.timelineEvents.map((event) => {
               const selected = case003Progress.timelineOrder.includes(event.id);
               return (
@@ -2254,6 +2253,7 @@ export default function HomeScreen() {
                 </Pressable>
               );
             })}
+            </View>
             {!!case003TimelineMessage && <Text style={[styles.notice, { color: case003Progress.timelineSolved ? colors.primary : colors.destructive }]}>{case003TimelineMessage}</Text>}
             {case003Progress.timelineSolved
               ? <ActionButton title="Make your deduction" onPress={() => setPhase('case003Deduction')} colors={colors} />
@@ -2266,10 +2266,9 @@ export default function HomeScreen() {
 
         {phase === 'case003Deduction' && (
           <>
-            <SectionLabel colors={colors}>Case 003 · Final deduction</SectionLabel>
-            <Text style={[styles.heroTitle, textStyle]}>Who placed the black square?</Text>
-            <Text style={[styles.subtitle, mutedStyle]}>Choose the person and motive that explain the printer job, seal custody and cabinet access together.</Text>
-            <View style={[styles.card, cardStyle]}>
+            <InvestigationBanner eyebrow="FINAL REVIEW · FILE 003" title="Who placed the black square?" subtitle="Choose the person and motive that explain the printer job, seal custody and cabinet access together." step="05 / DEDUCTION" progress="CHAIN OF CUSTODY REQUIRED" />
+            <View style={wideLayout ? styles.deductionGrid : undefined}>
+            <View style={[styles.card, cardStyle, wideLayout && styles.deductionPane]}>
               <SectionLabel colors={colors}>Who altered the files?</SectionLabel>
               {CASE_003_GAME.suspects.map((suspect) => {
                 const selected = case003Progress.selectedSuspect === suspect.id;
@@ -2279,7 +2278,7 @@ export default function HomeScreen() {
                 </Pressable>;
               })}
             </View>
-            <View style={[styles.card, cardStyle]}>
+            <View style={[styles.card, cardStyle, wideLayout && styles.deductionPane]}>
               <SectionLabel colors={colors}>Why?</SectionLabel>
               {CASE_003_GAME.motives.map((motive) => {
                 const selected = case003Progress.selectedMotive === motive.id;
@@ -2288,6 +2287,7 @@ export default function HomeScreen() {
                   <Text style={[styles.cardTitle, textStyle]}>{motive.label}</Text><Text style={[styles.small, mutedStyle]}>{motive.note}</Text>
                 </Pressable>;
               })}
+            </View>
             </View>
             {!!case003DeductionMessage && <Text style={[styles.notice, { color: colors.destructive }]}>{case003DeductionMessage}</Text>}
             <ActionButton title="Submit evidence-based conclusion" onPress={submitCase003Deduction} colors={colors}
