@@ -195,7 +195,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'case034' | 'case035' | 'case036' | 'case037' | 'case038' | 'case039' | 'case040' | 'case041' | 'case042' | 'case043' | 'case044' | 'case045' | 'case046' | 'case047' | 'case048' | 'case049' | 'case050' | 'case051' | 'case052' | 'case053' | 'case054' | 'case055' | 'case056' | 'case057' | 'case058' | 'case059' | 'case060' | 'case061' | 'case062' | 'case063' | 'case064' | 'case065' | 'case066' | 'daily' | 'team';
+type AppPhase = 'menu' | CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'case034' | 'case035' | 'case036' | 'case037' | 'case038' | 'case039' | 'case040' | 'case041' | 'case042' | 'case043' | 'case044' | 'case045' | 'case046' | 'case047' | 'case048' | 'case049' | 'case050' | 'case051' | 'case052' | 'case053' | 'case054' | 'case055' | 'case056' | 'case057' | 'case058' | 'case059' | 'case060' | 'case061' | 'case062' | 'case063' | 'case064' | 'case065' | 'case066' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -297,7 +297,7 @@ export default function HomeScreen() {
   const [archiveLoaded, setArchiveLoaded] = useState(false);
   const [investigationArchive, setInvestigationArchive] = useState<InvestigationArchive>(EMPTY_INVESTIGATION_ARCHIVE);
   const [bureauTeamBoard, setBureauTeamBoard] = useState<BureauTeamBoard>(EMPTY_BUREAU_TEAM_BOARD);
-  const [phase, setPhase] = useState<AppPhase>('briefing');
+  const [phase, setPhase] = useState<AppPhase>('menu');
   const [case002Progress, setCase002Progress] = useState<Case002Progress>(EMPTY_CASE002_PROGRESS);
   const [case003Progress, setCase003Progress] = useState<Case003Progress>(EMPTY_CASE003_PROGRESS);
   const [case003ActiveClue, setCase003ActiveClue] = useState<string | null>(null);
@@ -405,7 +405,7 @@ export default function HomeScreen() {
               (Array.isArray(saved.cluesFound) && saved.cluesFound.length > 0) ||
               (Array.isArray(saved.askedQuestions) && saved.askedQuestions.length > 0) ||
               saved.caseCompleted === true;
-            setPhase(saved.phase === 'hq' && !hasStartedInvestigation ? 'briefing' : saved.phase);
+            setPhase(saved.phase === 'hq' && !hasStartedInvestigation ? 'menu' : saved.phase);
           }
         }
       })
@@ -802,6 +802,45 @@ export default function HomeScreen() {
             <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : phase.startsWith('case012') ? 'FILE 012' : phase.startsWith('case013') ? 'FILE 013' : phase.startsWith('case014') ? 'FILE 014' : phase.startsWith('case015') ? 'FILE 015' : phase.startsWith('case016') ? 'FILE 016' : phase.startsWith('case017') ? 'FILE 017' : phase.startsWith('case018') ? 'FILE 018' : phase.startsWith('case019') ? 'FILE 019' : phase.startsWith('case020') ? 'FILE 020' : phase.startsWith('case021') ? 'FILE 021' : phase.startsWith('case022') ? 'FILE 022' : phase.startsWith('case023') ? 'FILE 023' : phase.startsWith('case024') ? 'FILE 024' : phase.startsWith('case025') ? 'FILE 025' : phase.startsWith('case026') ? 'FILE 026' : phase.startsWith('case027') ? 'FILE 027' : phase.startsWith('case028') ? 'FILE 028' : phase.startsWith('case029') ? 'FILE 029' : phase.startsWith('case030') ? 'FILE 030' : 'FILE 001'}</Text>
           </View>
         </View>
+
+        {phase === 'menu' && (
+          <View style={{ minHeight: wideLayout ? Math.max(460, viewportHeight - 105) : 620, borderWidth: 1, borderColor: '#344354', backgroundColor: '#080D18', overflow: 'hidden' }}>
+            <ImageBackground source={require('../../assets/images/observatory.jpg')} resizeMode="cover" style={{ flex: 1, minHeight: wideLayout ? Math.max(460, viewportHeight - 105) : 620 }} imageStyle={{ opacity: 0.82 }}>
+              <LinearGradient colors={['rgba(4,9,16,0.20)', 'rgba(5,10,18,0.60)', 'rgba(5,10,18,0.98)']} locations={[0,0.48,1]} style={{ flex: 1, justifyContent: 'space-between', padding: wideLayout ? 34 : 22 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}>
+                    <View style={{ width: 8, height: 8, borderRadius: 8, backgroundColor: '#B99A58' }} />
+                    <Text style={{ color: '#D7C18E', fontSize: 10, letterSpacing: 2.2, fontWeight: '700' }}>THE INVESTIGATION DIVISION</Text>
+                  </View>
+                  <Text style={{ color: '#AAB4C1', fontSize: 10, letterSpacing: 1.6 }}>EST. 1998  /  BUREAU NETWORK</Text>
+                </View>
+                <View style={{ maxWidth: wideLayout ? 680 : 520, alignSelf: wideLayout ? 'flex-start' : 'stretch', marginTop: wideLayout ? 12 : 26 }}>
+                  <Text style={{ color: '#C5A86A', fontSize: 11, letterSpacing: 4, fontWeight: '700' }}>THE FILES NEVER FORGET</Text>
+                  <Text style={{ color: '#F2F0E9', fontSize: wideLayout ? 64 : 48, lineHeight: wideLayout ? 70 : 54, letterSpacing: 5, fontWeight: '900', marginTop: 10 }}>CASEZERO</Text>
+                  <Text style={{ color: '#D8DCE2', fontSize: wideLayout ? 16 : 14, letterSpacing: 3.2, marginTop: 4 }}>BEYOND THE EVIDENCE</Text>
+                  <View style={{ height: 1, width: 94, backgroundColor: '#B99A58', marginTop: 23, marginBottom: 18 }} />
+                  <Text style={{ color: '#E8E5DD', fontSize: wideLayout ? 22 : 19, lineHeight: wideLayout ? 31 : 27, fontWeight: '600' }}>ONE THOUSAND CASES.{ '\n' }ONE HIDDEN TRUTH.</Text>
+                  <Text style={{ color: '#B9C0CA', fontSize: 13, lineHeight: 21, marginTop: 12, maxWidth: 510 }}>Some mysteries are solved. Others are only beginning. Every case leaves a trace. Every trace leads somewhere.</Text>
+                </View>
+                <View style={{ flexDirection: wideLayout ? 'row' : 'column', gap: 12, alignItems: 'stretch', justifyContent: 'space-between' }}>
+                  <View style={{ flex: 1, flexDirection: wideLayout ? 'row' : 'column', gap: 10 }}>
+                    <Pressable accessibilityRole="button" onPress={openCase} style={({ pressed }) => ({ flex: 1, minHeight: 54, paddingHorizontal: 20, justifyContent: 'center', backgroundColor: '#B99A58', borderWidth: 1, borderColor: '#D6BD83', opacity: pressed ? 0.82 : 1 })}>
+                      <Text style={{ color: '#101722', fontSize: 12, fontWeight: '900', letterSpacing: 1.8, textAlign: 'center' }}>{caseCompleted ? 'CONTINUE INVESTIGATION' : cluesFound.length ? 'RESUME CASE 001' : 'BEGIN INVESTIGATION'}</Text>
+                    </Pressable>
+                    <Pressable accessibilityRole="button" onPress={() => setPhase('hq')} style={({ pressed }) => ({ flex: 1, minHeight: 54, paddingHorizontal: 20, justifyContent: 'center', backgroundColor: 'rgba(11,19,30,0.78)', borderWidth: 1, borderColor: '#718092', opacity: pressed ? 0.78 : 1 })}>
+                      <Text style={{ color: '#E5E8EC', fontSize: 12, fontWeight: '800', letterSpacing: 1.8, textAlign: 'center' }}>ENTER THE BUREAU</Text>
+                    </Pressable>
+                  </View>
+                  <View style={{ justifyContent: 'center', paddingHorizontal: 12, paddingVertical: 8, borderLeftWidth: wideLayout ? 1 : 0, borderTopWidth: wideLayout ? 0 : 1, borderColor: '#455365' }}>
+                    <Text style={{ color: '#C5A86A', fontSize: 10, letterSpacing: 1.5, fontWeight: '700' }}>CAMPAIGN ARCHIVE</Text>
+                    <Text style={{ color: '#F0EEE8', fontSize: 22, fontWeight: '800', marginTop: 3 }}>1,000+</Text>
+                    <Text style={{ color: '#AAB4C1', fontSize: 9, letterSpacing: 1.3 }}>PLANNED CASE FILES</Text>
+                  </View>
+                </View>
+              </LinearGradient>
+            </ImageBackground>
+          </View>
+        )}
 
         {phase === 'hq' && (
           <>
