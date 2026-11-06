@@ -991,6 +991,26 @@ export default function HomeScreen() {
             </View>
 
             <View style={[styles.card, cardStyle]}>
+              <SectionLabel colors={colors}>MASTER CASE ARCHIVE</SectionLabel>
+              <Text style={[styles.cardTitle, textStyle]}>The wider investigation.</Text>
+              <Text style={[styles.body, mutedStyle]}>Track the central conspiracy, browse the ten connected story dossiers, and see which files are playable now versus planned for future releases.</Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 9, marginTop: 12 }}>
+                <View style={{ flex: 1, minWidth: 105, padding: 12, backgroundColor: '#101925', borderWidth: 1, borderColor: '#344354' }}>
+                  <Text style={{ color: '#D8BC7F', fontSize: 22, fontWeight: '900' }}>66</Text>
+                  <Text style={{ color: '#AEB9C6', fontSize: 9, letterSpacing: 1 }}>CURRENT FILE SET</Text>
+                </View>
+                <View style={{ flex: 1, minWidth: 105, padding: 12, backgroundColor: '#101925', borderWidth: 1, borderColor: '#344354' }}>
+                  <Text style={{ color: '#D8BC7F', fontSize: 22, fontWeight: '900' }}>{investigationArchive.completedCases.length + (caseCompleted && !case001Archived ? 1 : 0)}</Text>
+                  <Text style={{ color: '#AEB9C6', fontSize: 9, letterSpacing: 1 }}>FILES CLOSED</Text>
+                </View>
+                <View style={{ flex: 1, minWidth: 105, padding: 12, backgroundColor: '#101925', borderWidth: 1, borderColor: '#344354' }}>
+                  <Text style={{ color: '#D8BC7F', fontSize: 22, fontWeight: '900' }}>1,000+</Text>
+                  <Text style={{ color: '#AEB9C6', fontSize: 9, letterSpacing: 1 }}>LONG-TERM TARGET</Text>
+                </View>
+              </View>
+              <ActionButton title="Open campaign archive and story dossiers" onPress={() => setPhase('campaign')} colors={colors} />
+            </View>
+            <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>THE MEMORY</SectionLabel>
               <Text style={[styles.cardTitle, textStyle]}>
                 {caseCompleted ? 'This file stays with you.' : 'Every detail leaves a trace.'}
