@@ -15,6 +15,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import TrainStationScene from '@/components/TrainStationScene';
 import HotelNightScene from '@/components/HotelNightScene';
 import RecordsAnnexScene from '@/components/RecordsAnnexScene';
+import SuspectPortrait from '@/components/SuspectPortrait';
 import { useColors } from '@/hooks/useColors';
 import Case004Screen from '@/components/Case004Screen';
 import Case005Screen from '@/components/Case005Screen';
@@ -1668,7 +1669,7 @@ export default function HomeScreen() {
               <SectionLabel colors={colors}>Persons of interest</SectionLabel>
               {CASE_002_GAME.suspects.map((suspect) => (
                 <View key={suspect.id} style={styles.personRow}>
-                  <View style={styles.personInitial}><Text style={[styles.personInitialText, { color: colors.primary }]}>{suspect.name.split(' ').map((part) => part[0]).join('')}</Text></View>
+                  <SuspectPortrait variant={suspect.id === 'june' ? 'nia' : suspect.id === 'ellis' ? 'miles' : 'ada'} size={66} />
                   <View style={styles.personCopy}>
                     <Text style={[styles.cardTitle, textStyle]}>{suspect.name}</Text>
                     <Text style={[styles.small, { color: colors.primary }]}>{suspect.role}</Text>
@@ -1852,11 +1853,7 @@ export default function HomeScreen() {
               <SectionLabel colors={colors}>Persons of interest</SectionLabel>
               {CASE_001.suspects.map((suspect) => (
                 <View key={suspect.id} style={styles.personRow}>
-                  <View style={styles.personInitial}>
-                    <Text style={[styles.personInitialText, { color: colors.primary }]}>
-                      {suspect.name.split(' ').map((part) => part[0]).join('')}
-                    </Text>
-                  </View>
+                  <SuspectPortrait variant={suspect.id} size={66} />
                   <View style={styles.personCopy}>
                     <Text style={[styles.cardTitle, textStyle]}>{suspect.name}</Text>
                     <Text style={[styles.small, { color: colors.primary }]}>{suspect.role}</Text>
@@ -2139,7 +2136,7 @@ export default function HomeScreen() {
               <SectionLabel colors={colors}>Persons under review</SectionLabel>
               {CASE_003_GAME.suspects.map((suspect) => (
                 <View key={suspect.id} style={styles.personRow}>
-                  <View style={styles.personInitial}><Text style={[styles.personInitialText, { color: colors.primary }]}>{suspect.name.split(' ').map((part) => part[0]).join('')}</Text></View>
+                  <SuspectPortrait variant={suspect.id === 'pike' ? 'nia' : suspect.id === 'arden' ? 'miles' : 'ada'} size={66} />
                   <View style={styles.personCopy}>
                     <Text style={[styles.cardTitle, textStyle]}>{suspect.name}</Text>
                     <Text style={[styles.small, { color: colors.primary }]}>{suspect.role}</Text>
@@ -3019,7 +3016,7 @@ const styles = StyleSheet.create({
   memoryLabel: { fontSize: 10, lineHeight: 15, marginTop: 4 },
   memoryNote: { fontSize: 12, lineHeight: 19, marginTop: 13 },
   footerNote: { fontSize: 11, lineHeight: 18, textAlign: 'center', marginTop: 24, letterSpacing: 0.4 },
-  personRow: { flexDirection: 'row', alignItems: 'flex-start', marginTop: 13 },
+  personRow: { flexDirection: 'row', alignItems: 'flex-start', marginTop: 13, gap: 12 },
   personInitial: { width: 42, height: 42, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: '#1A2636', marginRight: 12 },
   personInitialText: { fontSize: 12, fontWeight: '900', letterSpacing: 1 },
   personCopy: { flex: 1 },
