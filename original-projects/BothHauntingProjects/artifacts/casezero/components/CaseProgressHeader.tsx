@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View } from 'react-native';
 import { useColors } from '@/hooks/useColors';
+import EvidenceWallScene from '@/components/EvidenceWallScene';
 
 type Phase = 'briefing' | 'evidence' | 'interviews' | 'timeline' | 'deduction' | 'review' | 'fragments' | 'sequence' | 'conclusion';
 
@@ -22,7 +23,9 @@ export default function CaseProgressHeader({ caseNumber, phase }: { caseNumber: 
   const progress = phase === 'review' ? 100 : ((activeIndex + 1) / sequence.length) * 100;
 
   return (
-    <LinearGradient colors={['#1B3044', '#111D2B', '#0A111B']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.shell}>
+    <View style={styles.shell}>
+      <View style={styles.artwork}><EvidenceWallScene height={150} /></View>
+      <LinearGradient colors={['rgba(27,48,68,0.68)', 'rgba(17,29,43,0.84)', 'rgba(10,17,27,0.95)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.overlay}>
       <View style={styles.topline}>
         <View>
           <Text style={styles.kicker}>CASEZERO  /  FILE {caseNumber}</Text>
@@ -48,12 +51,15 @@ export default function CaseProgressHeader({ caseNumber, phase }: { caseNumber: 
         })}
       </View>
       <View style={styles.cornerLine} />
-    </LinearGradient>
+      </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  shell: { borderWidth: 1, borderColor: '#3A4B5D', borderRadius: 18, paddingHorizontal: 20, paddingVertical: 16, marginBottom: 18, minHeight: 112, overflow: 'hidden', justifyContent: 'center' },
+  shell: { borderWidth: 1, borderColor: '#3A4B5D', borderRadius: 18, marginBottom: 18, minHeight: 120, overflow: 'hidden', backgroundColor: '#101A29' },
+  artwork: { ...StyleSheet.absoluteFillObject, opacity: 0.88 },
+  overlay: { flex: 1, minHeight: 120, paddingHorizontal: 20, paddingVertical: 16, justifyContent: 'center' },
   topline: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   kicker: { color: '#D9BB7A', fontSize: 10, fontWeight: '900', letterSpacing: 2 },
   status: { color: '#92A1B1', fontSize: 8, fontWeight: '800', letterSpacing: 1.5, marginTop: 6 },
