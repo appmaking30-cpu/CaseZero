@@ -875,8 +875,8 @@ export default function HomeScreen() {
                 <Pressable accessibilityRole="button" onPress={() => setPhase('briefing')} style={{ backgroundColor: '#B99A58', paddingVertical: 12, paddingHorizontal: 16 }}>
                   <Text style={{ color: '#111722', fontSize: 10, fontWeight: '900', letterSpacing: 1.2 }}>OPEN FIRST INVESTIGATION</Text>
                 </Pressable>
-                <Pressable accessibilityRole="button" onPress={() => setPhase('case002')} style={{ borderWidth: 1, borderColor: '#7D8A9A', paddingVertical: 12, paddingHorizontal: 16 }}>
-                  <Text style={{ color: '#E1E5EA', fontSize: 10, fontWeight: '800', letterSpacing: 1.1 }}>CONTINUE TO FILE 002</Text>
+                <Pressable accessibilityRole="button" disabled={!case001Archived && !case002Progress.completed} onPress={() => setPhase(case002Progress.completed ? 'case002Review' : 'case002Briefing')} style={{ borderWidth: 1, borderColor: case001Archived || case002Progress.completed ? '#7D8A9A' : '#394555', paddingVertical: 12, paddingHorizontal: 16, opacity: case001Archived || case002Progress.completed ? 1 : 0.48 }}>
+                  <Text style={{ color: '#E1E5EA', fontSize: 10, fontWeight: '800', letterSpacing: 1.1 }}>{case002Progress.completed ? 'REVIEW FILE 002' : case001Archived ? 'CONTINUE TO FILE 002' : 'FILE 002 · LOCKED'}</Text>
                 </Pressable>
               </View>
             </View>
