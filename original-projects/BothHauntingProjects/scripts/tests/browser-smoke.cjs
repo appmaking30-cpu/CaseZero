@@ -125,9 +125,9 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     const openCase002Button = page.getByRole('button', { name: 'Open Case 002' });
     await openCase002Button.waitFor();
     await openCase002Button.click();
-    await page.getByText('Case 002 · Incoming file').waitFor();
+    await page.getByText('INCOMING FILE · 002', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Begin evidence review' }).click();
-    await page.getByText('Case 002 · Evidence').waitFor();
+    await page.getByText('HOTEL ARCHIVE · FILE 002', { exact: true }).waitFor();
 
     // Verify Case 002 investigation progress survives a browser reload.
     await page.getByText('The access-panel printout', { exact: true }).click();
