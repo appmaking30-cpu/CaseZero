@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import TrainStationScene from '@/components/TrainStationScene';
 import { useColors } from '@/hooks/useColors';
 import Case004Screen from '@/components/Case004Screen';
 import Case005Screen from '@/components/Case005Screen';
@@ -262,26 +263,24 @@ function SectionLabel({
   );
 }
 
-function InvestigationBanner({ eyebrow, title, subtitle, step, progress }: { eyebrow: string; title: string; subtitle: string; step: string; progress: string }) {
+function InvestigationBanner({ eyebrow, title, subtitle, step, progress, scene = false }: { eyebrow: string; title: string; subtitle: string; step: string; progress: string; scene?: boolean }) {
   return (
-    <LinearGradient
-      colors={['#182A3B', '#101A29', '#0B111C']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.investigationBanner}
-    >
-      <View style={styles.bannerTopline}>
-        <Text style={styles.bannerEyebrow}>{eyebrow}</Text>
-        <Text style={styles.bannerStep}>{step}</Text>
-      </View>
-      <Text style={styles.bannerTitle}>{title}</Text>
-      <Text style={styles.bannerSubtitle}>{subtitle}</Text>
-      <View style={styles.bannerBottomline}>
-        <View style={styles.bannerRule} />
-        <Text style={styles.bannerProgress}>{progress}</Text>
-      </View>
-      <View style={styles.bannerAccent} />
-    </LinearGradient>
+    <View style={styles.investigationBanner}>
+      {scene && <View style={styles.bannerArtwork}><TrainStationScene height={230} /></View>}
+      <LinearGradient colors={['rgba(24,42,59,0.70)', 'rgba(16,26,41,0.84)', 'rgba(11,17,28,0.96)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.bannerOverlay}>
+        <View style={styles.bannerTopline}>
+          <Text style={styles.bannerEyebrow}>{eyebrow}</Text>
+          <Text style={styles.bannerStep}>{step}</Text>
+        </View>
+        <Text style={styles.bannerTitle}>{title}</Text>
+        <Text style={styles.bannerSubtitle}>{subtitle}</Text>
+        <View style={styles.bannerBottomline}>
+          <View style={styles.bannerRule} />
+          <Text style={styles.bannerProgress}>{progress}</Text>
+        </View>
+        <View style={styles.bannerAccent} />
+      </LinearGradient>
+    </View>
   );
 }
 
@@ -1845,7 +1844,7 @@ export default function HomeScreen() {
 
         {phase === 'briefing' && (
           <>
-            <InvestigationBanner eyebrow="PRIORITY FILE · 001" title={CASE_001.title} subtitle="THE LAST TRAIN HOME · An envelope disappeared before the final train left the station." step="01 / BRIEFING" progress="PERSONS OF INTEREST IDENTIFIED" />
+            <InvestigationBanner eyebrow="PRIORITY FILE · 001" title={CASE_001.title} subtitle="THE LAST TRAIN HOME · An envelope disappeared before the final train left the station." step="01 / BRIEFING" progress="PERSONS OF INTEREST IDENTIFIED" scene />
             <Text style={[styles.subtitle, mutedStyle]}>{CASE_001.briefing}</Text>
             <View style={[styles.card, cardStyle]}>
               <SectionLabel colors={colors}>Persons of interest</SectionLabel>
@@ -1871,7 +1870,7 @@ export default function HomeScreen() {
 
         {phase === 'evidence' && (
           <>
-            <InvestigationBanner eyebrow="EVIDENCE ROOM · FILE 001" title="Every detail matters." subtitle="Inspect the recovered records. Match the small inconsistencies before you question the witnesses." step="02 / EVIDENCE" progress={`${cluesFound.length} OF 5 RECORDS LOGGED`} />
+            <InvestigationBanner eyebrow="EVIDENCE ROOM · FILE 001" title="Every detail matters." subtitle="Inspect the recovered records. Match the small inconsistencies before you question the witnesses." step="02 / EVIDENCE" progress={`${cluesFound.length} OF 5 RECORDS LOGGED`} scene />
             <View style={[styles.progressTrack, { backgroundColor: colors.secondary }]}>
               <View style={[styles.progressFill, { backgroundColor: colors.primary, width: `${(cluesFound.length / CASE_001.clues.length) * 100}%` }]} />
             </View>
@@ -2940,7 +2939,9 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  investigationBanner: { minHeight: 190, borderWidth: 1, borderColor: '#34475B', borderRadius: 20, paddingHorizontal: 24, paddingVertical: 20, marginBottom: 14, overflow: 'hidden', justifyContent: 'center' },
+  investigationBanner: { minHeight: 190, borderWidth: 1, borderColor: '#34475B', borderRadius: 20, marginBottom: 14, overflow: 'hidden', backgroundColor: '#101A29' },
+  bannerArtwork: { ...StyleSheet.absoluteFillObject, opacity: 0.94 },
+  bannerOverlay: { flex: 1, minHeight: 190, paddingHorizontal: 24, paddingVertical: 20, justifyContent: 'center' },
   bannerTopline: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 },
   bannerEyebrow: { color: '#D7B873', fontSize: 9, fontWeight: '900', letterSpacing: 2 },
   bannerStep: { color: '#8294A8', fontSize: 9, fontWeight: '900', letterSpacing: 1.4 },
