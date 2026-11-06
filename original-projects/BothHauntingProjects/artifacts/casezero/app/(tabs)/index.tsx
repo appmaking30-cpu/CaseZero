@@ -2959,7 +2959,6 @@ const styles = StyleSheet.create({
 
   content: {
     width: '100%',
-    width: '100%',
     maxWidth: 1320,
     alignSelf: 'center',
     paddingHorizontal: 26,
