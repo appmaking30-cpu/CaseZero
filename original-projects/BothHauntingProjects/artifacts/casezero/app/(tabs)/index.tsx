@@ -195,7 +195,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
-type AppPhase = 'menu' | CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'case034' | 'case035' | 'case036' | 'case037' | 'case038' | 'case039' | 'case040' | 'case041' | 'case042' | 'case043' | 'case044' | 'case045' | 'case046' | 'case047' | 'case048' | 'case049' | 'case050' | 'case051' | 'case052' | 'case053' | 'case054' | 'case055' | 'case056' | 'case057' | 'case058' | 'case059' | 'case060' | 'case061' | 'case062' | 'case063' | 'case064' | 'case065' | 'case066' | 'daily' | 'team';
+type AppPhase = 'menu' | 'campaign' | CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'case034' | 'case035' | 'case036' | 'case037' | 'case038' | 'case039' | 'case040' | 'case041' | 'case042' | 'case043' | 'case044' | 'case045' | 'case046' | 'case047' | 'case048' | 'case049' | 'case050' | 'case051' | 'case052' | 'case053' | 'case054' | 'case055' | 'case056' | 'case057' | 'case058' | 'case059' | 'case060' | 'case061' | 'case062' | 'case063' | 'case064' | 'case065' | 'case066' | 'daily' | 'team';
 
 type SavedState = {
   phase: AppPhase;
@@ -799,7 +799,7 @@ export default function HomeScreen() {
             <Text style={[styles.kicker, mutedStyle]}>BEYOND THE EVIDENCE</Text>
           </View>
           <View style={[styles.caseStamp, { borderColor: colors.primary }]}>
-            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : phase.startsWith('case012') ? 'FILE 012' : phase.startsWith('case013') ? 'FILE 013' : phase.startsWith('case014') ? 'FILE 014' : phase.startsWith('case015') ? 'FILE 015' : phase.startsWith('case016') ? 'FILE 016' : phase.startsWith('case017') ? 'FILE 017' : phase.startsWith('case018') ? 'FILE 018' : phase.startsWith('case019') ? 'FILE 019' : phase.startsWith('case020') ? 'FILE 020' : phase.startsWith('case021') ? 'FILE 021' : phase.startsWith('case022') ? 'FILE 022' : phase.startsWith('case023') ? 'FILE 023' : phase.startsWith('case024') ? 'FILE 024' : phase.startsWith('case025') ? 'FILE 025' : phase.startsWith('case026') ? 'FILE 026' : phase.startsWith('case027') ? 'FILE 027' : phase.startsWith('case028') ? 'FILE 028' : phase.startsWith('case029') ? 'FILE 029' : phase.startsWith('case030') ? 'FILE 030' : 'FILE 001'}</Text>
+            <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase === 'campaign' ? 'CAMPAIGN ARCHIVE' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : phase.startsWith('case012') ? 'FILE 012' : phase.startsWith('case013') ? 'FILE 013' : phase.startsWith('case014') ? 'FILE 014' : phase.startsWith('case015') ? 'FILE 015' : phase.startsWith('case016') ? 'FILE 016' : phase.startsWith('case017') ? 'FILE 017' : phase.startsWith('case018') ? 'FILE 018' : phase.startsWith('case019') ? 'FILE 019' : phase.startsWith('case020') ? 'FILE 020' : phase.startsWith('case021') ? 'FILE 021' : phase.startsWith('case022') ? 'FILE 022' : phase.startsWith('case023') ? 'FILE 023' : phase.startsWith('case024') ? 'FILE 024' : phase.startsWith('case025') ? 'FILE 025' : phase.startsWith('case026') ? 'FILE 026' : phase.startsWith('case027') ? 'FILE 027' : phase.startsWith('case028') ? 'FILE 028' : phase.startsWith('case029') ? 'FILE 029' : phase.startsWith('case030') ? 'FILE 030' : 'FILE 001'}</Text>
           </View>
         </View>
 
@@ -831,6 +831,9 @@ export default function HomeScreen() {
                       <Text style={{ color: '#E5E8EC', fontSize: 12, fontWeight: '800', letterSpacing: 1.8, textAlign: 'center' }}>ENTER THE BUREAU</Text>
                     </Pressable>
                   </View>
+                  <Pressable accessibilityRole="button" onPress={() => setPhase('campaign')} style={({ pressed }) => ({ minHeight: 42, justifyContent: 'center', paddingHorizontal: 14, borderWidth: 1, borderColor: '#596779', backgroundColor: 'rgba(8,14,23,0.72)', opacity: pressed ? 0.78 : 1 })}>
+                    <Text style={{ color: '#D9C28F', fontSize: 10, fontWeight: '800', letterSpacing: 1.5, textAlign: 'center' }}>OPEN CAMPAIGN ARCHIVE</Text>
+                  </Pressable>
                   <View style={{ justifyContent: 'center', paddingHorizontal: 12, paddingVertical: 8, borderLeftWidth: wideLayout ? 1 : 0, borderTopWidth: wideLayout ? 0 : 1, borderColor: '#455365' }}>
                     <Text style={{ color: '#C5A86A', fontSize: 10, letterSpacing: 1.5, fontWeight: '700' }}>CAMPAIGN ARCHIVE</Text>
                     <Text style={{ color: '#F0EEE8', fontSize: 22, fontWeight: '800', marginTop: 3 }}>1,000+</Text>
@@ -839,6 +842,77 @@ export default function HomeScreen() {
                 </View>
               </LinearGradient>
             </ImageBackground>
+          </View>
+        )}
+
+        {phase === 'campaign' && (
+          <View style={{ gap: 16, paddingBottom: 24 }}>
+            <ImageBackground source={require('../../assets/images/observatory.jpg')} resizeMode="cover" style={{ minHeight: 190, borderWidth: 1, borderColor: '#596779' }}>
+              <LinearGradient colors={['rgba(5,10,18,0.50)','rgba(5,10,18,0.94)']} style={{ flex: 1, padding: 24, justifyContent: 'flex-end' }}>
+                <Text style={{ color: '#C5A86A', fontSize: 10, letterSpacing: 2.6, fontWeight: '800' }}>THE INVESTIGATION DIVISION · MASTER ARCHIVE</Text>
+                <Text style={{ color: '#F1EEE7', fontSize: wideLayout ? 38 : 30, fontWeight: '900', letterSpacing: 1.4, marginTop: 8 }}>THE CASE FILES</Text>
+                <Text style={{ color: '#C1C8D1', fontSize: 13, lineHeight: 20, marginTop: 8, maxWidth: 620 }}>One thousand investigations. One hidden truth. Follow the main investigation, uncover optional story arcs, or open an independent case.</Text>
+              </LinearGradient>
+            </ImageBackground>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+              {[
+                { value: '1,000+', label: 'PLANNED CASE FILES' },
+                { value: '100', label: 'MAIN STORY FILES' },
+                { value: '200', label: 'SIDE STORY FILES' },
+                { value: '66', label: 'CURRENT CAMPAIGN SET' },
+              ].map((stat) => (
+                <View key={stat.label} style={{ flexGrow: 1, minWidth: 115, padding: 14, backgroundColor: '#111B29', borderWidth: 1, borderColor: '#344354' }}>
+                  <Text style={{ color: '#E4C985', fontSize: 23, fontWeight: '900' }}>{stat.value}</Text>
+                  <Text style={{ color: '#9DAABA', fontSize: 9, letterSpacing: 1.1, marginTop: 4 }}>{stat.label}</Text>
+                </View>
+              ))}
+            </View>
+            <View style={{ padding: 18, backgroundColor: '#111B29', borderWidth: 1, borderColor: '#9B814D' }}>
+              <Text style={{ color: '#C5A86A', fontSize: 10, letterSpacing: 2, fontWeight: '800' }}>PRIMARY INVESTIGATION · ACT I</Text>
+              <Text style={{ color: '#F0EEE8', fontSize: 23, fontWeight: '800', marginTop: 8 }}>The Missing Detective</Text>
+              <Text style={{ color: '#B8C2CE', fontSize: 12, lineHeight: 19, marginTop: 6 }}>A colleague vanished while tracing links between closed cases. The first three files establish the mystery and begin the trail.</Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
+                <Pressable accessibilityRole="button" onPress={() => setPhase('briefing')} style={{ backgroundColor: '#B99A58', paddingVertical: 12, paddingHorizontal: 16 }}>
+                  <Text style={{ color: '#111722', fontSize: 10, fontWeight: '900', letterSpacing: 1.2 }}>OPEN FIRST INVESTIGATION</Text>
+                </Pressable>
+                <Pressable accessibilityRole="button" onPress={() => setPhase('case002')} style={{ borderWidth: 1, borderColor: '#7D8A9A', paddingVertical: 12, paddingHorizontal: 16 }}>
+                  <Text style={{ color: '#E1E5EA', fontSize: 10, fontWeight: '800', letterSpacing: 1.1 }}>CONTINUE TO FILE 002</Text>
+                </Pressable>
+              </View>
+            </View>
+            <View style={{ gap: 10 }}>
+              <Text style={{ color: '#E8E5DD', fontSize: 16, fontWeight: '900', letterSpacing: 1.4 }}>SIDE-STORY DOSSIERS</Text>
+              {[
+                ['01','THE MISSING DETECTIVE','30+ files · Main-story connection','Reopen the unfinished investigation and follow the colleague’s final trail.'],
+                ['02','THE ORGANIZED CRIME NETWORK','20+ files · Long-form investigation','Trace a web of connected cases, hidden relationships and financial records.'],
+                ['03','THE SERIAL CASE FILES','20+ files · Advanced deduction','Compare evidence across incidents and reconstruct the connections.'],
+                ['04','THE COLD CASE ARCHIVE','30+ files · Historical investigations','Return to abandoned files and uncover overlooked evidence.'],
+                ['05','THE CORRUPT RECORDS','20+ files · Bureau mystery','Investigate altered reports, missing documents and unexplained closures.'],
+                ['06','THE VANISHING WITNESSES','15+ files · Character-led arc','Discover why witnesses from separate investigations are connected.'],
+                ['07','THE ART OF DECEPTION','20+ files · Standalone arc','Solve theft, forgery and elaborate evidence-based mysteries.'],
+                ['08','THE PRIVATE INVESTIGATOR','15+ files · Rival detective arc','Follow a recurring rival whose theories challenge your own.'],
+                ['09','THE VANISHED CITY','15+ files · Location-led arc','Explore forgotten places and the histories hidden inside them.'],
+                ['10','THE FINAL DOSSIER','Late-game · Convergence arc','Bring evidence from earlier storylines together to face the largest mystery.'],
+              ].map((arc) => (
+                <View key={arc[0]} style={{ flexDirection: 'row', gap: 12, padding: 14, backgroundColor: '#101925', borderWidth: 1, borderColor: '#344354' }}>
+                  <View style={{ width: 34, height: 34, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#8D7548' }}>
+                    <Text style={{ color: '#D8BC7F', fontSize: 12, fontWeight: '900' }}>{arc[0]}</Text>
+                  </View>
+                  <View style={{ flex: 1, gap: 4 }}>
+                    <Text style={{ color: '#E8E5DD', fontSize: 12, fontWeight: '900', letterSpacing: 0.8 }}>{arc[1]}</Text>
+                    <Text style={{ color: '#C5A86A', fontSize: 9, letterSpacing: 1 }}>{arc[2]}</Text>
+                    <Text style={{ color: '#AEB9C6', fontSize: 11, lineHeight: 17 }}>{arc[3]}</Text>
+                  </View>
+                  <Text style={{ color: '#8491A1', fontSize: 9, alignSelf: 'center' }}>DOSSIER</Text>
+                </View>
+              ))}
+            </View>
+            <View style={{ padding: 16, backgroundColor: '#0D1520', borderWidth: 1, borderColor: '#344354' }}>
+              <Text style={{ color: '#C5A86A', fontSize: 10, letterSpacing: 1.8, fontWeight: '800' }}>ARCHIVE STATUS</Text>
+              <Text style={{ color: '#E2E6EB', fontSize: 12, lineHeight: 19, marginTop: 7 }}>The 1,000+ figure is the long-term content target. Only implemented and tested files are playable; future dossiers unlock as their investigations are built.</Text>
+            </View>
+            <ActionButton title="Return to the opening screen" onPress={() => setPhase('menu')} colors={colors} variant="ghost" />
+            <ActionButton title="Return to Detective Bureau" onPress={() => setPhase('hq')} colors={colors} />
           </View>
         )}
 
