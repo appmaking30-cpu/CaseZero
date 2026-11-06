@@ -2941,7 +2941,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   investigationBanner: { minHeight: 190, borderWidth: 1, borderColor: '#34475B', borderRadius: 20, marginBottom: 14, overflow: 'hidden', backgroundColor: '#101A29' },
-  bannerArtwork: { ...StyleSheet.absoluteFillObject, opacity: 0.94 },
+  bannerArtwork: { ...StyleSheet.absoluteFill, opacity: 0.94 },
   bannerOverlay: { flex: 1, minHeight: 190, paddingHorizontal: 24, paddingVertical: 20, justifyContent: 'center' },
   bannerTopline: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 },
   bannerEyebrow: { color: '#D7B873', fontSize: 9, fontWeight: '900', letterSpacing: 2 },
