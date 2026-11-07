@@ -1,4 +1,47 @@
-# Current development checkpoint — 6 November 2026
+# Current development checkpoint — 7 November 2026
+
+## Preservation and working source
+
+- The existing Replit workspace `BothHauntingProjects` was not edited in this workflow; no Replit Agent usage was made.
+- The original `BothHauntingProjects.zip` is present on `replit-original-backup-2026-10-31`. Its GitHub file entry was verified; the previously recorded archive size is 7,167,701 bytes.
+- The extracted source remains under `original-projects/BothHauntingProjects/`; the canonical Expo app is `original-projects/BothHauntingProjects/artifacts/casezero/`.
+- Active source branch: `casezero-development`. Do not develop on `main`, `casezero-original-work`, or the original backup branch.
+- Checkpoints: `casezero-safety-checkpoint-2026-11-07` is the pre-smoke-fix snapshot; `casezero-verified-checkpoint-2026-11-07` contains the corrected browser test.
+- `CASEZERO_ANDROID_WORKFLOW.md` now documents the no-Replit-Agent, Android-first workflow. GitHub remains the source of truth for current changes; nothing automatically syncs back into Replit.
+
+## Exact implementation and playability boundary
+
+- Stack: the existing Expo Router / React Native / TypeScript app with AsyncStorage. This was continued, not restarted. The app config is dark, landscape-first, with 16:9 layout checks.
+- **Case 001 — The Last Train Home:** five inspectable records, three witnesses/six questions, at least one question per witness required (the other questions are optional), four-event timeline, retryable wrong timeline and suspect/motive attempts, evidence-gated conclusion, separate Truth / Proof / Outcome review, and local save/restore. The recorded browser walkthrough completes this case; it has not yet been played through on a physical Android device.
+- **Cases 002–006:** connected evidence/interview/timeline/deduction cases; included in the recorded full browser walkthrough. Cases 002–003 are integrated into the Bureau flow; Cases 004–066 have dedicated React Native case screen components.
+- **Cases 007–040:** case data/rules and dedicated screens exist. The recorded unit suite covers their rules, while browser smoke only checked screen navigation and one-clue save/restore. They have not all been completed as full browser mysteries.
+- **Cases 041–066:** included in the recorded full browser walkthrough, including the finite Missing Detective endgame.
+- Shared systems in source: investigation archive/carryover, seven date-rotating Daily Case Bulletin mysteries, and three Bureau specialists with saved assignments, XP/ranks and evidence-gated insights.
+- The repository contains 67 case data modules, 63 dedicated case screen components (004–066), and 63 dedicated case test files (Case 001 plus Cases 005–066); Cases 002–004 are exercised by the opening-case integration tests and walkthrough.
+- The 1,000+ number is the long-term content target, not the current playable case count. The present campaign set is 66 cases. Daily bulletin entries rotate in-app by device date; automatic push notifications are not implemented.
+- No production backend, cloud sync, online case publishing, multiplayer, real-world case system, active monetization, production signing, Play Store AAB or store release is complete.
+- The dark cinematic UI and bespoke illustrated SVG scene components are implemented. Browser screenshots/layout checks are not a substitute for testing the APK on a real phone.
+
+## Validation and fixes on 7 November
+
+- Browser checks run [42283938284](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42283938284) completed TypeScript, the full unit suite and Expo web export successfully. The Playwright smoke then failed at its first page assertion because it expected the Bureau to load immediately; the current new-install flow correctly starts at the cinematic title screen.
+- Corrected the smoke script in commit [edb50b9](https://github.com/appmaking30-cpu/CaseZero/commit/edb50b9bb0a7727952036340c2f1da157e006b95). It now enters the Bureau from the title screen, checks that File 002 is locked in the campaign archive before Case 001 is closed, and then checks the 16:9 Bureau layout. A fresh green run for this correction has not yet been confirmed.
+- Android workflow [42283938002](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42283938002) passed typecheck, unit tests, native prebuild, Gradle APK assembly, payload verification and artifact upload. Its artifact was built from commit `3e72cdd`, before the current title-screen/archive/progression changes. It is therefore a stale test build, not the latest app.
+- No physical Android installation or full phone playthrough has been completed. A fresh APK for the current app source and a device test remain outstanding.
+- No paid Replit Agent allowance, EAS build, paid API, paid hosting, analytics or monetization was used.
+
+## Next work
+
+1. Re-run the corrected browser smoke and resolve any new failure before unrelated features.
+2. Generate a fresh APK from the current app-source commit and test it on a real Android phone in landscape.
+3. Keep Case 001 the quality bar: polish its tutorial guidance, readability, accessibility and evidence presentation without weakening its deduction requirements.
+4. Add deeper full-case walkthroughs for Cases 007–040; do not label shallow navigation checks as complete mysteries.
+5. Continue connected story/case memory and Missing Detective continuity, then improve HQ/team and daily bulletin only where they add real gameplay choices.
+6. Keep monetization and paid services deferred unless explicitly approved.
+
+---
+
+# Historical development checkpoint — 6 November 2026
 
 ## Preservation and sustainable workflow
 
