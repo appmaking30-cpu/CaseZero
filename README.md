@@ -53,4 +53,4 @@ The repository contains 67 case data modules, 63 dedicated case screen component
 - No production backend, cloud account sync, multiplayer or online case publishing is implemented.
 - Monetization is intentionally deferred until the free core campaign is complete.
 
-See [CASEZERO_PROGRESS.md](CASEZERO_PROGRESS.md) for the detailed feature audit, validation history and next-work priorities.
+See [CASEZERO_ANDROID_WORKFLOW.md](CASEZERO_ANDROID_WORKFLOW.md) for the no-Replit-Agent Android testing workflow, exact playability boundaries and free build route. See [CASEZERO_PROGRESS.md](CASEZERO_PROGRESS.md) for the detailed feature audit, validation history and next-work priorities.
