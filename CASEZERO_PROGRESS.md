@@ -26,8 +26,9 @@
 
 - Browser checks run [42283938284](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42283938284) completed TypeScript, the full unit suite and Expo web export successfully. The Playwright smoke then failed at its first page assertion because it expected the Bureau to load immediately; the current new-install flow correctly starts at the cinematic title screen.
 - Corrected the smoke script in commit [edb50b9](https://github.com/appmaking30-cpu/CaseZero/commit/edb50b9bb0a7727952036340c2f1da157e006b95). It now enters the Bureau from the title screen, checks that File 002 is locked in the campaign archive before Case 001 is closed, and then checks the 16:9 Bureau layout. A fresh green run for this correction has not yet been confirmed.
-- Android workflow [42283938002](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42283938002) passed typecheck, unit tests, native prebuild, Gradle APK assembly, payload verification and artifact upload. Its artifact was built from commit `3e72cdd`, before the current title-screen/archive/progression changes. It is therefore a stale test build, not the latest app.
-- No physical Android installation or full phone playthrough has been completed. A fresh APK for the current app source and a device test remain outstanding.
+- Older Android workflow [42283938002](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42283938002) passed but built stale commit `3e72cdd`.
+- Current-source Android workflow [42288858029](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42288858029) passed typecheck, unit tests, native prebuild, Gradle APK assembly, payload verification and upload on app-source commit `58d3d76`. Artifact `casezero-standalone-apk` (47,695,913 bytes; ID `13539543763`) is available until 6 December 2026. The later `edb50b9` commit only changes browser test code, so the APK contains the latest app source.
+- No physical Android installation or full phone playthrough has been completed; device testing remains outstanding.
 - No paid Replit Agent allowance, EAS build, paid API, paid hosting, analytics or monetization was used.
 
 ## Next work
