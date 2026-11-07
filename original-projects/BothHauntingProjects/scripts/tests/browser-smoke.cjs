@@ -16,6 +16,18 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
 
   try {
     await page.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
+    // New installs open on the cinematic title screen. Verify the campaign archive
+    // cannot bypass the first investigation, then enter the Bureau for the tutorial.
+    await page.getByRole('button', { name: 'ENTER THE BUREAU' }).waitFor();
+    await page.screenshot({ path: '/tmp/casezero-menu.png', fullPage: true });
+    const archivePage = await context.newPage();
+    await archivePage.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
+    await archivePage.getByRole('button', { name: 'OPEN CAMPAIGN ARCHIVE' }).click();
+    const lockedArchiveFile002 = archivePage.getByRole('button', { name: 'FILE 002 · LOCKED' });
+    await lockedArchiveFile002.waitFor();
+    assert.equal(await lockedArchiveFile002.isDisabled(), true, 'the campaign archive must not bypass Case 001');
+    await archivePage.close();
+    await page.getByRole('button', { name: 'ENTER THE BUREAU' }).click();
     await page.getByText('THE INVESTIGATION DIVISION', { exact: true }).waitFor();
     await page.getByText('The Last Train Home', { exact: true }).first().waitFor();
     const lockedCaseButton = page.getByRole('button', { name: 'Complete Case 001 to unlock' });
@@ -35,6 +47,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     const landscapePage = await landscapeContext.newPage();
     landscapePage.on('pageerror', (error) => pageErrors.push(error.message));
     await landscapePage.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
+    await landscapePage.getByRole('button', { name: 'ENTER THE BUREAU' }).click();
     await landscapePage.getByText('THE INVESTIGATION DIVISION', { exact: true }).waitFor();
     const landscapeHero = await landscapePage.getByText('THE INVESTIGATION DIVISION', { exact: true }).boundingBox();
     const landscapeCase = await landscapePage.getByText('Active case file', { exact: true }).boundingBox();
