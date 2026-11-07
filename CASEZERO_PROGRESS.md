@@ -34,12 +34,12 @@
 
 ## Next work
 
-1. Re-run the corrected browser smoke and resolve any new failure before unrelated features.
-2. Generate a fresh APK from the current app-source commit and test it on a real Android phone in landscape.
-3. Keep Case 001 the quality bar: polish its tutorial guidance, readability, accessibility and evidence presentation without weakening its deduction requirements.
-4. Add deeper full-case walkthroughs for Cases 007–040; do not label shallow navigation checks as complete mysteries.
-5. Continue connected story/case memory and Missing Detective continuity, then improve HQ/team and daily bulletin only where they add real gameplay choices.
-6. Keep monetization and paid services deferred unless explicitly approved.
+1. Install the current-source APK on a real Android phone and complete a physical playthrough of Case 001; record the device model, Android version and exact APK commit.
+2. Keep Case 001 the quality bar: polish its tutorial guidance, readability, accessibility and evidence presentation without weakening its deduction requirements.
+3. Add deeper full-case walkthroughs for Cases 007–040; do not label shallow navigation checks as complete mysteries.
+4. Review cross-case save migration and continuity through the Missing Detective endgame, then improve HQ/team and the daily bulletin only where they add meaningful player choices.
+5. Add audio, accessibility and performance checks before considering a public release.
+6. Keep monetization, production services and paid usage deferred unless explicitly approved.
 
 ---
 
