@@ -1,4 +1,20 @@
-# Current development checkpoint — 7 November 2026
+# Current development checkpoint — 8 November 2026
+
+## Case 001 tutorial fairness correction
+
+- A chronology mismatch was found in the first tutorial mystery: Jo Bell heard the cart at 21:12, but the signed porter addendum claiming the envelope had been moved was dated 21:11. That made the record appear to precede the witnessed movement.
+- Corrected the addendum timestamp to **21:13** in the evidence detail and proof narrative.
+- Added a regression test that extracts both minute values and asserts that the signed move record follows the witnessed cart movement.
+- Updated the existing protective-motive test and the Playwright browser-smoke assertion to expect 21:13.
+- Changes are on `casezero-development`: game data commit [0ef760d](https://github.com/appmaking30-cpu/CaseZero/commit/0ef760dfc6ea62e8d1f40442f3fbc2d5b68c50c2), chronology test correction [e9f6f04](https://github.com/appmaking30-cpu/CaseZero/commit/e9f6f0487ad503fce060cb85da5507ab9574aa6d), browser smoke alignment [8bcaef0](https://github.com/appmaking30-cpu/CaseZero/commit/8bcaef044e52c645d0213fbd26ebfc41eb34facb).
+- Created safety checkpoint `casezero-safety-checkpoint-2026-11-08` before the edits.
+- The GitHub checks and Android APK workflows are configured to trigger from the affected paths. **No post-fix workflow result has been verified yet**; do not call this change tested until the new checks pass.
+- The previously successful APK from run [42288858029](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42288858029) predates this 8 November app-source correction. It is no longer the latest build and must not be used to claim the chronology fix is present. A fresh APK and physical Android playthrough remain outstanding.
+- The original Replit workspace and backup branch were not modified. No Replit Agent or paid build/service usage was used.
+
+---
+
+# Development checkpoint — 7 November 2026
 
 ## Preservation and working source
 
