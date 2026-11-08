@@ -58,12 +58,28 @@ test('the protective motive is supported by a dated, signed record', () => {
   const leakClue = CASE_001.clues.find((clue) => clue.id === 'leak');
   assert.ok(leakClue);
   assert.match(leakClue.detail, /21:05/);
-  assert.match(leakClue.detail, /21:11/);
+  assert.match(leakClue.detail, /21:13/);
   assert.ok(leakClue.detail.includes('M.R.'));
   assert.match(leakClue.detail, /keep it dry/i);
   assert.match(CASE_001.proof, /maintenance ticket/i);
 });
 
+
+
+test('the signed porter addendum follows the witnessed cart movement', () => {
+  const leakClue = CASE_001.clues.find((clue) => clue.id === 'leak');
+  const joBell = CASE_001.witnesses.find((witness) => witness.id === 'jo');
+  assert.ok(leakClue);
+  assert.ok(joBell);
+  const cartReport = joBell.questions.find((question) => question.id === 'sound');
+  assert.ok(cartReport);
+  const cartMinute = Number(cartReport.reply.match(/at 21:(\\d{2})/)?.[1]);
+  const addendumMinute = Number(leakClue.detail.match(/porter addendum at 21:(\\d{2})/)?.[1]);
+  assert.ok(Number.isFinite(cartMinute));
+  assert.ok(Number.isFinite(addendumMinute));
+  assert.ok(cartMinute < addendumMinute, 'the signed move record must follow the witnessed cart movement');
+  assert.match(CASE_001.proof, /21:13 porter addendum/);
+});
 
 test('investigation memory records exact evidence and interview choices', () => {
   const memory = getInvestigationMemory(
