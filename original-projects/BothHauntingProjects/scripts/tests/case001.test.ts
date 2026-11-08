@@ -73,8 +73,8 @@ test('the signed porter addendum follows the witnessed cart movement', () => {
   assert.ok(joBell);
   const cartReport = joBell.questions.find((question) => question.id === 'sound');
   assert.ok(cartReport);
-  const cartMinute = Number(cartReport.reply.match(/at 21:(\\d{2})/)?.[1]);
-  const addendumMinute = Number(leakClue.detail.match(/porter addendum at 21:(\\d{2})/)?.[1]);
+  const cartMinute = Number(cartReport.reply.match(/at 21:([0-9]{2})/)?.[1]);
+  const addendumMinute = Number(leakClue.detail.match(/porter addendum at 21:([0-9]{2})/)?.[1]);
   assert.ok(Number.isFinite(cartMinute));
   assert.ok(Number.isFinite(addendumMinute));
   assert.ok(cartMinute < addendumMinute, 'the signed move record must follow the witnessed cart movement');
