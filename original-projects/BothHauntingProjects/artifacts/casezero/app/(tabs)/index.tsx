@@ -148,6 +148,7 @@ import { CASE_066_GAME } from '@/game/case066Game';
 import {
   CASE_001,
   getInvestigationMemory,
+  getCase001ResumePhase,
   isDeductionCorrect,
   isTimelineCorrect,
   type CasePhase,
@@ -564,7 +565,15 @@ export default function HomeScreen() {
     AsyncStorage.removeItem(SAVE_KEY).catch(() => undefined);
   };
 
-  const openCase = () => setPhase(caseCompleted ? 'review' : 'briefing');
+  const openCase = () => setPhase(getCase001ResumePhase({
+    caseCompleted,
+    cluesFound,
+    askedQuestions,
+    timelineOrder,
+    timelineSolved,
+    selectedSuspect,
+    selectedMotive,
+  }));
 
   const inspectClue = (clueId: string) => {
     setCluesFound((current) =>
@@ -872,8 +881,8 @@ export default function HomeScreen() {
               <Text style={{ color: '#F0EEE8', fontSize: 23, fontWeight: '800', marginTop: 8 }}>The Missing Detective</Text>
               <Text style={{ color: '#B8C2CE', fontSize: 12, lineHeight: 19, marginTop: 6 }}>A colleague vanished while tracing links between closed cases. The first three files establish the mystery and begin the trail.</Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
-                <Pressable accessibilityRole="button" onPress={() => setPhase('briefing')} style={{ backgroundColor: '#B99A58', paddingVertical: 12, paddingHorizontal: 16 }}>
-                  <Text style={{ color: '#111722', fontSize: 10, fontWeight: '900', letterSpacing: 1.2 }}>OPEN FIRST INVESTIGATION</Text>
+                <Pressable accessibilityRole="button" onPress={openCase} style={{ backgroundColor: '#B99A58', paddingVertical: 12, paddingHorizontal: 16 }}>
+                  <Text style={{ color: '#111722', fontSize: 10, fontWeight: '900', letterSpacing: 1.2 }}>{caseCompleted ? 'REVIEW FIRST INVESTIGATION' : cluesFound.length || askedQuestions.length || timelineOrder.length ? 'RESUME FIRST INVESTIGATION' : 'OPEN FIRST INVESTIGATION'}</Text>
                 </Pressable>
                 <Pressable accessibilityRole="button" disabled={!case001Archived && !case002Progress.completed} onPress={() => setPhase(case002Progress.completed ? 'case002Review' : 'case002Briefing')} style={{ borderWidth: 1, borderColor: case001Archived || case002Progress.completed ? '#7D8A9A' : '#394555', paddingVertical: 12, paddingHorizontal: 16, opacity: case001Archived || case002Progress.completed ? 1 : 0.48 }}>
                   <Text style={{ color: '#E1E5EA', fontSize: 10, fontWeight: '800', letterSpacing: 1.1 }}>{case002Progress.completed ? 'REVIEW FILE 002' : case001Archived ? 'CONTINUE TO FILE 002' : 'FILE 002 · LOCKED'}</Text>
