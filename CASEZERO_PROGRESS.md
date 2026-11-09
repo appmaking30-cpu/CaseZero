@@ -1,4 +1,25 @@
-# Current development checkpoint — 8 November 2026
+# Current development checkpoint — 9 November 2026
+
+## Case 001 resume-flow correction
+
+- Found a tutorial usability bug: the title-screen action was labelled **RESUME CASE 001**, but the shared action always reopened the briefing even when evidence/interviews/timeline work had already been saved.
+- Added `getCase001ResumePhase` in the existing Case 001 game module. It routes saved progress to the furthest evidence-unlocked stage: briefing, evidence, interviews, timeline, deduction, or completed review.
+- The title-screen action and campaign archive's first-investigation action now use the same resume routing. This preserves the existing investigation data rather than resetting or replaying the briefing.
+- Added a unit test covering fresh, partial-evidence, interview, timeline, deduction and completed-review states.
+- Source commits: [resume helper](https://github.com/appmaking30-cpu/CaseZero/commit/cea11ad7c7e4c1f2843f4e312f6dc5851fda14a9), [resume tests](https://github.com/appmaking30-cpu/CaseZero/commit/f82edbd25ab51122a32b2ed638220cced9fa5565), [screen integration](https://github.com/appmaking30-cpu/CaseZero/commit/7e0d7c576122e2b2843c1859604c3a179833a1ad).
+- Updated the Android workflow to run when `scripts/tests/**` changes, because it runs the unit suite before APK assembly. This avoids leaving test-only corrections without a fresh APK build trigger: [workflow commit](https://github.com/appmaking30-cpu/CaseZero/commit/c8e46a5e992c1bd3bba6d667d3fa89f6eeb5a892).
+- Updated the Android workflow guide to document that trigger: [documentation commit](https://github.com/appmaking30-cpu/CaseZero/commit/3c2a3eacca33582d811df4ea214c7215d71dbc31).
+
+## Verification on 9 November
+
+- Browser/checks run [42621083377](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42621083377) passed on source commit `7e0d7c5`: Expo TypeScript, the full unit suite, web export, Chromium dark mobile walkthrough, 16:9 layout assertions and screenshot upload.
+- Android standalone build [42621083166](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42621083166) was still running at the time of this checkpoint. Do not treat it as a successful APK until the workflow completes and the artifact is present.
+- Earlier Android attempt [42480316099](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42480316099) stopped at the unit suite because the app-source correction had moved the signed record to 21:13 while the test still expected 21:11. The test was corrected, and the subsequent full browser/checks run passed.
+- Physical Android installation and playthrough remain outstanding. Browser simulation is not device verification.
+- No Replit Agent, paid EAS build, paid API, paid hosting or monetization was used.
+
+---
+
 
 ## Case 001 tutorial fairness correction
 
