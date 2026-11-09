@@ -8,6 +8,7 @@ import {
 import {
   CASE_001,
   getInvestigationMemory,
+  getCase001ResumePhase,
   isDeductionCorrect,
   isTimelineCorrect,
 } from '../../artifacts/casezero/game/case001';
@@ -46,6 +47,42 @@ test('deduction requires both the correct person and motive', () => {
   assert.equal(isDeductionCorrect('miles', 'steal'), false);
   assert.equal(isDeductionCorrect('ada', 'protect'), false);
   assert.equal(isDeductionCorrect(null, 'protect'), false);
+});
+
+test('Case 001 resume routing returns to the furthest evidence-unlocked stage', () => {
+  const fresh = {
+    caseCompleted: false,
+    cluesFound: [] as string[],
+    askedQuestions: [] as string[],
+    timelineOrder: [] as string[],
+    timelineSolved: false,
+    selectedSuspect: null as string | null,
+    selectedMotive: null as string | null,
+  };
+  assert.equal(getCase001ResumePhase(fresh), 'briefing');
+  assert.equal(getCase001ResumePhase({ ...fresh, cluesFound: ['leak'] }), 'evidence');
+  assert.equal(
+    getCase001ResumePhase({
+      ...fresh,
+      cluesFound: CASE_001.clues.map((clue) => clue.id),
+      askedQuestions: ['jo:sound'],
+    }),
+    'interviews',
+  );
+  assert.equal(
+    getCase001ResumePhase({
+      ...fresh,
+      cluesFound: CASE_001.clues.map((clue) => clue.id),
+      askedQuestions: ['jo:sound', 'ada:desk', 'nia:route'],
+    }),
+    'timeline',
+  );
+  assert.equal(getCase001ResumePhase({ ...fresh, timelineOrder: ['key'] }), 'timeline');
+  assert.equal(
+    getCase001ResumePhase({ ...fresh, timelineSolved: true, selectedSuspect: 'miles', selectedMotive: 'protect' }),
+    'deduction',
+  );
+  assert.equal(getCase001ResumePhase({ ...fresh, caseCompleted: true }), 'review');
 });
 
 test('the case review separates truth, proof and outcome', () => {
