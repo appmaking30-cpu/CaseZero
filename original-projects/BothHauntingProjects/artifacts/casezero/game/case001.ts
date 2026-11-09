@@ -231,3 +231,32 @@ export function isDeductionCorrect(
     motiveId === CASE_001.correctMotive
   );
 }
+
+export type Case001ResumeState = {
+  caseCompleted: boolean;
+  cluesFound: readonly string[];
+  askedQuestions: readonly string[];
+  timelineOrder: readonly string[];
+  timelineSolved: boolean;
+  selectedSuspect: string | null;
+  selectedMotive: string | null;
+};
+
+/** Return the furthest tutorial stage the saved evidence actually unlocks. */
+export function getCase001ResumePhase(state: Case001ResumeState): CasePhase {
+  if (state.caseCompleted) return "review";
+  if (state.selectedSuspect || state.selectedMotive) return "deduction";
+  if (state.timelineSolved || state.timelineOrder.length > 0) return "timeline";
+
+  const witnessesHeard = CASE_001.witnesses.filter((witness) =>
+    witness.questions.some((question) =>
+      state.askedQuestions.includes(`${witness.id}:${question.id}`),
+    ),
+  ).length;
+
+  if (state.cluesFound.length === CASE_001.clues.length &&
+      witnessesHeard === CASE_001.witnesses.length) return "timeline";
+  if (witnessesHeard > 0) return "interviews";
+  if (state.cluesFound.length > 0) return "evidence";
+  return "briefing";
+}
