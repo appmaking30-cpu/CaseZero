@@ -39,7 +39,7 @@ After a code change, check the repository's Actions tab. If a run did not start 
 Workflow: [CaseZero Android standalone APK](https://github.com/appmaking30-cpu/CaseZero/actions/workflows/android-debug-apk.yml)
 
 - It uses the standard GitHub-hosted Ubuntu runner, installs the locked dependencies and Android SDK, runs typecheck and unit tests, generates the native Android project, builds a standalone APK with the JavaScript bundle embedded, verifies the APK payload, and uploads `casezero-standalone-apk`.
-- It can be started manually from the Actions tab using **Run workflow** on `casezero-development`. It also has a push trigger for app-source changes.
+- It can be started manually from the Actions tab using **Run workflow** on `casezero-development`. Push triggers cover app-source changes, workspace lockfile changes, the Android workflow itself, and `scripts/tests/**` changes because the APK workflow runs the unit suite before building.
 - Download the artifact ZIP from the completed run, extract `app-release.apk`, and test that APK on the Android phone in landscape.
 - The workflow artifact is retained for 30 days. Keep the commit SHA beside any test notes so a device result is tied to the exact build.
 - This is a test APK, not a Play Store release. The project has not selected a permanent Android application ID or completed production signing/store preparation.
