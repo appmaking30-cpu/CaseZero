@@ -10,7 +10,7 @@ This is the supported workflow for continuing the existing CaseZero project with
 - Canonical app: `original-projects/BothHauntingProjects/artifacts/casezero/`.
 - Active development branch: `casezero-development`.
 - Do not develop on `main`, `casezero-original-work`, or the original ZIP/backup branch.
-- Safety snapshots: `casezero-safety-checkpoint-2026-11-07` (before the browser-smoke correction) and `casezero-verified-checkpoint-2026-11-07` (current source after that correction).
+- Safety snapshots: `casezero-safety-checkpoint-2026-11-07`, `casezero-verified-checkpoint-2026-11-07`, and `casezero-safety-checkpoint-2026-11-10` (the pre-save-sanitizer source head).
 
 The existing Replit project is not being replaced. Do not edit the Replit copy and GitHub copy independently.
 
