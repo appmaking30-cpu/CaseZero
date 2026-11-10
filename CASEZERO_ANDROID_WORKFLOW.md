@@ -22,6 +22,10 @@ The existing Replit project is not being replaced. Do not edit the Replit copy a
 4. Review the commit diff before moving to the next feature.
 5. Never replace the project with a fresh template or regenerate the whole app to make a small change.
 
+### Case 001 save validation
+
+AsyncStorage is treated as untrusted input. Before restoring the tutorial, `sanitizeCase001SavedProgress` checks known IDs and the real investigation gates. Interview progress requires all five clues; timeline progress requires all three witnesses; a solved timeline requires the exact chronological order; completion requires the verified timeline plus Miles and the protective motive. The conclusion handler repeats the prerequisites, and regression tests live in `scripts/tests/case001.test.ts`. Keep this logic pure and unit-testable outside React Native.
+
 The existing stack is Expo Router, React Native, TypeScript and AsyncStorage. Keep the current stack and lockfile.
 
 ## 3. Free automated checks
