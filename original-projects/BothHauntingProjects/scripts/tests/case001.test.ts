@@ -9,6 +9,7 @@ import {
   CASE_001,
   getInvestigationMemory,
   getCase001ResumePhase,
+  sanitizeCase001SavedProgress,
   isDeductionCorrect,
   isTimelineCorrect,
 } from '../../artifacts/casezero/game/case001';
@@ -49,7 +50,7 @@ test('deduction requires both the correct person and motive', () => {
   assert.equal(isDeductionCorrect(null, 'protect'), false);
 });
 
-test('Case 001 resume routing returns to the furthest evidence-unlocked stage', () => {
+test('Case 001 resume routing never skips evidence, witness or timeline gates', () => {
   const fresh = {
     caseCompleted: false,
     cluesFound: [] as string[],
@@ -59,30 +60,163 @@ test('Case 001 resume routing returns to the furthest evidence-unlocked stage', 
     selectedSuspect: null as string | null,
     selectedMotive: null as string | null,
   };
+  const allClues = CASE_001.clues.map((clue) => clue.id);
+  const oneQuestionPerWitness = ['jo:sound', 'ada:desk', 'nia:route'];
+
   assert.equal(getCase001ResumePhase(fresh), 'briefing');
   assert.equal(getCase001ResumePhase({ ...fresh, cluesFound: ['leak'] }), 'evidence');
   assert.equal(
-    getCase001ResumePhase({
-      ...fresh,
-      cluesFound: CASE_001.clues.map((clue) => clue.id),
-      askedQuestions: ['jo:sound'],
-    }),
+    getCase001ResumePhase({ ...fresh, cluesFound: allClues, askedQuestions: ['jo:sound'] }),
     'interviews',
   );
   assert.equal(
-    getCase001ResumePhase({
-      ...fresh,
-      cluesFound: CASE_001.clues.map((clue) => clue.id),
-      askedQuestions: ['jo:sound', 'ada:desk', 'nia:route'],
-    }),
+    getCase001ResumePhase({ ...fresh, cluesFound: allClues, askedQuestions: oneQuestionPerWitness }),
     'timeline',
   );
-  assert.equal(getCase001ResumePhase({ ...fresh, timelineOrder: ['key'] }), 'timeline');
   assert.equal(
-    getCase001ResumePhase({ ...fresh, timelineSolved: true, selectedSuspect: 'miles', selectedMotive: 'protect' }),
-    'deduction',
+    getCase001ResumePhase({ ...fresh, timelineOrder: ['key'], timelineSolved: true }),
+    'briefing',
   );
-  assert.equal(getCase001ResumePhase({ ...fresh, caseCompleted: true }), 'review');
+
+  const solved = {
+    ...fresh,
+    cluesFound: allClues,
+    askedQuestions: oneQuestionPerWitness,
+    timelineOrder: [...CASE_001.correctTimelineOrder],
+    timelineSolved: true,
+    selectedSuspect: 'miles',
+    selectedMotive: 'protect',
+  };
+  assert.equal(getCase001ResumePhase(solved), 'deduction');
+  assert.equal(getCase001ResumePhase({ ...solved, caseCompleted: true }), 'review');
+  assert.equal(getCase001ResumePhase({ ...fresh, caseCompleted: true }), 'briefing');
+});
+
+test('Case 001 save sanitizer drops unknown IDs and impossible early-stage progress', () => {
+  const restored = sanitizeCase001SavedProgress({
+    cluesFound: ['leak', 'unknown-clue', 'leak'],
+    askedQuestions: ['jo:sound', 'unknown:question', 'jo:sound'],
+    timelineOrder: ['key', 'unknown-event', 'cart'],
+    timelineSolved: true,
+    timelineAttempts: -4,
+    selectedSuspect: 'miles',
+    selectedMotive: 'protect',
+    caseCompleted: true,
+  });
+
+  assert.deepEqual(restored.cluesFound, ['leak']);
+  assert.deepEqual(restored.askedQuestions, []);
+  assert.deepEqual(restored.timelineOrder, []);
+  assert.equal(restored.timelineSolved, false);
+  assert.equal(restored.timelineAttempts, 0);
+  assert.equal(restored.selectedSuspect, null);
+  assert.equal(restored.selectedMotive, null);
+  assert.equal(restored.caseCompleted, false);
+});
+
+test('Case 001 save sanitizer preserves legitimate partial progress and retry attempts', () => {
+  const restored = sanitizeCase001SavedProgress({
+    cluesFound: [...CASE_001.clues.map((clue) => clue.id), 'not-a-clue'],
+    askedQuestions: ['jo:sound', 'ada:desk', 'nia:route', 'jo:sound', 'not-a-question'],
+    timelineOrder: ['key', 'cart'],
+    timelineSolved: false,
+    timelineAttempts: 2,
+    selectedSuspect: null,
+    selectedMotive: null,
+    caseCompleted: false,
+  });
+
+  assert.deepEqual(restored.cluesFound, CASE_001.clues.map((clue) => clue.id));
+  assert.deepEqual(restored.askedQuestions, ['jo:sound', 'ada:desk', 'nia:route']);
+  assert.deepEqual(restored.timelineOrder, ['key', 'cart']);
+  assert.equal(restored.timelineSolved, false);
+  assert.equal(restored.timelineAttempts, 2);
+  assert.equal(getCase001ResumePhase({ ...restored, caseCompleted: false }), 'timeline');
+});
+
+test('Case 001 save sanitizer rejects forged solved timelines and conclusions', () => {
+  const requiredProgress = {
+    cluesFound: CASE_001.clues.map((clue) => clue.id),
+    askedQuestions: ['jo:sound', 'ada:desk', 'nia:route'],
+    timelineAttempts: 3,
+  };
+
+  const forgedSequence = sanitizeCase001SavedProgress({
+    ...requiredProgress,
+    timelineOrder: ['key', 'cart', 'receipt', 'inventory', 'unknown-event'],
+    timelineSolved: true,
+    selectedSuspect: 'miles',
+    selectedMotive: 'protect',
+    caseCompleted: true,
+  });
+  assert.deepEqual(forgedSequence.timelineOrder, []);
+  assert.equal(forgedSequence.timelineSolved, false);
+  assert.equal(forgedSequence.caseCompleted, false);
+  assert.equal(forgedSequence.selectedSuspect, null);
+  assert.equal(forgedSequence.selectedMotive, null);
+
+  const wrongOrder = sanitizeCase001SavedProgress({
+    ...requiredProgress,
+    timelineOrder: ['cart', 'key', 'receipt', 'inventory'],
+    timelineSolved: true,
+    selectedSuspect: 'miles',
+    selectedMotive: 'protect',
+    caseCompleted: true,
+  });
+  assert.deepEqual(wrongOrder.timelineOrder, ['cart', 'key', 'receipt', 'inventory']);
+  assert.equal(wrongOrder.timelineSolved, false);
+  assert.equal(wrongOrder.caseCompleted, false);
+  assert.equal(wrongOrder.selectedSuspect, null);
+  assert.equal(wrongOrder.selectedMotive, null);
+
+  const wrongConclusion = sanitizeCase001SavedProgress({
+    ...requiredProgress,
+    timelineOrder: [...CASE_001.correctTimelineOrder],
+    timelineSolved: true,
+    selectedSuspect: 'ada',
+    selectedMotive: 'protect',
+    caseCompleted: true,
+  });
+  assert.equal(wrongConclusion.timelineSolved, true);
+  assert.equal(wrongConclusion.selectedSuspect, 'ada');
+  assert.equal(wrongConclusion.selectedMotive, 'protect');
+  assert.equal(wrongConclusion.caseCompleted, false);
+});
+
+test('Case 001 save sanitizer accepts a genuinely completed tutorial save', () => {
+  const restored = sanitizeCase001SavedProgress({
+    cluesFound: CASE_001.clues.map((clue) => clue.id),
+    askedQuestions: ['jo:sound', 'ada:desk', 'nia:route'],
+    timelineOrder: [...CASE_001.correctTimelineOrder],
+    timelineSolved: true,
+    timelineAttempts: 1,
+    selectedSuspect: CASE_001.correctSuspect,
+    selectedMotive: CASE_001.correctMotive,
+    caseCompleted: true,
+  });
+
+  assert.equal(restored.timelineSolved, true);
+  assert.equal(restored.selectedSuspect, 'miles');
+  assert.equal(restored.selectedMotive, 'protect');
+  assert.equal(restored.caseCompleted, true);
+  assert.equal(getCase001ResumePhase(restored), 'review');
+});
+
+test('Case 001 save sanitizer safely handles null, arrays and malformed values', () => {
+  const empty = {
+    cluesFound: [],
+    askedQuestions: [],
+    timelineOrder: [],
+    timelineSolved: false,
+    timelineAttempts: 0,
+    selectedSuspect: null,
+    selectedMotive: null,
+    caseCompleted: false,
+  };
+  assert.deepEqual(sanitizeCase001SavedProgress(null), empty);
+  assert.deepEqual(sanitizeCase001SavedProgress([]), empty);
+  assert.deepEqual(sanitizeCase001SavedProgress('broken'), empty);
+  assert.deepEqual(sanitizeCase001SavedProgress({ timelineAttempts: Number.POSITIVE_INFINITY }), empty);
 });
 
 test('the case review separates truth, proof and outcome', () => {
