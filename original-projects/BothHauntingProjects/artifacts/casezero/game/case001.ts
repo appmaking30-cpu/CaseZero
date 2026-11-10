@@ -253,15 +253,15 @@ export type Case001SavedProgress = {
   caseCompleted: boolean;
 };
 
-const CASE_001_CLUE_IDS = new Set(CASE_001.clues.map((clue) => clue.id));
-const CASE_001_QUESTION_KEYS = new Set(
+const CASE_001_CLUE_IDS: ReadonlySet<string> = new Set<string>(CASE_001.clues.map((clue) => clue.id));
+const CASE_001_QUESTION_KEYS: ReadonlySet<string> = new Set<string>(
   CASE_001.witnesses.flatMap((witness) =>
     witness.questions.map((question) => `${witness.id}:${question.id}`),
   ),
 );
-const CASE_001_TIMELINE_IDS = new Set(CASE_001.timelineEvents.map((event) => event.id));
-const CASE_001_SUSPECT_IDS = new Set(CASE_001.suspects.map((suspect) => suspect.id));
-const CASE_001_MOTIVE_IDS = new Set(CASE_001.motives.map((motive) => motive.id));
+const CASE_001_TIMELINE_IDS: ReadonlySet<string> = new Set<string>(CASE_001.timelineEvents.map((event) => event.id));
+const CASE_001_SUSPECT_IDS: ReadonlySet<string> = new Set<string>(CASE_001.suspects.map((suspect) => suspect.id));
+const CASE_001_MOTIVE_IDS: ReadonlySet<string> = new Set<string>(CASE_001.motives.map((motive) => motive.id));
 
 function uniqueKnownIds(value: unknown, allowed: ReadonlySet<string>): string[] {
   if (!Array.isArray(value)) return [];
