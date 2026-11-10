@@ -242,21 +242,148 @@ export type Case001ResumeState = {
   selectedMotive: string | null;
 };
 
-/** Return the furthest tutorial stage the saved evidence actually unlocks. */
-export function getCase001ResumePhase(state: Case001ResumeState): CasePhase {
-  if (state.caseCompleted) return "review";
-  if (state.selectedSuspect || state.selectedMotive) return "deduction";
-  if (state.timelineSolved || state.timelineOrder.length > 0) return "timeline";
+export type Case001SavedProgress = {
+  cluesFound: string[];
+  askedQuestions: string[];
+  timelineOrder: string[];
+  timelineSolved: boolean;
+  timelineAttempts: number;
+  selectedSuspect: string | null;
+  selectedMotive: string | null;
+  caseCompleted: boolean;
+};
 
+const CASE_001_CLUE_IDS = new Set(CASE_001.clues.map((clue) => clue.id));
+const CASE_001_QUESTION_KEYS = new Set(
+  CASE_001.witnesses.flatMap((witness) =>
+    witness.questions.map((question) => `${witness.id}:${question.id}`),
+  ),
+);
+const CASE_001_TIMELINE_IDS = new Set(CASE_001.timelineEvents.map((event) => event.id));
+const CASE_001_SUSPECT_IDS = new Set(CASE_001.suspects.map((suspect) => suspect.id));
+const CASE_001_MOTIVE_IDS = new Set(CASE_001.motives.map((motive) => motive.id));
+
+function uniqueKnownIds(value: unknown, allowed: ReadonlySet<string>): string[] {
+  if (!Array.isArray(value)) return [];
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const entry of value) {
+    if (typeof entry !== "string" || !allowed.has(entry) || seen.has(entry)) continue;
+    seen.add(entry);
+    result.push(entry);
+  }
+  return result;
+}
+
+/**
+ * Restore only progress that the Case 001 screens could legitimately produce.
+ * Invalid timeline entries invalidate the whole sequence so filtering cannot
+ * accidentally turn a forged sequence into the correct answer.
+ */
+export function sanitizeCase001SavedProgress(value: unknown): Case001SavedProgress {
+  const record =
+    value !== null && typeof value === "object" && !Array.isArray(value)
+      ? (value as Record<string, unknown>)
+      : {};
+
+  const cluesFound = uniqueKnownIds(record.cluesFound, CASE_001_CLUE_IDS);
+  const allCluesFound = CASE_001.clues.every((clue) => cluesFound.includes(clue.id));
+
+  // Interviews are only reachable after every evidence record has been inspected.
+  const askedQuestions = allCluesFound
+    ? uniqueKnownIds(record.askedQuestions, CASE_001_QUESTION_KEYS)
+    : [];
+  const allWitnessesHeard = CASE_001.witnesses.every((witness) =>
+    witness.questions.some((question) =>
+      askedQuestions.includes(`${witness.id}:${question.id}`),
+    ),
+  );
+
+  const rawTimelineOrder = record.timelineOrder;
+  const timelineOrderIsValid =
+    Array.isArray(rawTimelineOrder) &&
+    rawTimelineOrder.every(
+      (entry, index, entries) =>
+        typeof entry === "string" &&
+        CASE_001_TIMELINE_IDS.has(entry) &&
+        entries.indexOf(entry) === index,
+    );
+  const canReconstructTimeline = allCluesFound && allWitnessesHeard;
+  const timelineOrder =
+    canReconstructTimeline && timelineOrderIsValid
+      ? (rawTimelineOrder as string[])
+      : [];
+
+  const timelineSolved =
+    record.timelineSolved === true &&
+    canReconstructTimeline &&
+    isTimelineCorrect(timelineOrder);
+
+  // Suspect and motive selections are only reachable after a valid timeline.
+  const selectedSuspect =
+    timelineSolved &&
+    typeof record.selectedSuspect === "string" &&
+    CASE_001_SUSPECT_IDS.has(record.selectedSuspect)
+      ? record.selectedSuspect
+      : null;
+  const selectedMotive =
+    timelineSolved &&
+    typeof record.selectedMotive === "string" &&
+    CASE_001_MOTIVE_IDS.has(record.selectedMotive)
+      ? record.selectedMotive
+      : null;
+
+  const caseCompleted =
+    record.caseCompleted === true &&
+    timelineSolved &&
+    isDeductionCorrect(selectedSuspect, selectedMotive);
+
+  const timelineAttempts =
+    canReconstructTimeline &&
+    Number.isSafeInteger(record.timelineAttempts) &&
+    (record.timelineAttempts as number) >= 0
+      ? Math.min(record.timelineAttempts as number, 999)
+      : 0;
+
+  return {
+    cluesFound,
+    askedQuestions,
+    timelineOrder,
+    timelineSolved,
+    timelineAttempts,
+    selectedSuspect,
+    selectedMotive,
+    caseCompleted,
+  };
+}
+
+/** Return the furthest tutorial stage supported by valid saved evidence. */
+export function getCase001ResumePhase(state: Case001ResumeState): CasePhase {
+  const allCluesFound = CASE_001.clues.every((clue) => state.cluesFound.includes(clue.id));
   const witnessesHeard = CASE_001.witnesses.filter((witness) =>
     witness.questions.some((question) =>
       state.askedQuestions.includes(`${witness.id}:${question.id}`),
     ),
   ).length;
+  const allWitnessesHeard = witnessesHeard === CASE_001.witnesses.length;
+  const timelineIsValid =
+    allCluesFound &&
+    allWitnessesHeard &&
+    state.timelineSolved &&
+    isTimelineCorrect(state.timelineOrder);
 
-  if (state.cluesFound.length === CASE_001.clues.length &&
-      witnessesHeard === CASE_001.witnesses.length) return "timeline";
-  if (witnessesHeard > 0) return "interviews";
-  if (state.cluesFound.length > 0) return "evidence";
+  if (
+    state.caseCompleted &&
+    timelineIsValid &&
+    isDeductionCorrect(state.selectedSuspect, state.selectedMotive)
+  ) {
+    return "review";
+  }
+  if (timelineIsValid && (state.selectedSuspect !== null || state.selectedMotive !== null)) {
+    return "deduction";
+  }
+  if (allCluesFound && allWitnessesHeard) return "timeline";
+  if (allCluesFound && witnessesHeard > 0) return "interviews";
+  if (state.cluesFound.some((id) => CASE_001_CLUE_IDS.has(id))) return "evidence";
   return "briefing";
 }
