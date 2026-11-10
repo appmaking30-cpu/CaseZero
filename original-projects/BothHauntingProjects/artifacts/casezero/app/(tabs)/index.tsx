@@ -149,6 +149,7 @@ import {
   CASE_001,
   getInvestigationMemory,
   getCase001ResumePhase,
+  sanitizeCase001SavedProgress,
   isDeductionCorrect,
   isTimelineCorrect,
   type CasePhase,
@@ -197,6 +198,23 @@ const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
 type AppPhase = 'menu' | 'campaign' | CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'case034' | 'case035' | 'case036' | 'case037' | 'case038' | 'case039' | 'case040' | 'case041' | 'case042' | 'case043' | 'case044' | 'case045' | 'case046' | 'case047' | 'case048' | 'case049' | 'case050' | 'case051' | 'case052' | 'case053' | 'case054' | 'case055' | 'case056' | 'case057' | 'case058' | 'case059' | 'case060' | 'case061' | 'case062' | 'case063' | 'case064' | 'case065' | 'case066' | 'daily' | 'team';
+
+const CASE001_PHASES = new Set(['hq', 'briefing', 'evidence', 'interviews', 'timeline', 'deduction', 'review']);
+const CASE002_PHASES = new Set(['case002Briefing', 'case002Evidence', 'case002Interviews', 'case002Timeline', 'case002Deduction', 'case002Review']);
+const CASE003_PHASES = new Set(['case003Briefing', 'case003Evidence', 'case003Interviews', 'case003Timeline', 'case003Deduction', 'case003Review']);
+
+function isKnownAppPhase(value: unknown): value is AppPhase {
+  return typeof value === 'string' && (
+    value === 'menu' ||
+    value === 'campaign' ||
+    value === 'daily' ||
+    value === 'team' ||
+    CASE001_PHASES.has(value) ||
+    CASE002_PHASES.has(value) ||
+    CASE003_PHASES.has(value) ||
+    /^case(?:00[4-9]|0[1-5][0-9]|06[0-6])$/.test(value)
+  );
+}
 
 type SavedState = {
   phase: AppPhase;
@@ -386,27 +404,35 @@ export default function HomeScreen() {
         }
         if (!active) return;
         const saved = parseStoredJson(raw) as Partial<SavedState> | null;
-        if (saved && typeof saved === 'object') {
-          if (Array.isArray(saved.cluesFound)) setCluesFound(saved.cluesFound);
-          if (Array.isArray(saved.askedQuestions)) setAskedQuestions(saved.askedQuestions);
-          if (Array.isArray(saved.timelineOrder)) setTimelineOrder(saved.timelineOrder);
-          if (typeof saved.timelineSolved === 'boolean') setTimelineSolved(saved.timelineSolved);
-          if (typeof saved.timelineAttempts === 'number') setTimelineAttempts(saved.timelineAttempts);
-          if (typeof saved.selectedSuspect === 'string' || saved.selectedSuspect === null) {
-            setSelectedSuspect(saved.selectedSuspect ?? null);
-          }
-          if (typeof saved.selectedMotive === 'string' || saved.selectedMotive === null) {
-            setSelectedMotive(saved.selectedMotive ?? null);
-          }
-          if (typeof saved.caseCompleted === 'boolean') setCaseCompleted(saved.caseCompleted);
-          if (saved.phase) {
-            // New players should enter the playable investigation, not stop at the Bureau dashboard.
-            // Preserve an existing investigation or completed-file review exactly as saved.
-            const hasStartedInvestigation =
-              (Array.isArray(saved.cluesFound) && saved.cluesFound.length > 0) ||
-              (Array.isArray(saved.askedQuestions) && saved.askedQuestions.length > 0) ||
-              saved.caseCompleted === true;
-            setPhase(saved.phase === 'hq' && !hasStartedInvestigation ? 'menu' : saved.phase);
+        if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
+          const restoredProgress = sanitizeCase001SavedProgress(saved);
+          setCluesFound(restoredProgress.cluesFound);
+          setAskedQuestions(restoredProgress.askedQuestions);
+          setTimelineOrder(restoredProgress.timelineOrder);
+          setTimelineSolved(restoredProgress.timelineSolved);
+          setTimelineAttempts(restoredProgress.timelineAttempts);
+          setSelectedSuspect(restoredProgress.selectedSuspect);
+          setSelectedMotive(restoredProgress.selectedMotive);
+          setCaseCompleted(restoredProgress.caseCompleted);
+
+          const hasStartedInvestigation =
+            restoredProgress.cluesFound.length > 0 ||
+            restoredProgress.askedQuestions.length > 0 ||
+            restoredProgress.timelineOrder.length > 0 ||
+            restoredProgress.caseCompleted;
+
+          if (typeof saved.phase === 'string' && CASE001_PHASES.has(saved.phase)) {
+            // Re-derive Case 001's resume stage from verified progress; never trust a saved screen
+            // to skip an evidence, witness or chronology gate.
+            setPhase(
+              saved.phase === 'hq'
+                ? (hasStartedInvestigation ? 'hq' : 'menu')
+                : getCase001ResumePhase(restoredProgress),
+            );
+          } else if (isKnownAppPhase(saved.phase)) {
+            setPhase(saved.phase);
+          } else {
+            setPhase(getCase001ResumePhase(restoredProgress));
           }
         }
       })
