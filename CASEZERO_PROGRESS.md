@@ -1,3 +1,40 @@
+# Current development checkpoint — 10 November 2026
+
+## Case 001 save-state integrity hardening
+
+The tutorial save is now restored as untrusted input instead of being copied directly into React state.
+
+- Added `sanitizeCase001SavedProgress` in the existing Case 001 game module.
+- Only known clue, witness-question, timeline-event, suspect and motive IDs are accepted. Duplicate IDs are removed.
+- Interview progress is retained only after all five evidence records are found. Timeline progress is retained only after every witness has been heard.
+- A timeline is considered solved only when the four-event order is exactly correct and the evidence/witness prerequisites are met. If any timeline ID is unknown or duplicated, the entire saved sequence is discarded rather than filtered into a potentially correct answer.
+- Suspect/motive choices are restored only after a verified timeline. A completed case is restored only when the correct suspect and motive are both selected.
+- Negative, non-integer, infinite and implausibly large attempt counts are rejected or capped.
+- Tutorial resume routing is re-derived from the sanitized evidence rather than trusting a saved screen name. Known non-tutorial screens remain restorable; unknown phase strings are rejected.
+- The conclusion handler now independently checks the evidence, witness and correct-timeline gates before it can mark the case complete.
+
+Regression tests cover malformed values, unknown and duplicate IDs, incomplete evidence, forged timeline completion, wrong conclusions, legitimate partial progress, and a genuinely completed save.
+
+Source changes:
+- [Case 001 sanitizer](https://github.com/appmaking30-cpu/CaseZero/commit/c88ca84cba340f9120f9a34b99c358c8d29ad351)
+- [Save-tampering regression tests](https://github.com/appmaking30-cpu/CaseZero/commit/b79308803c15fffc433ecbb845bd0172f0277f80)
+- [Validated save restoration](https://github.com/appmaking30-cpu/CaseZero/commit/6efa4662384dbfa13e75541bfc04c544e7cd230c)
+- [Conclusion prerequisite guard](https://github.com/appmaking30-cpu/CaseZero/commit/ddcebd9c97b06f3dd64a0fc99c06435511f64338)
+
+A rollback branch, `casezero-safety-checkpoint-2026-11-10`, was created from the pre-change development head `78f74228e1e2c2b3e3388d14cc844a4ac66d2202`.
+
+## Verification status
+
+- The final-source browser/checks run is [42814610289](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814610289).
+- The final-source standalone Android APK run is [42814610164](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814610164).
+- Both were started from commit `ddcebd9`. Their results must be checked before describing the sanitizer as CI-verified or distributing a new APK.
+- The previous successful APK [42621083166](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42621083166) predates this save-state hardening and does not contain it.
+- Physical Android installation and a full Case 001 phone playthrough remain outstanding.
+
+No Replit Agent, paid EAS build, paid API, paid hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 9 November 2026
 
 ## Case 001 resume-flow correction
