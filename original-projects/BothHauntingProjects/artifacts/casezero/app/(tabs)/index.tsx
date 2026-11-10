@@ -785,6 +785,22 @@ export default function HomeScreen() {
   };
 
   const submitDeduction = () => {
+    const hasCompleteEvidence = allCluesFound && allWitnessesHeard;
+    const hasVerifiedTimeline = timelineSolved && isTimelineCorrect(timelineOrder);
+    if (!hasCompleteEvidence || !hasVerifiedTimeline) {
+      setDeductionMessage('');
+      setPhase(getCase001ResumePhase({
+        caseCompleted: false,
+        cluesFound,
+        askedQuestions,
+        timelineOrder,
+        timelineSolved,
+        selectedSuspect,
+        selectedMotive,
+      }));
+      return;
+    }
+
     if (isDeductionCorrect(selectedSuspect, selectedMotive)) {
       setCaseCompleted(true);
       setDeductionMessage('');
