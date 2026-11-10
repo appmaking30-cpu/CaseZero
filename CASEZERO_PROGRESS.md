@@ -25,9 +25,8 @@ A rollback branch, `casezero-safety-checkpoint-2026-11-10`, was created from the
 
 ## Verification status
 
-- The final-source browser/checks run is [42814610289](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814610289).
-- The final-source standalone Android APK run is [42814610164](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814610164).
-- Both were started from commit `ddcebd9`. Their results must be checked before describing the sanitizer as CI-verified or distributing a new APK.
+- The first CI attempt, [42814610289](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814610289) and [42814610164](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814610164), caught strict TypeScript inference on the ID sets. The sets were explicitly typed as `ReadonlySet<string>` in [f2c01e2](https://github.com/appmaking30-cpu/CaseZero/commit/f2c01e27bf737c0b89649dc681847110ddbeb29d).
+- Final-source checks [42814764720](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814764720) and Android build [42814764581](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814764581) run against commit `f2c01e2`. At the last inspection, TypeScript and the complete unit-test suite had passed in both workflows; Expo web export/browser smoke and Gradle APK assembly/payload upload were still in progress. Do not call the workflows green or distribute a new APK until the final jobs complete.
 - The previous successful APK [42621083166](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42621083166) predates this save-state hardening and does not contain it.
 - Physical Android installation and a full Case 001 phone playthrough remain outstanding.
 
