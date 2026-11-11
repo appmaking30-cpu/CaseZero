@@ -186,7 +186,14 @@ export type CasePhase =
 
 export type InvestigationMemory = {
   inspectedClues: string[];
+  evidenceNotes: Array<{ title: string; label: string; detail: string }>;
   askedQuestions: string[];
+  witnessStatements: Array<{
+    witnessName: string;
+    role: string;
+    prompt: string;
+    reply: string;
+  }>;
   unansweredQuestions: string[];
 };
 
@@ -194,11 +201,16 @@ export function getInvestigationMemory(
   clueIds: readonly string[],
   questionKeys: readonly string[],
 ): InvestigationMemory {
-  const inspectedClues = CASE_001.clues
-    .filter((clue) => clueIds.includes(clue.id))
-    .map((clue) => clue.title);
+  const inspectedRecords = CASE_001.clues.filter((clue) => clueIds.includes(clue.id));
+  const inspectedClues = inspectedRecords.map((clue) => clue.title);
+  const evidenceNotes = inspectedRecords.map(({ title, label, detail }) => ({
+    title,
+    label,
+    detail,
+  }));
 
   const askedQuestions: string[] = [];
+  const witnessStatements: InvestigationMemory["witnessStatements"] = [];
   const unansweredQuestions: string[] = [];
 
   for (const witness of CASE_001.witnesses) {
@@ -206,13 +218,25 @@ export function getInvestigationMemory(
       const note = `${witness.name}: ${question.prompt}`;
       if (questionKeys.includes(`${witness.id}:${question.id}`)) {
         askedQuestions.push(note);
+        witnessStatements.push({
+          witnessName: witness.name,
+          role: witness.role,
+          prompt: question.prompt,
+          reply: question.reply,
+        });
       } else {
         unansweredQuestions.push(note);
       }
     }
   }
 
-  return { inspectedClues, askedQuestions, unansweredQuestions };
+  return {
+    inspectedClues,
+    evidenceNotes,
+    askedQuestions,
+    witnessStatements,
+    unansweredQuestions,
+  };
 }
 
 export function isTimelineCorrect(order: readonly string[]): boolean {
