@@ -24,14 +24,14 @@ A rollback checkpoint, `casezero-safety-checkpoint-2026-11-11`, was created from
 
 - The original Replit entry still resolves as `BothHauntingProjects` and reports last updated `2026-10-30T08:28:03.800Z`. No Replit write/update was made.
 - The original ZIP is still present on `replit-original-backup-2026-10-31`: 7,167,701 bytes, file SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
-- Active branch: `casezero-development`, head `d15a2385619a858b5ff2d515da71a05fdc32458e`. It is 746 commits ahead of the original backup branch and zero commits behind it.
+- Active branch: `casezero-development`; the current code/test revision is `d15a2385619a858b5ff2d515da71a05fdc32458e` (later commits in this run only update documentation). It is 748 commits ahead of the original backup branch and zero commits behind it.
 - The recursive source tree contains 66 game/case data modules (including shared opening-case modules), 63 case-specific screen components for Cases 004–066, one separate Daily Case Bulletin screen, and 63 dedicated case test files (Case 001 and Cases 005–066; Cases 002–004 are covered in the opening-case integration suite).
 - This is a file inventory, not a claim that every case has had a full playthrough.
 
 ## Verification for the field-notebook source
 
-- [Workspace checks — run 43025576531](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43025576531): TypeScript and the full unit-test suite passed; Expo web export and browser walkthrough were still running at the last check.
-- [Android APK — run 43025576454](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43025576454): TypeScript, unit tests and Android native prebuild passed; Gradle APK assembly was still running at the last check.
+- [Workspace checks — run 43025576531](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43025576531): completed successfully. TypeScript, the full unit-test suite, Expo web export, the dark mobile/browser campaign smoke (including the new notebook hide/reopen assertions), and screenshot upload all passed. Preview artifact ID `13857321599` (3,200,531 bytes) is available from the run.
+- [Android APK — run 43025576454](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43025576454): TypeScript, unit tests and Android native prebuild passed; Gradle APK assembly was still in progress at the last check. No new APK artifact was available yet.
 - The previous successful APK is [run 42814764581](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814764581), artifact ID `13765622041`, 47,698,704 bytes, expiring 10 December 2026. It predates the 11 November notebook changes and is not the current build.
 - Physical Android installation and a complete Case 001 phone playthrough remain outstanding.
 
