@@ -24,7 +24,7 @@ A rollback checkpoint, `casezero-safety-checkpoint-2026-11-11`, was created from
 
 - The original Replit entry still resolves as `BothHauntingProjects` and reports last updated `2026-10-30T08:28:03.800Z`. No Replit write/update was made.
 - The original ZIP is still present on `replit-original-backup-2026-10-31`: 7,167,701 bytes, file SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
-- Active branch: `casezero-development`; the current code/test revision is `d15a2385619a858b5ff2d515da71a05fdc32458e` (later commits in this run only update documentation). It is 750 commits ahead of the original backup branch and zero commits behind it.
+- Active branch: `casezero-development`; the current code/test revision is `d15a2385619a858b5ff2d515da71a05fdc32458e` (later commits in this run only update documentation). It contains all commits from the original backup branch (zero commits behind) plus the subsequent development history.
 - The recursive source tree contains 66 game/case data modules (including shared opening-case modules), 63 case-specific screen components for Cases 004–066, one separate Daily Case Bulletin screen, and 63 dedicated case test files (Case 001 and Cases 005–066; Cases 002–004 are covered in the opening-case integration suite).
 - This is a file inventory, not a claim that every case has had a full playthrough.
 
