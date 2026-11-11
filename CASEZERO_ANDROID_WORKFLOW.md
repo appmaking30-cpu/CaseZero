@@ -78,7 +78,7 @@ The project currently uses Expo SDK 58. We are not depending on the Play Store v
 
 ## 6. Current verification notes — 11 November 2026
 
-- Active development head: `d15a2385619a858b5ff2d515da71a05fdc32458e`. A safety branch, `casezero-safety-checkpoint-2026-11-11`, preserves the pre-notebook head `eca33208744ab58f6b6bd3e96bddc32564859f3b`.
+- Code/test revision used by the 11 November workflows: `d15a2385619a858b5ff2d515da71a05fdc32458e` (subsequent branch commits in this run only update documentation). A safety branch, `casezero-safety-checkpoint-2026-11-11`, preserves the pre-notebook head `eca33208744ab58f6b6bd3e96bddc32564859f3b`.
 - The 11 November change adds a collapsible Case 001 field notebook on the deduction screen. It shows only inspected evidence details and witness replies for questions actually asked, plus optional questions still available. It does not reveal answers to unasked questions.
 - Source/test commits: [memory helper](https://github.com/appmaking30-cpu/CaseZero/commit/b73a19eab20448e9cd3b3c472f387ef6e0876e8a), [unit tests](https://github.com/appmaking30-cpu/CaseZero/commit/19f28b223140d54adc1c6eb24272d707a6116eed), [app integration](https://github.com/appmaking30-cpu/CaseZero/commit/07a4a137b35d8a6397ba650dd7889265cda600bb), [browser test](https://github.com/appmaking30-cpu/CaseZero/commit/d15a2385619a858b5ff2d515da71a05fdc32458e).
 - Workspace checks [43025576531](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43025576531) completed successfully: TypeScript, the full unit suite, Expo web export, the dark mobile/browser campaign smoke (including notebook hide/reopen), and screenshot upload all passed. Preview artifact ID `13857321599` (3,200,531 bytes) is available from the run.
