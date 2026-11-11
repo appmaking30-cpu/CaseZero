@@ -10,7 +10,7 @@ This is the supported workflow for continuing the existing CaseZero project with
 - Canonical app: `original-projects/BothHauntingProjects/artifacts/casezero/`.
 - Active development branch: `casezero-development`.
 - Do not develop on `main`, `casezero-original-work`, or the original ZIP/backup branch.
-- Safety snapshots: `casezero-safety-checkpoint-2026-11-07`, `casezero-verified-checkpoint-2026-11-07`, and `casezero-safety-checkpoint-2026-11-10` (the pre-save-sanitizer source head).
+- Safety snapshots: `casezero-safety-checkpoint-2026-11-07`, `casezero-verified-checkpoint-2026-11-07`, and `casezero-safety-checkpoint-2026-11-10` (the pre-save-sanitizer source head), and `casezero-safety-checkpoint-2026-11-11` (the pre-field-notebook source head).
 
 The existing Replit project is not being replaced. Do not edit the Replit copy and GitHub copy independently.
 
@@ -25,6 +25,8 @@ The existing Replit project is not being replaced. Do not edit the Replit copy a
 ### Case 001 save validation
 
 AsyncStorage is treated as untrusted input. Before restoring the tutorial, `sanitizeCase001SavedProgress` checks known IDs and the real investigation gates. Interview progress requires all five clues; timeline progress requires all three witnesses; a solved timeline requires the exact chronological order; completion requires the verified timeline plus Miles and the protective motive. The conclusion handler repeats the prerequisites, and regression tests live in `scripts/tests/case001.test.ts`. Keep this logic pure and unit-testable outside React Native.
+
+The Case 001 deduction screen also has a collapsible field notebook. It derives full evidence details from inspected clue IDs and exact witness replies from asked-question IDs, while leaving unasked replies hidden. The notebook is review-only and does not mutate the investigation save.
 
 The existing stack is Expo Router, React Native, TypeScript and AsyncStorage. Keep the current stack and lockfile.
 
@@ -74,13 +76,14 @@ The project currently uses Expo SDK 58. We are not depending on the Play Store v
 - No monetization is active. Hints, case packs, optional ads and Bureau upgrades remain future decisions requiring explicit approval.
 - No physical Android installation/playthrough, Play Store AAB, production signing, store listing or publishing has been completed.
 
-## 6. Current verification notes — 10 November 2026
+## 6. Current verification notes — 11 November 2026
 
-- The latest source work hardens Case 001 AsyncStorage restoration and the conclusion handler. The pre-change rollback branch is `casezero-safety-checkpoint-2026-11-10`.
-- The first CI attempt exposed strict TypeScript inference on the case ID sets. This was fixed by explicitly typing them as `ReadonlySet<string>` in [f2c01e2](https://github.com/appmaking30-cpu/CaseZero/commit/f2c01e27bf737c0b89649dc681847110ddbeb29d).
-- Final-source checks: [42814764720](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814764720). Android standalone APK: [42814764581](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814764581). Both run the corrected code at commit `f2c01e2). At the last inspection, TypeScript and the complete unit suite passed; web export/browser smoke and Gradle APK assembly/verification/upload were still running. Verify their final conclusions before treating this build as green.
-- The previous successful standalone APK is [42621083166](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42621083166), artifact `casezero-standalone-apk` (47,696,824 bytes; ID `13677657518`). It was built from app-source commit `7e0d7c5` on 9 November and predates the 10 November save sanitizer. It is not the current build.
-- The browser checks from [42621083377](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42621083377) passed TypeScript, all unit tests, Expo web export, the dark mobile walkthrough, 16:9 checks and screenshot upload on commit `7e0d7c5`. These do not validate the new save sanitizer.
-- The source archive remains on `replit-original-backup-2026-10-31`; the existing Replit workspace has not been edited by this GitHub workflow. The current development branch is based on the same imported history and contains all backup commits.
-- Physical Android installation and a complete Case 001 phone playthrough remain outstanding. The APK workflow verifies the standalone package payload but cannot substitute for testing on the user's handset.
+- Active development head: `d15a2385619a858b5ff2d515da71a05fdc32458e`. A safety branch, `casezero-safety-checkpoint-2026-11-11`, preserves the pre-notebook head `eca33208744ab58f6b6bd3e96bddc32564859f3b`.
+- The 11 November change adds a collapsible Case 001 field notebook on the deduction screen. It shows only inspected evidence details and witness replies for questions actually asked, plus optional questions still available. It does not reveal answers to unasked questions.
+- Source/test commits: [memory helper](https://github.com/appmaking30-cpu/CaseZero/commit/b73a19eab20448e9cd3b3c472f387ef6e0876e8a), [unit tests](https://github.com/appmaking30-cpu/CaseZero/commit/19f28b223140d54adc1c6eb24272d707a6116eed), [app integration](https://github.com/appmaking30-cpu/CaseZero/commit/07a4a137b35d8a6397ba650dd7889265cda600bb), [browser test](https://github.com/appmaking30-cpu/CaseZero/commit/d15a2385619a858b5ff2d515da71a05fdc32458e).
+- Workspace checks [43025576531](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43025576531): TypeScript and the full unit suite passed; Expo web export and browser smoke were still running at the last inspection.
+- Android build [43025576454](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43025576454): TypeScript, unit tests and Android native prebuild passed; Gradle APK assembly was still running at the last inspection.
+- The previous successful APK is [42814764581](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814764581), artifact `casezero-standalone-apk` (47,698,704 bytes; ID `13765622041`; expires 10 December 2026). It predates the field-notebook changes and is not the current build.
+- Replit's existing `BothHauntingProjects` entry was re-resolved on 11 November and still reported last updated `2026-10-30T08:28:03.800Z`. No Replit Agent or Replit project write was made. The original ZIP remains on `replit-original-backup-2026-10-31`.
+- Physical Android installation and a full Case 001 phone playthrough remain outstanding. A passing browser walkthrough and APK payload verification do not substitute for device testing.
 - No paid Replit Agent, EAS build, paid API, paid hosting or monetization was used.
