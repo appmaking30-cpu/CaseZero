@@ -121,6 +121,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('A porter addendum at 21:13 reads', { exact: false }).waitFor();
     await page.getByRole('button', { name: 'HIDE NOTES' }).click();
     await page.getByRole('button', { name: 'REVIEW NOTES' }).waitFor();
+    await page.getByText('A cart stopped outside the records room at 21:12. The wheels squeaked twice, then rolled toward the luggage office.', { exact: true }).waitFor({ state: 'hidden' });
     await page.getByRole('button', { name: 'REVIEW NOTES' }).click();
     await page.getByText('A cart stopped outside the records room at 21:12. The wheels squeaked twice, then rolled toward the luggage office.', { exact: true }).waitFor();
 
