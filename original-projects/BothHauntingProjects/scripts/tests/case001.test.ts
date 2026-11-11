@@ -252,7 +252,7 @@ test('the signed porter addendum follows the witnessed cart movement', () => {
   assert.match(CASE_001.proof, /21:13 porter addendum/);
 });
 
-test('investigation memory records exact evidence and interview choices', () => {
+test('investigation memory records evidence details and the exact witness replies the player heard', () => {
   const memory = getInvestigationMemory(
     ['leak', 'wheel'],
     ['jo:sound', 'nia:route'],
@@ -262,9 +262,28 @@ test('investigation memory records exact evidence and interview choices', () => 
     'The ceiling stain',
     'The chipped cart wheel',
   ]);
+  assert.deepEqual(memory.evidenceNotes.map(({ title, label }) => ({ title, label })), [
+    { title: 'The ceiling stain', label: 'Physical evidence' },
+    { title: 'The chipped cart wheel', label: 'Trace evidence' },
+  ]);
+  assert.equal(memory.evidenceNotes[0].detail, CASE_001.clues[0].detail);
   assert.deepEqual(memory.askedQuestions, [
     'Jo Bell: What did you hear near the records room?',
     'Nia Vale: What did you see after the departure announcement?',
+  ]);
+  assert.deepEqual(memory.witnessStatements, [
+    {
+      witnessName: 'Jo Bell',
+      role: 'Night cleaner',
+      prompt: 'What did you hear near the records room?',
+      reply: 'A cart stopped outside the records room at 21:12. The wheels squeaked twice, then rolled toward the luggage office.',
+    },
+    {
+      witnessName: 'Nia Vale',
+      role: 'Passenger',
+      prompt: 'What did you see after the departure announcement?',
+      reply: 'Miles pushed an empty cart toward the records room, then returned with a damp blue parcel and took it to the luggage office.',
+    },
   ]);
   assert.equal(memory.unansweredQuestions.length, 4);
   assert.ok(memory.unansweredQuestions.every((note) => !memory.askedQuestions.includes(note)));
