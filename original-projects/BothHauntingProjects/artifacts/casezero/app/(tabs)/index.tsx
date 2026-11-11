@@ -337,6 +337,7 @@ export default function HomeScreen() {
   const [caseCompleted, setCaseCompleted] = useState(false);
   const [activeClue, setActiveClue] = useState<string | null>(null);
   const [activeReply, setActiveReply] = useState<string | null>(null);
+  const [notebookExpanded, setNotebookExpanded] = useState(true);
   const [timelineMessage, setTimelineMessage] = useState('');
   const [deductionMessage, setDeductionMessage] = useState('');
 
@@ -2227,6 +2228,67 @@ export default function HomeScreen() {
         {phase === 'deduction' && (
           <>
             <InvestigationBanner eyebrow="FINAL REVIEW · FILE 001" title="Build your case." subtitle="Choose the person and motive that explain every verified clue. An unsupported guess will not close the file." step="05 / DEDUCTION" progress="ALL EVIDENCE MUST AGREE" />
+            <View style={[styles.card, cardStyle]}>
+              <View style={styles.row}>
+                <View style={styles.flexCopy}>
+                  <SectionLabel colors={colors}>FIELD NOTEBOOK · FILE 001</SectionLabel>
+                  <Text style={[styles.small, mutedStyle]}>
+                    {investigationMemory.evidenceNotes.length} records logged · {investigationMemory.witnessStatements.length} statements recorded · {unansweredQuestions} optional questions unasked
+                  </Text>
+                </View>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityState={{ expanded: notebookExpanded }}
+                  onPress={() => setNotebookExpanded((current) => !current)}
+                  style={({ pressed }) => ({
+                    minHeight: 44,
+                    minWidth: 92,
+                    paddingHorizontal: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderWidth: 1,
+                    borderColor: colors.border,
+                    opacity: pressed ? 0.75 : 1,
+                  })}
+                >
+                  <Text style={{ color: colors.primary, fontSize: 10, fontWeight: '900', letterSpacing: 1 }}>
+                    {notebookExpanded ? 'HIDE NOTES' : 'REVIEW NOTES'}
+                  </Text>
+                </Pressable>
+              </View>
+              {notebookExpanded && (
+                <View style={{ gap: 16, marginTop: 16 }}>
+                  <View style={{ gap: 9 }}>
+                    <SectionLabel colors={colors}>INSPECTED RECORDS</SectionLabel>
+                    {investigationMemory.evidenceNotes.map((note) => (
+                      <View key={note.title} style={{ paddingTop: 9, borderTopWidth: 1, borderTopColor: colors.border, gap: 4 }}>
+                        <Text style={[styles.cardTitle, textStyle]}>{note.title}</Text>
+                        <Text style={[styles.small, { color: colors.primary }]}>{note.label}</Text>
+                        <Text style={[styles.body, mutedStyle]}>{note.detail}</Text>
+                      </View>
+                    ))}
+                  </View>
+                  <View style={{ gap: 9 }}>
+                    <SectionLabel colors={colors}>WITNESS STATEMENTS</SectionLabel>
+                    {investigationMemory.witnessStatements.map((statement) => (
+                      <View key={statement.witnessName + statement.prompt} style={{ paddingTop: 9, borderTopWidth: 1, borderTopColor: colors.border, gap: 4 }}>
+                        <Text style={[styles.small, { color: colors.primary }]}>{statement.witnessName} · {statement.role}</Text>
+                        <Text style={[styles.cardTitle, textStyle]}>{statement.prompt}</Text>
+                        <Text style={[styles.body, mutedStyle]}>{statement.reply}</Text>
+                      </View>
+                    ))}
+                  </View>
+                  {investigationMemory.unansweredQuestions.length > 0 && (
+                    <View style={{ gap: 6 }}>
+                      <SectionLabel colors={colors}>STILL AVAILABLE TO ASK</SectionLabel>
+                      {investigationMemory.unansweredQuestions.map((question) => (
+                        <Text key={question} style={[styles.small, mutedStyle]}>{question}</Text>
+                      ))}
+                    </View>
+                  )}
+                </View>
+              )}
+            </View>
             <View style={wideLayout ? styles.deductionGrid : undefined}>
             <View style={[styles.card, cardStyle, wideLayout && styles.deductionPane]}>
               <SectionLabel colors={colors}>Who moved it?</SectionLabel>
