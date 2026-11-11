@@ -1,3 +1,44 @@
+# Current development checkpoint — 11 November 2026
+
+## Case 001 field notebook
+
+The tutorial's deduction stage now includes a collapsible field notebook so the player can review the evidence and testimony they actually inspected before choosing a conclusion.
+
+- The notebook lists only evidence records whose IDs are in the player's inspected-clue save.
+- It reproduces each inspected record's full label and detail, not just its title.
+- It records the exact witness replies for questions the player actually asked; unasked replies are not revealed.
+- It lists remaining optional questions and can be hidden/reopened without changing investigation progress.
+- The notebook is derived from the existing clue/question save state; it does not create a second, divergent copy of investigation progress.
+- Unit tests verify that only inspected evidence and asked replies are returned. Browser smoke verifies the notebook content and hide/reopen behavior.
+
+Source commits:
+- [Full evidence and witness memory](https://github.com/appmaking30-cpu/CaseZero/commit/b73a19eab20448e9cd3b3c472f387ef6e0876e8a)
+- [Notebook memory regression tests](https://github.com/appmaking30-cpu/CaseZero/commit/19f28b223140d54adc1c6eb24272d707a6116eed)
+- [Deduction-screen notebook](https://github.com/appmaking30-cpu/CaseZero/commit/07a4a137b35d8a6397ba650dd7889265cda600bb)
+- [Browser notebook walkthrough](https://github.com/appmaking30-cpu/CaseZero/commit/6a717698f7d50528ceec3387efeff0702e5d176e)
+- [Final hide/reopen assertion](https://github.com/appmaking30-cpu/CaseZero/commit/d15a2385619a858b5ff2d515da71a05fdc32458e)
+
+A rollback checkpoint, `casezero-safety-checkpoint-2026-11-11`, was created from the pre-notebook source head `eca33208744ab58f6b6bd3e96bddc32564859f3b`.
+
+## Preservation and exact source inventory
+
+- The original Replit entry still resolves as `BothHauntingProjects` and reports last updated `2026-10-30T08:28:03.800Z`. No Replit write/update was made.
+- The original ZIP is still present on `replit-original-backup-2026-10-31`: 7,167,701 bytes, file SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- Active branch: `casezero-development`, head `d15a2385619a858b5ff2d515da71a05fdc32458e`. It is 746 commits ahead of the original backup branch and zero commits behind it.
+- The recursive source tree contains 66 game/case data modules (including shared opening-case modules), 63 case-specific screen components for Cases 004–066, one separate Daily Case Bulletin screen, and 63 dedicated case test files (Case 001 and Cases 005–066; Cases 002–004 are covered in the opening-case integration suite).
+- This is a file inventory, not a claim that every case has had a full playthrough.
+
+## Verification for the field-notebook source
+
+- [Workspace checks — run 43025576531](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43025576531): TypeScript and the full unit-test suite passed; Expo web export and browser walkthrough were still running at the last check.
+- [Android APK — run 43025576454](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43025576454): TypeScript, unit tests and Android native prebuild passed; Gradle APK assembly was still running at the last check.
+- The previous successful APK is [run 42814764581](https://github.com/appmaking30-cpu/CaseZero/actions/runs/42814764581), artifact ID `13765622041`, 47,698,704 bytes, expiring 10 December 2026. It predates the 11 November notebook changes and is not the current build.
+- Physical Android installation and a complete Case 001 phone playthrough remain outstanding.
+
+No Replit Agent, paid EAS build, paid API, paid hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 10 November 2026
 
 ## Case 001 save-state integrity hardening
@@ -90,7 +131,7 @@ No Replit Agent, paid EAS build, paid API, paid hosting or monetization was used
 - **Cases 007–040:** case data/rules and dedicated screens exist. The recorded unit suite covers their rules, while browser smoke only checked screen navigation and one-clue save/restore. They have not all been completed as full browser mysteries.
 - **Cases 041–066:** included in the recorded full browser walkthrough, including the finite Missing Detective endgame.
 - Shared systems in source: investigation archive/carryover, seven date-rotating Daily Case Bulletin mysteries, and three Bureau specialists with saved assignments, XP/ranks and evidence-gated insights.
-- The repository contains 67 case data modules, 63 dedicated case screen components (004–066), and 63 dedicated case test files (Case 001 plus Cases 005–066); Cases 002–004 are exercised by the opening-case integration tests and walkthrough.
+- The repository contains 66 game/case data modules, 63 dedicated case screen components (004–066), one separate Daily Case Bulletin screen, and 63 dedicated case test files (Case 001 plus Cases 005–066); Cases 002–004 are exercised by the opening-case integration tests and walkthrough.
 - The 1,000+ number is the long-term content target, not the current playable case count. The present campaign set is 66 cases. Daily bulletin entries rotate in-app by device date; automatic push notifications are not implemented.
 - No production backend, cloud sync, online case publishing, multiplayer, real-world case system, active monetization, production signing, Play Store AAB or store release is complete.
 - The dark cinematic UI and bespoke illustrated SVG scene components are implemented. Browser screenshots/layout checks are not a substitute for testing the APK on a real phone.
