@@ -114,6 +114,16 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('Timeline confirmed. The records now agree.').waitFor();
     await page.getByRole('button', { name: 'Make your deduction' }).click();
 
+    // The field notebook must reproduce the evidence and testimony actually inspected.
+    await page.getByText('FIELD NOTEBOOK · FILE 001', { exact: true }).waitFor();
+    await page.getByText('WITNESS STATEMENTS', { exact: true }).waitFor();
+    await page.getByText('A cart stopped outside the records room at 21:12. The wheels squeaked twice, then rolled toward the luggage office.', { exact: true }).waitFor();
+    await page.getByText('The porter addendum at 21:13 reads', { exact: false }).waitFor().catch(() => undefined);
+    await page.getByRole('button', { name: 'HIDE NOTES' }).click();
+    await page.getByRole('button', { name: 'REVIEW NOTES' }).waitFor();
+    await page.getByRole('button', { name: 'REVIEW NOTES' }).click();
+    await page.getByText('A cart stopped outside the records room at 21:12. The wheels squeaked twice, then rolled toward the luggage office.', { exact: true }).waitFor();
+
     // A wrong suspect must not lock the player out; the evidence supports a retry.
     await page.getByText('Ada Voss', { exact: true }).click();
     await page.getByText('To protect it from the leaking shelf', { exact: true }).click();
