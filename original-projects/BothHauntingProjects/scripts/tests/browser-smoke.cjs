@@ -101,6 +101,10 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
       await page.getByText(event, { exact: true }).click();
     }
     await page.getByText(/Not quite\. Recheck the timestamps/).waitFor();
+    await page.getByRole('button', { name: 'SHOW HINT' }).click();
+    await page.getByText('Start with the earliest timestamp. Which record is stamped 21:09?', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'HIDE HINT' }).click();
+    await page.getByText('Start with the earliest timestamp. Which record is stamped 21:09?', { exact: true }).waitFor({ state: 'hidden' });
     await page.getByRole('button', { name: 'Reset sequence and retry' }).click();
 
     for (const event of [
