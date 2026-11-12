@@ -1,3 +1,37 @@
+# Current development checkpoint — 12 November 2026
+
+## Case 001 progressive timeline guidance
+
+The tutorial now offers optional, free, progressively clearer hints after a failed timeline attempt. The player can reveal or hide guidance without losing progress or receiving a penalty.
+
+- First failed attempt: directs attention to the earliest 21:09 timestamp.
+- Second: relates the 21:12 cart report to the key sign-out.
+- Third: points out Ada's 21:16 receipt and the 21:18 inventory record.
+- Fourth and later: reveals the complete chronological sequence.
+- The hint level is derived from the already-saved timeline-attempt count. The hint text itself does not need a separate save.
+- A correct timeline closes the hint panel. Starting a new tutorial clears the hint visibility.
+- Unit tests cover the progressive levels, no hint before a failed attempt, invalid attempt values and the capped final hint.
+- Browser smoke verifies that the first hint can be shown and hidden.
+
+Source commits:
+- [Progressive hint rules](https://github.com/appmaking30-cpu/CaseZero/commit/7111e88b0953837a271dbb4acac54fc529969ce2)
+- [Timeline hint panel](https://github.com/appmaking30-cpu/CaseZero/commit/a293a2d690d8ecdfcafbc5c14590f66b57dce609)
+- [Hint-level unit tests](https://github.com/appmaking30-cpu/CaseZero/commit/f978eb99e691d9e49ed68fd09775a0fffb62e891)
+- [Browser show/hide test](https://github.com/appmaking30-cpu/CaseZero/commit/095a6c35aa0396f44ae87c2756571b0d66a1d1d3)
+
+A rollback checkpoint, `casezero-safety-checkpoint-2026-11-12`, was created at the source head before these changes: `03ad0a73164168463ef7d860236c68404d5e56e5`.
+
+## Verification for this change
+
+- [Workspace checks — run 43217980367](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43217980367): at the last inspection, TypeScript and the full unit-test suite passed; Expo web export and browser campaign smoke were still running.
+- [Android APK — run 43217980344](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43217980344): at the last inspection, TypeScript, unit tests and Android native project generation passed; Gradle APK assembly was still running. No artifact from this hint-enabled revision had yet been verified.
+- The last fully successful Android artifact is from [run 43025576454](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43025576454), artifact ID `13858843692`, 47,699,921 bytes, created 11 November 2026 and expiring 11 December 2026. It contains the field notebook but predates the progressive timeline hints.
+- Physical Android installation and a complete Case 001 phone playthrough remain outstanding. Browser smoke and APK payload verification are not device verification.
+
+No Replit Agent, paid EAS build, paid API, paid hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 11 November 2026
 
 ## Case 001 field notebook
