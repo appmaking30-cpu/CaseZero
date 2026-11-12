@@ -246,6 +246,21 @@ export function isTimelineCorrect(order: readonly string[]): boolean {
   );
 }
 
+const CASE_001_TIMELINE_HINTS = [
+  "Start with the earliest timestamp. Which record is stamped 21:09?",
+  "Jo heard the cart at 21:12, after the service key was signed out.",
+  "Ada's receipt is at 21:16. The envelope is logged later, at 21:18.",
+  "The full order is: service-key register → cart movement → refund receipt → luggage-office inventory.",
+] as const;
+
+/** Offer progressively clearer, optional guidance after each failed timeline attempt. */
+export function getCase001TimelineHint(attempts: number): string | null {
+  if (!Number.isFinite(attempts) || attempts < 1) return null;
+  const level = Math.floor(attempts);
+  if (level < 1) return null;
+  return CASE_001_TIMELINE_HINTS[Math.min(level, CASE_001_TIMELINE_HINTS.length) - 1] ?? null;
+}
+
 export function isDeductionCorrect(
   suspectId: string | null,
   motiveId: string | null,
