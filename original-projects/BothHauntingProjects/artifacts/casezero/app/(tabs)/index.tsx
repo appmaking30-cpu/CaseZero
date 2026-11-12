@@ -149,6 +149,7 @@ import {
   CASE_001,
   getInvestigationMemory,
   getCase001ResumePhase,
+  getCase001TimelineHint,
   sanitizeCase001SavedProgress,
   isDeductionCorrect,
   isTimelineCorrect,
@@ -339,6 +340,7 @@ export default function HomeScreen() {
   const [activeReply, setActiveReply] = useState<string | null>(null);
   const [notebookExpanded, setNotebookExpanded] = useState(true);
   const [timelineMessage, setTimelineMessage] = useState('');
+  const [timelineHintVisible, setTimelineHintVisible] = useState(false);
   const [deductionMessage, setDeductionMessage] = useState('');
 
   useEffect(() => {
@@ -588,6 +590,7 @@ export default function HomeScreen() {
     setActiveClue(null);
     setActiveReply(null);
     setTimelineMessage('');
+    setTimelineHintVisible(false);
     setDeductionMessage('');
     AsyncStorage.removeItem(SAVE_KEY).catch(() => undefined);
   };
@@ -626,6 +629,7 @@ export default function HomeScreen() {
     if (nextOrder.length === CASE_001.correctTimelineOrder.length) {
       if (isTimelineCorrect(nextOrder)) {
         setTimelineSolved(true);
+        setTimelineHintVisible(false);
         setTimelineMessage('Timeline confirmed. The records now agree.');
       } else {
         setTimelineAttempts((current) => current + 1);
@@ -2213,6 +2217,38 @@ export default function HomeScreen() {
               <Text style={[styles.notice, { color: timelineSolved ? colors.primary : colors.destructive }]}>
                 {timelineMessage}
               </Text>
+            )}
+            {timelineAttempts > 0 && !timelineSolved && (
+              <View style={[styles.card, cardStyle, { gap: 10 }]}>
+                <View style={styles.row}>
+                  <View style={styles.flexCopy}>
+                    <SectionLabel colors={colors}>OPTIONAL FIELD GUIDANCE</SectionLabel>
+                    <Text style={[styles.small, mutedStyle]}>Hints are free and carry no penalty. They become more specific after each failed sequence.</Text>
+                  </View>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityState={{ expanded: timelineHintVisible }}
+                    onPress={() => setTimelineHintVisible((current) => !current)}
+                    style={({ pressed }) => ({
+                      minHeight: 44,
+                      minWidth: 92,
+                      paddingHorizontal: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderWidth: 1,
+                      borderColor: colors.border,
+                      opacity: pressed ? 0.75 : 1,
+                    })}
+                  >
+                    <Text style={{ color: colors.primary, fontSize: 10, fontWeight: '900', letterSpacing: 1 }}>
+                      {timelineHintVisible ? 'HIDE HINT' : 'SHOW HINT'}
+                    </Text>
+                  </Pressable>
+                </View>
+                {timelineHintVisible && (
+                  <Text style={[styles.body, mutedStyle]}>{getCase001TimelineHint(timelineAttempts)}</Text>
+                )}
+              </View>
             )}
             {timelineSolved ? (
               <ActionButton title="Make your deduction" onPress={() => setPhase('deduction')} colors={colors} />
