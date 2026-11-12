@@ -9,6 +9,7 @@ import {
   CASE_001,
   getInvestigationMemory,
   getCase001ResumePhase,
+  getCase001TimelineHint,
   sanitizeCase001SavedProgress,
   isDeductionCorrect,
   isTimelineCorrect,
@@ -41,6 +42,17 @@ test('timeline accepts the evidence-backed chronological order only', () => {
     false,
   );
   assert.equal(isTimelineCorrect(['key', 'cart']), false);
+});
+
+test('Case 001 timeline hints are optional and become more specific after failed attempts', () => {
+  assert.equal(getCase001TimelineHint(0), null);
+  assert.equal(getCase001TimelineHint(-1), null);
+  assert.equal(getCase001TimelineHint(Number.NaN), null);
+  assert.match(getCase001TimelineHint(1) ?? '', /earliest timestamp.*21:09/);
+  assert.match(getCase001TimelineHint(2) ?? '', /21:12.*after the service key/);
+  assert.match(getCase001TimelineHint(3) ?? '', /21:16.*21:18/);
+  assert.match(getCase001TimelineHint(4) ?? '', /service-key register.*cart movement.*refund receipt.*luggage-office inventory/);
+  assert.equal(getCase001TimelineHint(99), getCase001TimelineHint(4));
 });
 
 test('deduction requires both the correct person and motive', () => {
