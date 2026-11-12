@@ -23,8 +23,8 @@ A rollback checkpoint, `casezero-safety-checkpoint-2026-11-12`, was created at t
 
 ## Verification for this change
 
-- [Workspace checks — run 43217980367](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43217980367): at the last inspection, TypeScript and the full unit-test suite passed; Expo web export and browser campaign smoke were still running.
-- [Android APK — run 43217980344](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43217980344): at the last inspection, TypeScript, unit tests and Android native project generation passed; Gradle APK assembly was still running. No artifact from this hint-enabled revision had yet been verified.
+- [Workspace checks — run 43217980367](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43217980367): completed successfully. TypeScript, the full unit-test suite, Expo web export, dark mobile campaign browser smoke (including the new hint show/hide assertion), and screenshot upload all passed. Preview artifact ID `13945460329` (3,200,288 bytes) is available from the run.
+- [Android APK — run 43217980344](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43217980344): TypeScript, unit tests and Android native project generation passed; Gradle APK assembly was still running at the latest check. No artifact from this hint-enabled revision had yet been verified.
 - The last fully successful Android artifact is from [run 43025576454](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43025576454), artifact ID `13858843692`, 47,699,921 bytes, created 11 November 2026 and expiring 11 December 2026. It contains the field notebook but predates the progressive timeline hints.
 - Physical Android installation and a complete Case 001 phone playthrough remain outstanding. Browser smoke and APK payload verification are not device verification.
 
