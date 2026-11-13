@@ -26,6 +26,8 @@ The existing Replit project is not being replaced. Do not edit the Replit copy a
 
 AsyncStorage is treated as untrusted input. Before restoring the tutorial, `sanitizeCase001SavedProgress` checks known IDs and the real investigation gates. Interview progress requires all five clues; timeline progress requires all three witnesses; a solved timeline requires the exact chronological order; completion requires the verified timeline plus Miles and the protective motive. The conclusion handler repeats the prerequisites, and regression tests live in `scripts/tests/case001.test.ts`. Keep this logic pure and unit-testable outside React Native.
 
+The Case 001 timeline screen now gives each selected event an accessible **REMOVE** control. This lets the player correct one selection without discarding the rest of the sequence; the solved timeline remains locked. The pure helper and browser walkthrough are covered by regression tests.
+
 The Case 001 deduction screen also has a collapsible field notebook. It derives full evidence details from inspected clue IDs and exact witness replies from asked-question IDs, while leaving unasked replies hidden. The notebook is review-only and does not mutate the investigation save.
 
 The existing stack is Expo Router, React Native, TypeScript and AsyncStorage. Keep the current stack and lockfile.
