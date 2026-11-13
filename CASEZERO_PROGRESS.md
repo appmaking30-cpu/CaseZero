@@ -1,3 +1,43 @@
+# Current development checkpoint — 13 November 2026
+
+## Case 001 timeline correction
+
+The tutorial timeline now allows the player to remove an individual selected event instead of forcing a complete reset after a mistaken choice.
+
+- Each event already placed in the sequence has its own accessible **REMOVE** control.
+- Removing one event preserves the other selected events and makes that event selectable again.
+- The correction clears the stale error message but does not erase failed-attempt history or earned hint progression.
+- A solved timeline cannot be altered.
+- A pure helper validates the event ID and returns a new sequence without mutating the original.
+- Unit tests cover single-event removal, unknown event IDs, and immutability.
+- The browser walkthrough deliberately enters a wrong sequence, removes one event, reselects it, and then completes the retry path.
+
+Source commits:
+- [Timeline removal helper](https://github.com/appmaking30-cpu/CaseZero/commit/0b0cc40b1096d041dca2b8fb1de5ec47cd31ff4d)
+- [Regression tests](https://github.com/appmaking30-cpu/CaseZero/commit/3319ec6d30eae1d03fef604f93b0fe1881f79d6c)
+- [Timeline screen integration](https://github.com/appmaking30-cpu/CaseZero/commit/cab641a525270884766a2ffac72d22b94af1c481)
+- [Browser correction walkthrough](https://github.com/appmaking30-cpu/CaseZero/commit/271a385929303763518346936ef234bcb22d4cba)
+
+Rollback checkpoint: `casezero-safety-checkpoint-2026-11-13`, created before the feature at source head `c147a642dec9872d65f42c96b1f9d75ea20ad5c1`.
+
+## Verification at the latest inspection
+
+- [Workspace checks — run 43422450831](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43422450831): TypeScript and the full unit-test suite (including the new removal test) passed. Expo web export and the Playwright browser walkthrough were still running; the run is not yet green.
+- [Android standalone APK — run 43422450809](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43422450809): TypeScript, unit tests, and Android native project generation passed. Gradle APK assembly was still running; no artifact for this revision had yet been uploaded.
+- The last verified APK is [run 43217980344](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43217980344), built before individual timeline removal. It is not the current revision's APK.
+- Physical Android installation and a complete Case 001 phone playthrough remain outstanding.
+
+## Preservation check
+
+- Original Replit workspace: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects), left untouched.
+- Original ZIP: [BothHauntingProjects.zip](https://github.com/appmaking30-cpu/CaseZero/blob/replit-original-backup-2026-10-31/BothHauntingProjects.zip), 7,167,701 bytes, Git blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- The development branch contains all backup-branch commits: 763 ahead, zero behind.
+- Current recursive tree: 462 entries, 67 case/game data modules, 63 case-specific screen components, and 63 dedicated case test files. This is a source inventory, not proof of 67 fully playable cases.
+
+No Replit Agent, paid EAS build, paid API, paid hosting, or monetization was used.
+
+---
+
 # Current development checkpoint — 12 November 2026
 
 ## Case 001 progressive timeline guidance
