@@ -246,6 +246,15 @@ export function isTimelineCorrect(order: readonly string[]): boolean {
   );
 }
 
+/** Remove one selected event so a player can correct a sequence without clearing all four choices. */
+export function removeCase001TimelineEvent(
+  order: readonly string[],
+  eventId: string,
+): string[] {
+  const isKnownEvent = CASE_001.timelineEvents.some((event) => event.id === eventId);
+  return isKnownEvent ? order.filter((id) => id !== eventId) : [...order];
+}
+
 const CASE_001_TIMELINE_HINTS = [
   "Start with the earliest timestamp. Which record is stamped 21:09?",
   "Jo heard the cart at 21:12, after the service key was signed out.",
