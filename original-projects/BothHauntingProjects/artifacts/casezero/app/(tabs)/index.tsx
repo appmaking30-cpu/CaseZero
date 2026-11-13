@@ -153,6 +153,7 @@ import {
   sanitizeCase001SavedProgress,
   isDeductionCorrect,
   isTimelineCorrect,
+  removeCase001TimelineEvent,
   type CasePhase,
 } from '@/game/case001';
 import {
@@ -636,6 +637,11 @@ export default function HomeScreen() {
         setTimelineMessage('Not quite. Recheck the timestamps, then try again.');
       }
     }
+  };
+
+  const removeTimelineSelection = (eventId: string) => {
+    setTimelineOrder((current) => removeCase001TimelineEvent(current, eventId));
+    setTimelineMessage('');
   };
 
   const resetTimeline = () => {
@@ -2184,9 +2190,32 @@ export default function HomeScreen() {
                 timelineOrder.map((id, index) => {
                   const event = CASE_001.timelineEvents.find((item) => item.id === id);
                   return (
-                    <Text key={id} style={[styles.sequenceItem, textStyle]}>
-                      {index + 1}. {event?.time} — {event?.title}
-                    </Text>
+                    <View
+                      key={id}
+                      style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: colors.border }}
+                    >
+                      <Text style={[styles.sequenceItem, textStyle, { flex: 1 }]}>
+                        {index + 1}. {event?.time} — {event?.title}
+                      </Text>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={`Remove ${event?.title ?? 'event'} from sequence`}
+                        disabled={timelineSolved}
+                        onPress={() => removeTimelineSelection(id)}
+                        style={({ pressed }) => ({
+                          minHeight: 40,
+                          minWidth: 76,
+                          paddingHorizontal: 9,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          borderWidth: 1,
+                          borderColor: colors.border,
+                          opacity: timelineSolved ? 0.4 : pressed ? 0.72 : 1,
+                        })}
+                      >
+                        <Text style={{ color: colors.primary, fontSize: 9, fontWeight: '900', letterSpacing: 0.9 }}>REMOVE</Text>
+                      </Pressable>
+                    </View>
                   );
                 })
               )}
