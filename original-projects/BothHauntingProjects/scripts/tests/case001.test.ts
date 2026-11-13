@@ -10,6 +10,7 @@ import {
   getInvestigationMemory,
   getCase001ResumePhase,
   getCase001TimelineHint,
+  removeCase001TimelineEvent,
   sanitizeCase001SavedProgress,
   isDeductionCorrect,
   isTimelineCorrect,
@@ -42,6 +43,13 @@ test('timeline accepts the evidence-backed chronological order only', () => {
     false,
   );
   assert.equal(isTimelineCorrect(['key', 'cart']), false);
+});
+
+test('a selected timeline event can be removed individually without mutating the saved order', () => {
+  const original = ['key', 'cart', 'receipt', 'inventory'];
+  assert.deepEqual(removeCase001TimelineEvent(original, 'cart'), ['key', 'receipt', 'inventory']);
+  assert.deepEqual(removeCase001TimelineEvent(original, 'unknown-event'), original);
+  assert.deepEqual(original, ['key', 'cart', 'receipt', 'inventory']);
 });
 
 test('Case 001 timeline hints are optional and become more specific after failed attempts', () => {
