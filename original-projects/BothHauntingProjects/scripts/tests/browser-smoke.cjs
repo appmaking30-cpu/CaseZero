@@ -105,6 +105,12 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('Start with the earliest timestamp. Which record is stamped 21:09?', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'HIDE HINT' }).click();
     await page.getByText('Start with the earliest timestamp. Which record is stamped 21:09?', { exact: true }).waitFor({ state: 'hidden' });
+
+    // Correct one choice in place, then reselect it to verify the card is usable again.
+    await page.getByRole('button', { name: 'Remove Envelope logged in the luggage office from sequence' }).click();
+    await page.getByText('3/4 events selected', { exact: true }).waitFor();
+    await page.getByText('Envelope logged in the luggage office', { exact: true }).click();
+    await page.getByText(/Not quite\\. Recheck the timestamps/).waitFor();
     await page.getByRole('button', { name: 'Reset sequence and retry' }).click();
 
     for (const event of [
