@@ -2374,6 +2374,9 @@ export default function HomeScreen() {
                   <Pressable
                     key={suspect.id}
                     accessibilityRole="button"
+                    accessibilityLabel={`Suspect ${suspect.name}, ${suspect.role}`}
+                    accessibilityHint="Selects this person as your evidence-based theory."
+                    accessibilityState={{ selected }}
                     onPress={() => setSelectedSuspect(suspect.id)}
                     style={[styles.choice, { borderColor: selected ? colors.primary : colors.border, backgroundColor: selected ? colors.secondary : 'transparent' }]}
                   >
@@ -2391,6 +2394,9 @@ export default function HomeScreen() {
                   <Pressable
                     key={motive.id}
                     accessibilityRole="button"
+                    accessibilityLabel={`Motive: ${motive.label}`}
+                    accessibilityHint="Selects this explanation for the move."
+                    accessibilityState={{ selected }}
                     onPress={() => setSelectedMotive(motive.id)}
                     style={[styles.choice, { borderColor: selected ? colors.primary : colors.border, backgroundColor: selected ? colors.secondary : 'transparent' }]}
                   >
