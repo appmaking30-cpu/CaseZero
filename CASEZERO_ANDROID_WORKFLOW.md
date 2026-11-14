@@ -28,6 +28,8 @@ AsyncStorage is treated as untrusted input. Before restoring the tutorial, `sani
 
 The Case 001 timeline screen now gives each selected event an accessible **REMOVE** control. This lets the player correct one selection without discarding the rest of the sequence; the solved timeline remains locked. The pure helper and browser walkthrough are covered by regression tests.
 
+Case 001 evidence records, witness questions and timeline choices also expose explicit screen-reader labels, contextual hints and selected/expanded/disabled state. The remove control explains that it removes only one event and preserves the rest. Browser smoke checks the accessible names; a real Android TalkBack pass is still required.
+
 The Case 001 deduction screen also has a collapsible field notebook. It derives full evidence details from inspected clue IDs and exact witness replies from asked-question IDs, while leaving unasked replies hidden. The notebook is review-only and does not mutate the investigation save.
 
 The existing stack is Expo Router, React Native, TypeScript and AsyncStorage. Keep the current stack and lockfile.
@@ -78,7 +80,16 @@ The project currently uses Expo SDK 58. We are not depending on the Play Store v
 - No monetization is active. Hints, case packs, optional ads and Bureau upgrades remain future decisions requiring explicit approval.
 - No physical Android installation/playthrough, Play Store AAB, production signing, store listing or publishing has been completed.
 
-## 6. Current verification notes — 11 November 2026
+## 6. Current verification notes — 14 November 2026
+
+- The 14 November source adds screen-reader labels, hints and state to Case 001 evidence, witness and timeline controls. The browser test now checks those accessible names.
+- The earlier timeline-correction browser smoke failed at a faulty Playwright assertion (over-escaped regex and a test sequence that repeated the wrong final event). The corrected walkthrough now preserves the first three correct selections, replaces the misplaced last event and expects the timeline to solve without a reset. A new green run has not yet been confirmed.
+- [Previous Android build run 43422450809](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43422450809) succeeded and produced artifact ID `14036082241` (47,700,828 bytes), built from commit `271a385929303763518346936ef234bcb22d4cba`. It contains individual timeline removal but predates the latest accessibility changes. It expires 13 December 2026.
+- [Previous browser run 43422450831](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43422450831) passed TypeScript, unit tests and Expo web export but failed only at the timeline-correction browser assertion. The fresh corrected browser run and fresh APK have not yet been verified.
+- The development branch remains 768 commits ahead of the original backup branch and zero behind. The original Replit workspace remains untouched, and the 7,167,701-byte ZIP remains preserved.
+- Physical Android installation, a complete Case 001 phone playthrough, and TalkBack testing remain outstanding.
+
+## 7. Historical verification notes — 11 November 2026
 
 - Code/test revision used by the 11 November workflows: `d15a2385619a858b5ff2d515da71a05fdc32458e` (subsequent branch commits in this run only update documentation). A safety branch, `casezero-safety-checkpoint-2026-11-11`, preserves the pre-notebook head `eca33208744ab58f6b6bd3e96bddc32564859f3b`.
 - The 11 November change adds a collapsible Case 001 field notebook on the deduction screen. It shows only inspected evidence details and witness replies for questions actually asked, plus optional questions still available. It does not reveal answers to unasked questions.
