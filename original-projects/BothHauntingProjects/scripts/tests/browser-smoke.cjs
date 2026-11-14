@@ -130,6 +130,10 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'REVIEW NOTES' }).click();
     await page.getByText('A cart stopped outside the records room at 21:12. The wheels squeaked twice, then rolled toward the luggage office.', { exact: true }).waitFor();
 
+    // Deduction choices expose meaningful screen-reader names before selection.
+    await page.getByRole('button', { name: 'Suspect Ada Voss, Night station clerk' }).waitFor();
+    await page.getByRole('button', { name: 'Motive: To protect it from the leaking shelf' }).waitFor();
+
     // A wrong suspect must not lock the player out; the evidence supports a retry.
     await page.getByText('Ada Voss', { exact: true }).click();
     await page.getByText('To protect it from the leaking shelf', { exact: true }).click();
