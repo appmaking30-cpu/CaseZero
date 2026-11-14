@@ -2093,6 +2093,9 @@ export default function HomeScreen() {
                 <Pressable
                   key={clue.id}
                   accessibilityRole="button"
+                  accessibilityLabel={`${clue.title}. ${clue.label}. ${found ? 'Logged' : 'Inspect record'}`}
+                  accessibilityHint={expanded ? 'Hides the record details.' : 'Opens the full record details.'}
+                  accessibilityState={{ selected: found, expanded }}
                   onPress={() => inspectClue(clue.id)}
                   style={({ pressed }) => [
                     styles.card,
@@ -2150,6 +2153,9 @@ export default function HomeScreen() {
                     <View key={key} style={styles.questionBlock}>
                       <Pressable
                         accessibilityRole="button"
+                        accessibilityLabel={`${witness.name}: ${question.prompt}`}
+                        accessibilityHint={active ? 'Hides this witness reply.' : 'Reveals this witness reply.'}
+                        accessibilityState={{ selected: asked, expanded: active }}
                         onPress={() => askQuestion(witness.id, question.id)}
                         style={({ pressed }) => [
                           styles.questionButton,
@@ -2200,6 +2206,8 @@ export default function HomeScreen() {
                       <Pressable
                         accessibilityRole="button"
                         accessibilityLabel={`Remove ${event?.title ?? 'event'} from sequence`}
+                        accessibilityHint="Removes only this event and keeps the other selected events."
+                        accessibilityState={{ disabled: timelineSolved }}
                         disabled={timelineSolved}
                         onPress={() => removeTimelineSelection(id)}
                         style={({ pressed }) => ({
@@ -2227,6 +2235,9 @@ export default function HomeScreen() {
                 <Pressable
                   key={event.id}
                   accessibilityRole="button"
+                  accessibilityLabel={`Select timeline event at ${event.time}: ${event.title}`}
+                  accessibilityHint={selected ? 'Already placed in your sequence.' : 'Adds this event to your timeline.'}
+                  accessibilityState={{ selected, disabled: selected || timelineSolved }}
                   disabled={selected || timelineSolved}
                   onPress={() => selectTimelineEvent(event.id)}
                   style={({ pressed }) => [
