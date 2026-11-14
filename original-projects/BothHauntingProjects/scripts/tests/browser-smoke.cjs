@@ -68,7 +68,9 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('PRIORITY FILE · 001', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Begin evidence review' }).click();
 
+    await page.getByRole('button', { name: 'The ceiling stain. Physical evidence. Inspect record' }).waitFor();
     await page.getByText('The ceiling stain', { exact: true }).click();
+    await page.getByRole('button', { name: 'The ceiling stain. Physical evidence. Logged' }).waitFor();
     await page.getByText(/maintenance ticket at 21:05.*porter addendum at 21:13/).waitFor();
 
     for (const clue of [
@@ -81,6 +83,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
       await page.getByText(clue, { exact: true }).click();
     }
     await page.getByRole('button', { name: 'Question the witnesses' }).click();
+    await page.getByRole('button', { name: 'Jo Bell: What did you hear near the records room?' }).waitFor();
 
     for (const question of [
       'What did you hear near the records room?',
@@ -90,6 +93,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
       await page.getByText(question, { exact: true }).click();
     }
     await page.getByRole('button', { name: 'Reconstruct the timeline' }).click();
+    await page.getByRole('button', { name: 'Select timeline event at 21:09: Miles signs out the service key' }).waitFor();
 
     // Deliberately try a wrong order first to verify the puzzle gives a fair retry.
     for (const event of [
@@ -106,7 +110,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'HIDE HINT' }).click();
     await page.getByText('Start with the earliest timestamp. Which record is stamped 21:09?', { exact: true }).waitFor({ state: 'hidden' });
 
-    // Correct one choice in place, then reselect it to verify the card is usable again.
+    // Correct one misplaced choice in place; the remaining three selections should survive.
     await page.getByRole('button', { name: 'Remove Envelope logged in the luggage office from sequence' }).click();
     await page.getByText('3/4 events selected', { exact: true }).waitFor();
     // The first three events are now in the correct order; restoring the removed
