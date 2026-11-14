@@ -93,10 +93,10 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
 
     // Deliberately try a wrong order first to verify the puzzle gives a fair retry.
     for (const event of [
-      'Envelope logged in the luggage office',
-      'Ada prints a ticket refund',
       'Miles signs out the service key',
       'Jo hears a cart at the records-room door',
+      'Envelope logged in the luggage office',
+      'Ada prints a ticket refund',
     ]) {
       await page.getByText(event, { exact: true }).click();
     }
@@ -109,19 +109,10 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     // Correct one choice in place, then reselect it to verify the card is usable again.
     await page.getByRole('button', { name: 'Remove Envelope logged in the luggage office from sequence' }).click();
     await page.getByText('3/4 events selected', { exact: true }).waitFor();
+    // The first three events are now in the correct order; restoring the removed
+    // envelope at the end should solve the timeline without resetting the sequence.
     await page.getByText('Envelope logged in the luggage office', { exact: true }).click();
-    await page.getByText(/Not quite\\. Recheck the timestamps/).waitFor();
-    await page.getByRole('button', { name: 'Reset sequence and retry' }).click();
-
-    for (const event of [
-      'Miles signs out the service key',
-      'Jo hears a cart at the records-room door',
-      'Ada prints a ticket refund',
-      'Envelope logged in the luggage office',
-    ]) {
-      await page.getByText(event, { exact: true }).click();
-    }
-    await page.getByText('Timeline confirmed. The records now agree.').waitFor();
+    await page.getByText('Timeline confirmed. The records now agree.', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Make your deduction' }).click();
 
     // The field notebook must reproduce the evidence and testimony actually inspected.
@@ -144,7 +135,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('Miles Renn', { exact: true }).click();
     await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
     await page.getByText('The truth is in the details.', { exact: true }).waitFor();
-    await page.getByText('Timeline attempts: 2', { exact: true }).waitFor();
+    await page.getByText('Timeline attempts: 1', { exact: true }).waitFor();
     await page.getByText('Questions left unasked: 3', { exact: true }).waitFor();
     await page.screenshot({ path: '/tmp/casezero-review.png', fullPage: true });
 
