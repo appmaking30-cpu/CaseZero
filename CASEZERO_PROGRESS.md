@@ -14,13 +14,16 @@ Case 001 now has explicit accessibility labels, hints and state on:
 - Witness-question controls (witness name and exact question).
 - Timeline event choices (timestamp and event title).
 - Individual event-removal controls (what will be removed and that the other choices remain).
+- Suspect and motive choices (who or what explanation is selected).
 
-The browser walkthrough now checks the accessible names for evidence, witness and timeline controls. This is a browser accessibility-name assertion, not a physical TalkBack certification.
+The browser walkthrough now checks the accessible names for evidence, witness, timeline and deduction controls. This is a browser accessibility-name assertion, not a physical TalkBack certification.
 
 Source commits:
 - [Correct the timeline repair walkthrough](https://github.com/appmaking30-cpu/CaseZero/commit/10d660cab261c184f7b480422669bf600df69c78)
 - [Add accessible Case 001 controls](https://github.com/appmaking30-cpu/CaseZero/commit/dd3773282ea6b2c75677d9c67d42a131167938c2)
 - [Verify accessible names in browser smoke](https://github.com/appmaking30-cpu/CaseZero/commit/45c4f54cee7f20143b257ec489cfcc89598b6f75)
+- [Label suspect and motive choices](https://github.com/appmaking30-cpu/CaseZero/commit/ae935fe5f19de790334aae94616ab9885e229fe2)
+- [Verify deduction choice names](https://github.com/appmaking30-cpu/CaseZero/commit/707ca681dccf4c26ab1751379aa7b664726d83c6)
 
 Rollback checkpoint: `casezero-safety-checkpoint-2026-11-14`, created from the corrected timeline-test source before the accessibility changes.
 
