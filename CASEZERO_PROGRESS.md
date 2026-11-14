@@ -1,3 +1,46 @@
+# Current development checkpoint — 14 November 2026
+
+## Case 001 correction test and screen-reader accessibility
+
+The individual timeline correction is now tested as a real repair, not merely as a remove-and-reselect of the same wrong event:
+
+- The browser walkthrough deliberately places the first two events correctly and the final two in the wrong order.
+- It removes the misplaced third event, verifies that the other three selections remain, then adds the correct final event.
+- The timeline must solve without a full reset. The failed-attempt count remains one.
+- The previous browser run failed only at the new Playwright assertion: the regex was over-escaped and the test tried to assert the same wrong order again. The app's TypeScript and unit suite had passed. The browser test has now been corrected; a fresh green run has not yet been confirmed.
+
+Case 001 now has explicit accessibility labels, hints and state on:
+- Evidence-record controls (record title, evidence type and logged/inspect state).
+- Witness-question controls (witness name and exact question).
+- Timeline event choices (timestamp and event title).
+- Individual event-removal controls (what will be removed and that the other choices remain).
+
+The browser walkthrough now checks the accessible names for evidence, witness and timeline controls. This is a browser accessibility-name assertion, not a physical TalkBack certification.
+
+Source commits:
+- [Correct the timeline repair walkthrough](https://github.com/appmaking30-cpu/CaseZero/commit/10d660cab261c184f7b480422669bf600df69c78)
+- [Add accessible Case 001 controls](https://github.com/appmaking30-cpu/CaseZero/commit/dd3773282ea6b2c75677d9c67d42a131167938c2)
+- [Verify accessible names in browser smoke](https://github.com/appmaking30-cpu/CaseZero/commit/45c4f54cee7f20143b257ec489cfcc89598b6f75)
+
+Rollback checkpoint: `casezero-safety-checkpoint-2026-11-14`, created from the corrected timeline-test source before the accessibility changes.
+
+## Latest verification boundary
+
+- The prior [workspace check run 43422450831](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43422450831) passed TypeScript, all unit tests and Expo web export, but its browser smoke failed at the faulty assertion described above. Its screenshots are still available as artifact `casezero-mobile-preview`, ID `14033728755`.
+- The prior [Android build run 43422450809](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43422450809) completed successfully and uploaded standalone APK artifact ID `14036082241` (47,700,828 bytes; SHA-256 `3b18a36d5166fba873378a647315268e8a5475ccbf61d0866a46cc1c0cfcfa14`). It was built from source commit `271a385929303763518346936ef234bcb22d4cba`: it includes the individual timeline-removal feature, but predates the latest accessibility labels and corrected browser test. It expires 13 December 2026.
+- The new source changes are committed on `casezero-development`; a fresh green browser run and a fresh APK for the accessibility revision have not yet been verified.
+- Physical Android installation and a full Case 001 phone playthrough remain outstanding.
+
+## Preservation and cost check
+
+- Original Replit workspace: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects), left untouched.
+- Original source ZIP: [BothHauntingProjects.zip](https://github.com/appmaking30-cpu/CaseZero/blob/replit-original-backup-2026-10-31/BothHauntingProjects.zip), preserved on the backup branch (7,167,701 bytes).
+- `casezero-development` contains all original backup history: 768 commits ahead, zero behind at this checkpoint.
+- The existing Expo Router / React Native / TypeScript project is still the app being developed. No restart or template replacement.
+- No Replit Agent allowance, paid EAS build, paid API, paid hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 13 November 2026
 
 ## Case 001 timeline correction
