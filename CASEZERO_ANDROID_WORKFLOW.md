@@ -28,7 +28,7 @@ AsyncStorage is treated as untrusted input. Before restoring the tutorial, `sani
 
 The Case 001 timeline screen now gives each selected event an accessible **REMOVE** control. This lets the player correct one selection without discarding the rest of the sequence; the solved timeline remains locked. The pure helper and browser walkthrough are covered by regression tests.
 
-Case 001 evidence records, witness questions and timeline choices also expose explicit screen-reader labels, contextual hints and selected/expanded/disabled state. The remove control explains that it removes only one event and preserves the rest. Browser smoke checks the accessible names; a real Android TalkBack pass is still required.
+Case 001 evidence records, witness questions, timeline choices, suspect choices and motive choices also expose explicit screen-reader labels, contextual hints and selected/expanded/disabled state. The remove control explains that it removes only one event and preserves the rest. Browser smoke checks the accessible names; a real Android TalkBack pass is still required.
 
 The Case 001 deduction screen also has a collapsible field notebook. It derives full evidence details from inspected clue IDs and exact witness replies from asked-question IDs, while leaving unasked replies hidden. The notebook is review-only and does not mutate the investigation save.
 
@@ -82,7 +82,7 @@ The project currently uses Expo SDK 58. We are not depending on the Play Store v
 
 ## 6. Current verification notes — 14 November 2026
 
-- The 14 November source adds screen-reader labels, hints and state to Case 001 evidence, witness and timeline controls. The browser test now checks those accessible names.
+- The 14 November source adds screen-reader labels, hints and state to Case 001 evidence, witness, timeline and deduction controls (suspect and motive choices). The browser test now checks those accessible names.
 - The earlier timeline-correction browser smoke failed at a faulty Playwright assertion (over-escaped regex and a test sequence that repeated the wrong final event). The corrected walkthrough now preserves the first three correct selections, replaces the misplaced last event and expects the timeline to solve without a reset. A new green run has not yet been confirmed.
 - [Previous Android build run 43422450809](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43422450809) succeeded and produced artifact ID `14036082241` (47,700,828 bytes), built from commit `271a385929303763518346936ef234bcb22d4cba`. It contains individual timeline removal but predates the latest accessibility changes. It expires 13 December 2026.
 - [Previous browser run 43422450831](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43422450831) passed TypeScript, unit tests and Expo web export but failed only at the timeline-correction browser assertion. The fresh corrected browser run and fresh APK have not yet been verified.
