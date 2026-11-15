@@ -427,7 +427,7 @@ export function getCase001ResumePhase(state: Case001ResumeState): CasePhase {
   ) {
     return "review";
   }
-  if (timelineIsValid && (state.selectedSuspect !== null || state.selectedMotive !== null)) {
+  if (timelineIsValid) {
     return "deduction";
   }
   if (allCluesFound && allWitnessesHeard) return "timeline";

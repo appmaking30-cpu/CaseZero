@@ -98,12 +98,17 @@ test('Case 001 resume routing never skips evidence, witness or timeline gates', 
     'briefing',
   );
 
-  const solved = {
+  const solvedBeforeChoosing = {
     ...fresh,
     cluesFound: allClues,
     askedQuestions: oneQuestionPerWitness,
     timelineOrder: [...CASE_001.correctTimelineOrder],
     timelineSolved: true,
+  };
+  assert.equal(getCase001ResumePhase(solvedBeforeChoosing), 'deduction');
+
+  const solved = {
+    ...solvedBeforeChoosing,
     selectedSuspect: 'miles',
     selectedMotive: 'protect',
   };
