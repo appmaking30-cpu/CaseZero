@@ -73,6 +73,16 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'The ceiling stain. Physical evidence. Logged' }).waitFor();
     await page.getByText(/maintenance ticket at 21:05.*porter addendum at 21:13/).waitFor();
 
+    // A partially inspected record must survive a full app reload, not only React state.
+    await page.waitForFunction(() => {
+      const raw = localStorage.getItem('casezero.case001.memory.v1');
+      return raw ? JSON.parse(raw).cluesFound?.includes('leak') === true : false;
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: 'The ceiling stain. Physical evidence. Logged' }).waitFor();
+    await page.getByText('The ceiling stain', { exact: true }).click();
+    await page.getByText(/maintenance ticket at 21:05.*porter addendum at 21:13/).waitFor();
+
     for (const clue of [
       'The ceiling stain',
       'The chipped cart wheel',
@@ -119,6 +129,16 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('Timeline confirmed. The records now agree.', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Make your deduction' }).click();
 
+    // The solved timeline and deduction stage must survive a second full reload.
+    await page.waitForFunction(() => {
+      const raw = localStorage.getItem('casezero.case001.memory.v1');
+      if (!raw) return false;
+      const saved = JSON.parse(raw);
+      return saved.phase === 'deduction' && saved.timelineSolved === true;
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.getByText('FIELD NOTEBOOK · FILE 001', { exact: true }).waitFor();
+
     // The field notebook must reproduce the evidence and testimony actually inspected.
     await page.getByText('FIELD NOTEBOOK · FILE 001', { exact: true }).waitFor();
     await page.getByText('WITNESS STATEMENTS', { exact: true }).waitFor();
@@ -143,7 +163,8 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('Miles Renn', { exact: true }).click();
     await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
     await page.getByText('The truth is in the details.', { exact: true }).waitFor();
-    await page.getByText('Timeline attempts: 1', { exact: true }).waitFor();
+    // The review counts one failed submission plus the successful repaired submission.
+    await page.getByText('Timeline attempts: 2', { exact: true }).waitFor();
     await page.getByText('Questions left unasked: 3', { exact: true }).waitFor();
     await page.screenshot({ path: '/tmp/casezero-review.png', fullPage: true });
 
