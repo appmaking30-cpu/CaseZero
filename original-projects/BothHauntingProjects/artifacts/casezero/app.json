@@ -10,7 +10,10 @@
     "ios": {
       "supportsTablet": false
     },
-    "android": {},
+    "android": {
+      "package": "com.casezero.beyondevidence",
+      "versionCode": 1
+    },
     "web": {
       "favicon": "./assets/images/icon.png",
       "output": "static"
