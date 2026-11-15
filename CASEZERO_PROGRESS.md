@@ -1,3 +1,44 @@
+# Current development checkpoint — 15 November 2026
+
+## Case 001 verified resume-stage correction
+
+A new browser reload test exposed a real resume-routing bug: after the player solved the four-event timeline but before choosing a suspect or motive, a reload sent them back to the timeline instead of the deduction stage. The saved progress was valid; the resume helper had incorrectly required a suspect or motive selection before opening deduction.
+
+- `getCase001ResumePhase` now returns **deduction** whenever all evidence, witness and exact timeline gates are satisfied, even if neither deduction choice has been made yet.
+- The unit test now covers the solved-timeline / no-selection state separately from a selected suspect-and-motive state.
+- Browser smoke now checks that one inspected evidence record survives a full reload, then checks that a solved timeline and deduction stage survive a second full reload.
+- The review assertion now correctly expects two timeline attempts: one failed submission plus the successful repaired submission.
+
+Source commits:
+- [Tutorial resume correction and regression test](https://github.com/appmaking30-cpu/CaseZero/commit/8fa3329fbc3c0b86bfe06d672ed7eda5eef7d785)
+- [Mid-investigation browser save checks and attempt-count correction](https://github.com/appmaking30-cpu/CaseZero/commit/334d97326fb03ba94d043c2ebcfa4cb9a5aa7046)
+
+## Android test identity
+
+- Expo Android config now sets application ID `com.casezero.beyondevidence` and `versionCode: 1`.
+- The APK workflow reads the package ID from `app.json`, asserts the expected value and writes it into the build summary.
+- This establishes a consistent package identity for test builds. Replacing an installed APK still requires a compatible signing key and a non-decreasing version code; persistent signing is not configured yet.
+- [Android workflow guide](https://github.com/appmaking30-cpu/CaseZero/blob/casezero-development/CASEZERO_ANDROID_WORKFLOW.md)
+
+## Verification status at this checkpoint
+
+- The latest source revision is `8fa3329fbc3c0b86bfe06d672ed7eda5eef7d785`.
+- TypeScript and the full unit-test suite passed in both current workflows.
+- [Workspace/browser checks — run 43713987743](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43713987743): Expo web export was still running; browser reload walkthrough and screenshot upload had not started.
+- [Android standalone APK — run 43713987746](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43713987746): Android prebuild passed; Gradle APK assembly was still running. No artifact for this revision was available yet.
+- The previous browser run [43713732359](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43713732359) failed at the new reload assertion, which revealed the resume bug described above. It is not counted as a passing run.
+- No physical Android installation or TalkBack test has been performed.
+
+## Preservation and cost check
+
+- Original Replit workspace: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects), left untouched.
+- Original source ZIP remains on `replit-original-backup-2026-10-31`: 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- `casezero-development` contains all original backup history: 779 commits ahead, zero behind at this checkpoint.
+- The canonical app remains the existing Expo Router / React Native / TypeScript project. No restart or template replacement.
+- No Replit Agent allowance, paid EAS build, paid API, paid hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 14 November 2026
 
 ## Case 001 correction test and screen-reader accessibility
