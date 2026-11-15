@@ -85,7 +85,9 @@ jobs:
             echo "- Embedded JavaScript bundle bytes: $BUNDLE_BYTES"
             echo "- Android manifest: present"
             echo "- arm64-v8a native libraries: present"
-            echo "- Package ID: temporary Expo default until a permanent ID is selected"
+            PACKAGE_ID=$(node -e "process.stdout.write(require('../app.json').expo.android.package ?? '')")
+            test "$PACKAGE_ID" = "com.casezero.beyondevidence"
+            echo "- Package ID: $PACKAGE_ID"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload standalone APK
