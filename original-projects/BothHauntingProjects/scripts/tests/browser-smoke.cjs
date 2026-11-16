@@ -115,9 +115,9 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
       await page.getByText(event, { exact: true }).click();
     }
     await page.getByText(/Not quite\. Recheck the timestamps/).waitFor();
-    await page.getByRole('button', { name: 'SHOW HINT' }).click();
+    await page.getByRole('button', { name: 'Show optional timeline hint', expanded: false }).click();
     await page.getByText('Start with the earliest timestamp. Which record is stamped 21:09?', { exact: true }).waitFor();
-    await page.getByRole('button', { name: 'HIDE HINT' }).click();
+    await page.getByRole('button', { name: 'Hide optional timeline hint', expanded: true }).click();
     await page.getByText('Start with the earliest timestamp. Which record is stamped 21:09?', { exact: true }).waitFor({ state: 'hidden' });
 
     // Correct one misplaced choice in place; the remaining three selections should survive.
@@ -144,10 +144,10 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('WITNESS STATEMENTS', { exact: true }).waitFor();
     await page.getByText('A cart stopped outside the records room at 21:12. The wheels squeaked twice, then rolled toward the luggage office.', { exact: true }).waitFor();
     await page.getByText('A porter addendum at 21:13 reads', { exact: false }).waitFor();
-    await page.getByRole('button', { name: 'HIDE NOTES' }).click();
-    await page.getByRole('button', { name: 'REVIEW NOTES' }).waitFor();
+    await page.getByRole('button', { name: 'Hide field notebook', expanded: true }).click();
+    await page.getByRole('button', { name: 'Review field notebook', expanded: false }).waitFor();
     await page.getByText('A cart stopped outside the records room at 21:12. The wheels squeaked twice, then rolled toward the luggage office.', { exact: true }).waitFor({ state: 'hidden' });
-    await page.getByRole('button', { name: 'REVIEW NOTES' }).click();
+    await page.getByRole('button', { name: 'Review field notebook', expanded: false }).click();
     await page.getByText('A cart stopped outside the records room at 21:12. The wheels squeaked twice, then rolled toward the luggage office.', { exact: true }).waitFor();
 
     // Deduction choices expose meaningful screen-reader names before selection.

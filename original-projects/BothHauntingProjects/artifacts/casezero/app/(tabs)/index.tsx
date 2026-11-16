@@ -2267,6 +2267,8 @@ export default function HomeScreen() {
                   </View>
                   <Pressable
                     accessibilityRole="button"
+                    accessibilityLabel={timelineHintVisible ? 'Hide optional timeline hint' : 'Show optional timeline hint'}
+                    accessibilityHint="Reveals or hides the free timeline guidance. It does not affect your score or investigation progress."
                     accessibilityState={{ expanded: timelineHintVisible }}
                     onPress={() => setTimelineHintVisible((current) => !current)}
                     style={({ pressed }) => ({
@@ -2314,6 +2316,8 @@ export default function HomeScreen() {
                 </View>
                 <Pressable
                   accessibilityRole="button"
+                  accessibilityLabel={notebookExpanded ? 'Hide field notebook' : 'Review field notebook'}
+                  accessibilityHint="Opens or closes notes containing only records you inspected and witness replies you heard."
                   accessibilityState={{ expanded: notebookExpanded }}
                   onPress={() => setNotebookExpanded((current) => !current)}
                   style={({ pressed }) => ({
