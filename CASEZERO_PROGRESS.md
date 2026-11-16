@@ -1,3 +1,43 @@
+# Current development checkpoint — 16 November 2026
+
+## Case 001 disclosure-control accessibility
+
+The optional tutorial hint and field notebook now have explicit, descriptive screen-reader names and explanations:
+
+- The hint control announces **Show optional timeline hint** / **Hide optional timeline hint**. Its accessibility hint explains that the free guidance does not change score or investigation progress.
+- The notebook control announces **Review field notebook** / **Hide field notebook**. Its accessibility hint explains that it contains only records inspected and witness replies actually heard.
+- The browser walkthrough now locates both controls by their accessible names and verifies that their names change when opened/closed.
+
+The first browser attempt on this change failed because Playwright's `expanded: false` role filter did not match the React Native Web disclosure control. The app's TypeScript and unit tests passed. I removed that unsupported filter while keeping the accessible-name assertions; the subsequent full browser workflow passed. This was a test-selector correction, not a game-logic change.
+
+Source commits:
+- [Accessible hint and notebook labels](https://github.com/appmaking30-cpu/CaseZero/commit/21592ab744a42bf7dd5bb5796fb2b15e8b039a1b)
+- [Browser assertions using the accessible names](https://github.com/appmaking30-cpu/CaseZero/commit/24730e0c1d9a5b1dd4e0f7a1bb8113319d0e9dd9)
+
+Rollback checkpoint before the code change: `casezero-safety-checkpoint-2026-11-16`.
+
+## Verification for this revision
+
+- [Workspace checks — run 43872861630](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43872861630) **passed** on commit `24730e0c1d9a5b1dd4e0f7a1bb8113319d0e9dd9`: TypeScript, the full Cases 001–066/system unit-test suite, Expo web export, and the dark mobile browser walkthrough all passed.
+- Browser preview artifact `casezero-mobile-preview`, ID `14227244418`, 3,177,451 bytes. It expires 14 February 2027.
+- [Android standalone APK — run 43872861562](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43872861562): TypeScript, unit tests and Android native prebuild passed; Gradle release APK assembly was still in progress at this checkpoint. No APK artifact for the new accessibility revision was yet available.
+- The previous successful APK is [run 43713987746](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43713987746), artifact ID `14161928472`, 47,701,174 bytes, expires 15 December 2026. It predates the new disclosure labels and is not the latest source build.
+- No physical Android installation, complete phone playthrough or TalkBack test has been performed.
+
+## Preservation and exact implementation boundary
+
+- Original Replit workspace: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). The GitHub workflow has not written to that workspace.
+- Original source archive `BothHauntingProjects.zip` remains on `replit-original-backup-2026-10-31`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- `casezero-development` is 783 commits ahead of the original backup branch and zero behind. Safety checkpoint: `casezero-safety-checkpoint-2026-11-16`.
+- The canonical app remains the imported Expo Router / React Native / TypeScript project; no restart or template replacement.
+- Source inventory: 66 campaign case-data modules; 63 dedicated case screens for Cases 004–066; 63 dedicated case test files (Case 001 and Cases 005–066). Cases 002–004 also have opening-campaign integration coverage.
+- Full browser campaign walkthrough coverage: Cases 001–006 and 041–066. Cases 007–040 have data/rules/screens/tests and shallow navigation/save-restore checks, not full individual mystery playthroughs.
+- Shared source systems include local investigation archive/carryover, three Bureau specialists with assignments and progression, and seven date-rotating in-app bulletin cases.
+- The 1,000+ case target is not finished content. Automatic push notifications, cloud sync, production backend, physical-device verification, production signing, Play Store release and monetization remain incomplete.
+- No Replit Agent allowance, paid EAS build, paid API, paid hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 15 November 2026
 
 ## Case 001 verified resume-stage correction
