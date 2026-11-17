@@ -45,6 +45,35 @@ test('timeline accepts the evidence-backed chronological order only', () => {
   assert.equal(isTimelineCorrect(['key', 'cart']), false);
 });
 
+test('Case 001 canonical timeline order matches the timestamps shown to the player', () => {
+  const eventIds = CASE_001.timelineEvents.map((event) => event.id);
+  assert.equal(new Set(eventIds).size, eventIds.length, 'Timeline event IDs must be unique');
+  assert.deepEqual(
+    [...CASE_001.correctTimelineOrder].sort(),
+    [...eventIds].sort(),
+    'The answer must contain every timeline event exactly once',
+  );
+
+  const eventById = new Map(CASE_001.timelineEvents.map((event) => [event.id, event]));
+  const orderedMinutes = CASE_001.correctTimelineOrder.map((id) => {
+    const event = eventById.get(id);
+    assert.ok(event, `Missing timeline event for ${id}`);
+    const match = /^(\\d{2}):(\\d{2})$/.exec(event.time);
+    assert.ok(match, `Invalid 24-hour timestamp for ${id}: ${event.time}`);
+
+    const hours = Number(match[1]);
+    const minutes = Number(match[2]);
+    assert.ok(hours < 24 && minutes < 60, `Out-of-range timestamp for ${id}: ${event.time}`);
+    return hours * 60 + minutes;
+  });
+
+  assert.deepEqual(
+    orderedMinutes,
+    [...orderedMinutes].sort((a, b) => a - b),
+    'The canonical solution must follow the timestamps visible in the case',
+  );
+});
+
 test('a selected timeline event can be removed individually without mutating the saved order', () => {
   const original = ['key', 'cart', 'receipt', 'inventory'];
   assert.deepEqual(removeCase001TimelineEvent(original, 'cart'), ['key', 'receipt', 'inventory']);
