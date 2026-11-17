@@ -1,3 +1,39 @@
+# Current development checkpoint — 17 November 2026
+
+## Case 001 visible-timestamp chronology guard
+
+Added a regression test that ties the canonical answer to the timestamps actually displayed in the tutorial:
+
+- Every timeline event ID must be unique.
+- The canonical answer must contain every event exactly once.
+- Every displayed event time must be a valid 24-hour HH:MM value.
+- The canonical answer must sort in ascending timestamp order.
+
+This catches future content edits that could make the accepted solution contradict the times shown to the player. The test-only change does not alter gameplay or existing saves.
+
+Source commits:
+- [Add the visible-timestamp chronology regression test](https://github.com/appmaking30-cpu/CaseZero/commit/8af5e3d6284f13dfb2f2fb67bfe989e1771d4ffb)
+- [Correct the test's digit matcher](https://github.com/appmaking30-cpu/CaseZero/commit/c43ec686acacb0c8a59dae0d91c612ebe4dce35c)
+
+Rollback checkpoint before the test change: casezero-safety-checkpoint-2026-11-17, at 02b060bd9fca3a0e1eaf1cf5a3a1cec627509701.
+
+## Verification status for the new test revision
+
+- [Workspace checks — run 44081923073](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44081923073): TypeScript and the full CaseZero unit-test suite passed; Expo web export and the browser walkthrough were still running at the latest inspection.
+- [Android standalone APK — run 44081923127](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44081923127): TypeScript, full unit tests and Android native project generation passed; Gradle APK assembly was still running at the latest inspection.
+- The immediately preceding application revision 24730e0c1d9a5b1dd4e0f7a1bb8113319d0e9dd9 passed the full browser workflow [43872861630](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43872861630) and produced a standalone APK in [43872861562](https://github.com/appmaking30-cpu/CaseZero/actions/runs/43872861562), artifact ID 14230700502 (47,701,333 bytes; expires 16 December 2026). That APK includes the current game code; the new revision only changes the test file.
+- No physical Android installation, full phone playthrough or TalkBack test has been performed.
+
+## Preservation and cost check
+
+- Original Replit workspace: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). No Replit write was made during this run.
+- Original source ZIP is present on replit-original-backup-2026-10-31: BothHauntingProjects.zip, 7,167,701 bytes, blob SHA 9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7.
+- The casezero-development branch is 786 commits ahead of the original backup branch and zero behind at this checkpoint.
+- The existing Expo Router / React Native / TypeScript project remains the canonical app; no restart or template replacement.
+- No Replit Agent allowance, paid EAS build, paid API, paid hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 16 November 2026
 
 ## Case 001 disclosure-control accessibility
