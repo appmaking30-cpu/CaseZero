@@ -58,7 +58,7 @@ test('Case 001 canonical timeline order matches the timestamps shown to the play
   const orderedMinutes = CASE_001.correctTimelineOrder.map((id) => {
     const event = eventById.get(id);
     assert.ok(event, `Missing timeline event for ${id}`);
-    const match = /^(\\d{2}):(\\d{2})$/.exec(event.time);
+    const match = /^(\d{2}):(\d{2})$/.exec(event.time);
     assert.ok(match, `Invalid 24-hour timestamp for ${id}: ${event.time}`);
 
     const hours = Number(match[1]);
