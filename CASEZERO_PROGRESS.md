@@ -28,7 +28,7 @@ Rollback checkpoint before the test change: casezero-safety-checkpoint-2026-11-1
 
 - Original Replit workspace: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). No Replit write was made during this run.
 - Original source ZIP is present on replit-original-backup-2026-10-31: BothHauntingProjects.zip, 7,167,701 bytes, blob SHA 9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7.
-- The casezero-development branch is 786 commits ahead of the original backup branch and zero behind at this checkpoint.
+- The development branch contains the original backup history and is zero commits behind the backup branch; [the live GitHub comparison](https://github.com/appmaking30-cpu/CaseZero/compare/replit-original-backup-2026-10-31...casezero-development) shows the current ahead count.
 - The existing Expo Router / React Native / TypeScript project remains the canonical app; no restart or template replacement.
 - No Replit Agent allowance, paid EAS build, paid API, paid hosting or monetization was used.
 
