@@ -17,6 +17,7 @@ import HotelNightScene from '@/components/HotelNightScene';
 import RecordsAnnexScene from '@/components/RecordsAnnexScene';
 import SuspectPortrait from '@/components/SuspectPortrait';
 import { useColors } from '@/hooks/useColors';
+import { readStorageItemsSafely } from '@/game/storageRecovery';
 import Case004Screen from '@/components/Case004Screen';
 import Case005Screen from '@/components/Case005Screen';
 import Case006Screen from '@/components/Case006Screen';
@@ -199,6 +200,7 @@ const SAVE_KEY = 'casezero.case001.memory.v1';
 const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
+const STORAGE_KEYS = [SAVE_KEY, ARCHIVE_KEY, CASE002_SAVE_KEY, CASE003_SAVE_KEY, BUREAU_TEAM_SAVE_KEY] as const;
 type AppPhase = 'menu' | 'campaign' | CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'case034' | 'case035' | 'case036' | 'case037' | 'case038' | 'case039' | 'case040' | 'case041' | 'case042' | 'case043' | 'case044' | 'case045' | 'case046' | 'case047' | 'case048' | 'case049' | 'case050' | 'case051' | 'case052' | 'case053' | 'case054' | 'case055' | 'case056' | 'case057' | 'case058' | 'case059' | 'case060' | 'case061' | 'case062' | 'case063' | 'case064' | 'case065' | 'case066' | 'daily' | 'team';
 
 const CASE001_PHASES = new Set(['hq', 'briefing', 'evidence', 'interviews', 'timeline', 'deduction', 'review']);
@@ -316,6 +318,7 @@ export default function HomeScreen() {
   const wideLayout = viewportWidth > viewportHeight;
   const [loaded, setLoaded] = useState(false);
   const [archiveLoaded, setArchiveLoaded] = useState(false);
+  const [storageReadFailures, setStorageReadFailures] = useState<string[]>([]);
   const [investigationArchive, setInvestigationArchive] = useState<InvestigationArchive>(EMPTY_INVESTIGATION_ARCHIVE);
   const [bureauTeamBoard, setBureauTeamBoard] = useState<BureauTeamBoard>(EMPTY_BUREAU_TEAM_BOARD);
   const [phase, setPhase] = useState<AppPhase>('menu');
@@ -346,14 +349,10 @@ export default function HomeScreen() {
 
   useEffect(() => {
     let active = true;
-    Promise.all([
-      AsyncStorage.getItem(SAVE_KEY),
-      AsyncStorage.getItem(ARCHIVE_KEY),
-      AsyncStorage.getItem(CASE002_SAVE_KEY),
-      AsyncStorage.getItem(CASE003_SAVE_KEY),
-      AsyncStorage.getItem(BUREAU_TEAM_SAVE_KEY),
-    ])
-      .then(([raw, archiveRaw, case002Raw, case003Raw, teamRaw]) => {
+    readStorageItemsSafely(AsyncStorage, STORAGE_KEYS)
+      .then((reads) => {
+        const [raw, archiveRaw, case002Raw, case003Raw, teamRaw] = reads.map((read) => read.value);
+        setStorageReadFailures(reads.filter((read) => read.failed).map((read) => read.key));
         if (!active) return;
         let restoredArchive = EMPTY_INVESTIGATION_ARCHIVE;
         if (archiveRaw) {
@@ -440,7 +439,9 @@ export default function HomeScreen() {
           }
         }
       })
-      .catch(() => undefined)
+      .catch(() => {
+        if (active) setStorageReadFailures([...STORAGE_KEYS]);
+      })
       .finally(() => {
         if (active) {
           setLoaded(true);
@@ -453,7 +454,7 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
-    if (!loaded) return;
+    if (!loaded || storageReadFailures.includes(SAVE_KEY)) return;
     const saved: SavedState = {
       phase,
       cluesFound,
@@ -468,6 +469,7 @@ export default function HomeScreen() {
     AsyncStorage.setItem(SAVE_KEY, JSON.stringify(saved)).catch(() => undefined);
   }, [
     loaded,
+    storageReadFailures,
     phase,
     cluesFound,
     askedQuestions,
@@ -480,24 +482,24 @@ export default function HomeScreen() {
   ]);
 
   useEffect(() => {
-    if (!archiveLoaded) return;
+    if (!archiveLoaded || storageReadFailures.includes(ARCHIVE_KEY)) return;
     AsyncStorage.setItem(ARCHIVE_KEY, JSON.stringify(investigationArchive)).catch(() => undefined);
-  }, [archiveLoaded, investigationArchive]);
+  }, [archiveLoaded, storageReadFailures, investigationArchive]);
 
   useEffect(() => {
-    if (!archiveLoaded) return;
+    if (!archiveLoaded || storageReadFailures.includes(BUREAU_TEAM_SAVE_KEY)) return;
     AsyncStorage.setItem(BUREAU_TEAM_SAVE_KEY, JSON.stringify(bureauTeamBoard)).catch(() => undefined);
-  }, [archiveLoaded, bureauTeamBoard]);
+  }, [archiveLoaded, storageReadFailures, bureauTeamBoard]);
 
   useEffect(() => {
-    if (!loaded) return;
+    if (!loaded || storageReadFailures.includes(CASE002_SAVE_KEY)) return;
     AsyncStorage.setItem(CASE002_SAVE_KEY, JSON.stringify(case002Progress)).catch(() => undefined);
-  }, [loaded, case002Progress]);
+  }, [loaded, storageReadFailures, case002Progress]);
 
   useEffect(() => {
-    if (!loaded) return;
+    if (!loaded || storageReadFailures.includes(CASE003_SAVE_KEY)) return;
     AsyncStorage.setItem(CASE003_SAVE_KEY, JSON.stringify(case003Progress)).catch(() => undefined);
-  }, [loaded, case003Progress]);
+  }, [loaded, storageReadFailures, case003Progress]);
 
   const allCluesFound = cluesFound.length === CASE_001.clues.length;
   const witnessCount = useMemo(
@@ -593,7 +595,9 @@ export default function HomeScreen() {
     setTimelineMessage('');
     setTimelineHintVisible(false);
     setDeductionMessage('');
-    AsyncStorage.removeItem(SAVE_KEY).catch(() => undefined);
+    if (!storageReadFailures.includes(SAVE_KEY)) {
+      AsyncStorage.removeItem(SAVE_KEY).catch(() => undefined);
+    }
   };
 
   const openCase = () => setPhase(getCase001ResumePhase({
@@ -864,6 +868,27 @@ export default function HomeScreen() {
             <Text style={[styles.caseStampText, { color: colors.primary }]}>{phase === 'daily' ? 'DAILY FILE' : phase === 'team' ? 'BUREAU' : phase === 'campaign' ? 'CAMPAIGN ARCHIVE' : phase.startsWith('case002') ? 'FILE 002' : phase.startsWith('case003') ? 'FILE 003'  : phase.startsWith('case004') ? 'FILE 004'  : phase.startsWith('case005') ? 'FILE 005' : phase.startsWith('case006') ? 'FILE 006' : phase.startsWith('case007') ? 'FILE 007' : phase.startsWith('case008') ? 'FILE 008' : phase.startsWith('case009') ? 'FILE 009' : phase.startsWith('case010') ? 'FILE 010' : phase.startsWith('case011') ? 'FILE 011' : phase.startsWith('case012') ? 'FILE 012' : phase.startsWith('case013') ? 'FILE 013' : phase.startsWith('case014') ? 'FILE 014' : phase.startsWith('case015') ? 'FILE 015' : phase.startsWith('case016') ? 'FILE 016' : phase.startsWith('case017') ? 'FILE 017' : phase.startsWith('case018') ? 'FILE 018' : phase.startsWith('case019') ? 'FILE 019' : phase.startsWith('case020') ? 'FILE 020' : phase.startsWith('case021') ? 'FILE 021' : phase.startsWith('case022') ? 'FILE 022' : phase.startsWith('case023') ? 'FILE 023' : phase.startsWith('case024') ? 'FILE 024' : phase.startsWith('case025') ? 'FILE 025' : phase.startsWith('case026') ? 'FILE 026' : phase.startsWith('case027') ? 'FILE 027' : phase.startsWith('case028') ? 'FILE 028' : phase.startsWith('case029') ? 'FILE 029' : phase.startsWith('case030') ? 'FILE 030' : 'FILE 001'}</Text>
           </View>
         </View>
+
+        {storageReadFailures.length > 0 && (
+          <View
+            accessibilityRole="alert"
+            style={{
+              borderWidth: 1,
+              borderColor: '#A66B3F',
+              backgroundColor: '#241B18',
+              borderRadius: 12,
+              padding: 14,
+              marginBottom: 16,
+            }}
+          >
+            <Text style={{ color: '#F0C58A', fontSize: 10, fontWeight: '900', letterSpacing: 1.3 }}>
+              LOCAL SAVE RECOVERY
+            </Text>
+            <Text style={{ color: '#E8DCCB', fontSize: 12, lineHeight: 19, marginTop: 6 }}>
+              Some saved records could not be read. CaseZero has paused writes to those records so it will not replace them with empty progress. Restart the app to retry. Do not clear app data while this warning is visible.
+            </Text>
+          </View>
+        )}
 
         {phase === 'menu' && (
           <View style={{ minHeight: wideLayout ? Math.max(460, viewportHeight - 105) : 620, borderWidth: 1, borderColor: '#344354', backgroundColor: '#080D18', overflow: 'hidden' }}>

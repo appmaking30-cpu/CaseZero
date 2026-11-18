@@ -589,3 +589,48 @@ Important limits:
 ## Quality bar
 
 A case is not release-ready just because its screen exists or its unit tests pass. Its evidence must support the conclusion, wrong deductions must be retryable, timeline rules must be fair, local progress and archive carryover must work, and the case must pass the relevant automated mobile walkthrough and later real-device testing. Keep Truth, Proof and Outcome distinct.
+
+
+---
+
+# Current development checkpoint — 18 November 2026
+
+## Per-key local-save recovery
+
+A review of the actual app startup path found a data-safety issue: all five AsyncStorage reads were inside one `Promise.all`. If a single key rejected, the app skipped restoration for every key, then the `.finally()` block enabled save effects. That could replace unrelated saved records with default state.
+
+The existing project now reads each storage key independently:
+
+- A failed key is recorded rather than rejecting the whole restore.
+- Other readable saves still restore normally.
+- Writes and reset deletion are paused only for keys whose reads failed, so unread data is not replaced with empty progress.
+- A visible **LOCAL SAVE RECOVERY** warning explains that saving is paused for affected records and advises restarting to retry; it also warns against clearing app data.
+- A pure helper has focused tests for isolated failures, missing keys and empty key lists.
+
+This is a recovery safeguard, not a cloud backup. A failed key remains unavailable until the app is restarted and the read succeeds.
+
+Source changes in this checkpoint:
+- `game/storageRecovery.ts`: per-key safe read helper.
+- `scripts/tests/storageRecovery.test.ts`: three focused regression tests.
+- `app/(tabs)/index.tsx`: independent restore, per-key write guards, guarded Case 001 reset and visible recovery warning.
+
+Rollback checkpoint created before these changes: `casezero-safety-checkpoint-2026-11-18-storage-recovery`, from the prior development head.
+
+## Verification before this change
+
+The previous revision `c43ec686acacb0c8a59dae0d91c612ebe4dce35c` completed both GitHub Actions workflows successfully:
+
+- [Workspace checks — run 44081923073](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44081923073): TypeScript, full unit tests, Expo web export, browser campaign walkthrough and screenshot upload all passed.
+- [Android standalone APK — run 44081923127](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44081923127): TypeScript, full unit tests, Android native generation, Gradle release APK build, payload verification and artifact upload all passed.
+- APK artifact ID `14328627711`, 47,701,327 bytes, from that test-only revision. It predates the storage recovery code in this checkpoint.
+- No physical Android installation, full phone playthrough or TalkBack test has been performed.
+
+## Preservation and workflow
+
+- Original Replit workspace remains untouched: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects).
+- Original ZIP remains on `replit-original-backup-2026-10-31`: 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- The active branch was `f9393000147c8bd185ba731d3545e63acd9f92f6` before this checkpoint; it compared 788 commits ahead and zero behind the backup branch.
+- The canonical app remains the existing Expo Router / React Native / TypeScript project. No restart or template replacement.
+- No Replit Agent allowance, paid EAS build, paid API, paid hosting or monetization was used.
+
+The new storage-recovery revision still requires its own TypeScript, unit, browser and Android workflow results. It has not yet been called verified or device-tested.
