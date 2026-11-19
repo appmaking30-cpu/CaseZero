@@ -634,3 +634,46 @@ The previous revision `c43ec686acacb0c8a59dae0d91c612ebe4dce35c` completed both 
 - No Replit Agent allowance, paid EAS build, paid API, paid hosting or monetization was used.
 
 The new storage-recovery revision still requires its own TypeScript, unit, browser and Android workflow results. It has not yet been called verified or device-tested.
+
+
+---
+
+# Current development checkpoint — 19 November 2026
+
+## Case 002 and Case 003 save restoration hardening
+
+The existing Case 002 and Case 003 restore paths previously accepted any string in saved clue, question, timeline, suspect and motive fields, and trusted the saved `timelineSolved` and `completed` booleans. The existing app also trusted the saved global phase for those cases.
+
+The development branch now:
+- Restores only known, unique clue IDs and witness-question keys.
+- Rejects a timeline sequence containing unknown IDs, duplicates, or too many events instead of filtering it into a different sequence.
+- Accepts `timelineSolved` only when every clue is logged, every witness has been heard, and the exact canonical event order is present.
+- Restores suspect and motive choices only after a verified timeline.
+- Accepts case completion only when the correct suspect and motive are both recorded after the verified timeline.
+- Re-derives the resume phase from sanitized progress for Cases 002 and 003, so a saved screen name cannot skip their evidence, interview or timeline gates.
+- Avoids a React state update from the storage-read promise after the screen has unmounted.
+
+Four focused regression tests cover both cases: unknown/duplicate IDs, invalid timelines, every legitimate resume stage, valid completion, and forged completion with a missing witness.
+
+Source commits:
+- [Case 002/003 sanitizer and resume integration](https://github.com/appmaking30-cpu/CaseZero/commit/5f643823a67f275247cc8f9547f401a254151c5e)
+- [Remove duplicate phase-set declarations](https://github.com/appmaking30-cpu/CaseZero/commit/9bdaf62a93ccdea52fcf6f70e482a9d8f50687c7)
+- [Fix strict timeline-ID Set typing](https://github.com/appmaking30-cpu/CaseZero/commit/63a9688604bec264f1ca1a066911e28cfbdfa2e1)
+
+Rollback checkpoint before this work: `casezero-safety-checkpoint-2026-11-19-case0023-save-hardening`, at the prior storage-recovery head.
+
+## Verification status at the latest inspection
+
+- [Workspace checks — run 44530168447](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44530168447): TypeScript, full unit tests and Expo web export passed on commit `63a9688604bec264f1ca1a066911e28cfbdfa2e1`. Chromium installation was still running, so the browser campaign walkthrough was not yet verified.
+- [Android standalone APK — run 44530168428](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44530168428): TypeScript, full unit tests and Android native project generation passed. Gradle APK assembly was still running; no artifact for this revision was yet available.
+- The first sanitizer attempt exposed a strict TypeScript inference issue in the timeline allowlists. It was corrected by explicitly typing those sets as `Set<string>`; the current run is for that corrected commit. The earlier failed run is not counted as passing.
+- The previous source head `42e0fcac2b411472dd96f821d6d809c19aa4c992` passed both full workflows and produced APK artifact `14430196826` (47,702,052 bytes). That APK predates the Case 002/003 sanitizer changes.
+- No physical Android installation, full phone playthrough or TalkBack test has been performed.
+
+## Preservation and workflow
+
+- Original Replit workspace remains the reference copy: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). No Replit write or Replit Agent request was made.
+- Original source ZIP remains on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- The development branch includes the full original backup history and is 792 commits ahead, zero behind at this code checkpoint.
+- The app remains the existing Expo Router / React Native / TypeScript project; no restart or template replacement.
+- The existing public-repository GitHub Actions workflows are used for free typecheck, tests, browser checks and APK assembly. No paid EAS build, Replit Agent allowance, paid API, paid hosting or monetization was used.
