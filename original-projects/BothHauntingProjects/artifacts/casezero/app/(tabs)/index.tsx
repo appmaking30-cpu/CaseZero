@@ -208,14 +208,6 @@ const STORAGE_KEYS = [SAVE_KEY, ARCHIVE_KEY, CASE002_SAVE_KEY, CASE003_SAVE_KEY,
 type AppPhase = 'menu' | 'campaign' | CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'case034' | 'case035' | 'case036' | 'case037' | 'case038' | 'case039' | 'case040' | 'case041' | 'case042' | 'case043' | 'case044' | 'case045' | 'case046' | 'case047' | 'case048' | 'case049' | 'case050' | 'case051' | 'case052' | 'case053' | 'case054' | 'case055' | 'case056' | 'case057' | 'case058' | 'case059' | 'case060' | 'case061' | 'case062' | 'case063' | 'case064' | 'case065' | 'case066' | 'daily' | 'team';
 
 const CASE001_PHASES = new Set(['hq', 'briefing', 'evidence', 'interviews', 'timeline', 'deduction', 'review']);
-const CASE002_PHASES = new Set<Case002Phase>([
-  'case002Briefing', 'case002Evidence', 'case002Interviews',
-  'case002Timeline', 'case002Deduction', 'case002Review',
-]);
-const CASE003_PHASES = new Set<Case003Phase>([
-  'case003Briefing', 'case003Evidence', 'case003Interviews',
-  'case003Timeline', 'case003Deduction', 'case003Review',
-]);
 const CASE002_PHASES = new Set(['case002Briefing', 'case002Evidence', 'case002Interviews', 'case002Timeline', 'case002Deduction', 'case002Review']);
 const CASE003_PHASES = new Set(['case003Briefing', 'case003Evidence', 'case003Interviews', 'case003Timeline', 'case003Deduction', 'case003Review']);
 
