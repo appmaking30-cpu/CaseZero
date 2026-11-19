@@ -664,7 +664,7 @@ Rollback checkpoint before this work: `casezero-safety-checkpoint-2026-11-19-cas
 
 ## Verification status at the latest inspection
 
-- [Workspace checks — run 44530168447](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44530168447): TypeScript, full unit tests and Expo web export passed on commit `63a9688604bec264f1ca1a066911e28cfbdfa2e1`. Chromium installation was still running, so the browser campaign walkthrough was not yet verified.
+- [Workspace checks — run 44530168447](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44530168447): **passed** on commit `63a9688604bec264f1ca1a066911e28cfbdfa2e1`. TypeScript passed; all 314 unit tests passed; Expo web export passed; the dark mobile browser smoke passed for Cases 001–006 and 041–066 full investigations, Cases 007–040 navigation/save-restore smoke, evidence memory, Daily Bulletin and Bureau assignment. Preview artifact `casezero-mobile-preview`, ID `14534855195`, 3,200,364 bytes; expires 17 February 2027.
 - [Android standalone APK — run 44530168428](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44530168428): TypeScript, full unit tests and Android native project generation passed. Gradle APK assembly was still running; no artifact for this revision was yet available.
 - The first sanitizer attempt exposed a strict TypeScript inference issue in the timeline allowlists. It was corrected by explicitly typing those sets as `Set<string>`; the current run is for that corrected commit. The earlier failed run is not counted as passing.
 - The previous source head `42e0fcac2b411472dd96f821d6d809c19aa4c992` passed both full workflows and produced APK artifact `14430196826` (47,702,052 bytes). That APK predates the Case 002/003 sanitizer changes.
