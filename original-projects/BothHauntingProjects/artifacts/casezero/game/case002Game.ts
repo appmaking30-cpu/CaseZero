@@ -86,7 +86,7 @@ function uniqueKnownCase002Values(value: unknown, allowedValues: readonly string
 
 function restoreCase002TimelineOrder(value: unknown): string[] {
   if (!Array.isArray(value) || value.length > CASE_002_GAME.timelineEvents.length) return [];
-  const allowed = new Set(CASE_002_GAME.timelineEvents.map((event) => event.id));
+  const allowed = new Set<string>(CASE_002_GAME.timelineEvents.map((event) => event.id));
   const seen = new Set<string>();
   const restored: string[] = [];
   for (const item of value) {
