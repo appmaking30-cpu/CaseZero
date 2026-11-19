@@ -69,6 +69,108 @@ export const EMPTY_CASE002_PROGRESS: Case002Progress = {
   completed: false,
 };
 
+
+function uniqueKnownCase002Values(value: unknown, allowedValues: readonly string[]): string[] {
+  if (!Array.isArray(value)) return [];
+  const allowed = new Set(allowedValues);
+  const seen = new Set<string>();
+  const restored: string[] = [];
+  for (const item of value) {
+    if (typeof item === 'string' && allowed.has(item) && !seen.has(item)) {
+      seen.add(item);
+      restored.push(item);
+    }
+  }
+  return restored;
+}
+
+function restoreCase002TimelineOrder(value: unknown): string[] {
+  if (!Array.isArray(value) || value.length > CASE_002_GAME.timelineEvents.length) return [];
+  const allowed = new Set(CASE_002_GAME.timelineEvents.map((event) => event.id));
+  const seen = new Set<string>();
+  const restored: string[] = [];
+  for (const item of value) {
+    if (typeof item !== 'string' || !allowed.has(item) || seen.has(item)) return [];
+    seen.add(item);
+    restored.push(item);
+  }
+  return restored;
+}
+
+/** Restore only known evidence and conclusions supported by the full investigation gates. */
+export function sanitizeCase002SavedProgress(value: unknown): Case002Progress {
+  const saved = value && typeof value === 'object' && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+  const cluesFound = uniqueKnownCase002Values(
+    saved.cluesFound,
+    CASE_002_GAME.clues.map((clue) => clue.id),
+  );
+  const askedQuestions = uniqueKnownCase002Values(
+    saved.askedQuestions,
+    CASE_002_GAME.witnesses.flatMap((witness) =>
+      witness.questions.map((question) => `${witness.id}:${question.id}`),
+    ),
+  );
+  const timelineOrder = restoreCase002TimelineOrder(saved.timelineOrder);
+  const allCluesFound = cluesFound.length === CASE_002_GAME.clues.length;
+  const allWitnessesHeard = CASE_002_GAME.witnesses.every((witness) =>
+    witness.questions.some((question) => askedQuestions.includes(`${witness.id}:${question.id}`)),
+  );
+  const timelineSolved =
+    saved.timelineSolved === true &&
+    allCluesFound &&
+    allWitnessesHeard &&
+    isCase002TimelineCorrect(timelineOrder);
+  const suspectCandidate = saved.selectedSuspect;
+  const motiveCandidate = saved.selectedMotive;
+  const selectedSuspect =
+    timelineSolved &&
+    typeof suspectCandidate === 'string' &&
+    CASE_002_GAME.suspects.some((suspect) => suspect.id === suspectCandidate)
+      ? suspectCandidate
+      : null;
+  const selectedMotive =
+    timelineSolved &&
+    typeof motiveCandidate === 'string' &&
+    CASE_002_GAME.motives.some((motive) => motive.id === motiveCandidate)
+      ? motiveCandidate
+      : null;
+  const completed =
+    saved.completed === true &&
+    timelineSolved &&
+    isCase002DeductionCorrect(selectedSuspect, selectedMotive);
+
+  return {
+    cluesFound,
+    askedQuestions,
+    timelineOrder,
+    timelineSolved,
+    selectedSuspect,
+    selectedMotive,
+    completed,
+  };
+}
+
+export function getCase002ResumePhase(progress: Case002Progress): Case002Phase {
+  if (progress.completed) return 'case002Review';
+  if (progress.timelineSolved) return 'case002Deduction';
+  const allCluesFound = CASE_002_GAME.clues.every((clue) => progress.cluesFound.includes(clue.id));
+  if (!allCluesFound) {
+    const hasProgress =
+      progress.cluesFound.length > 0 ||
+      progress.askedQuestions.length > 0 ||
+      progress.timelineOrder.length > 0;
+    return hasProgress ? 'case002Evidence' : 'case002Briefing';
+  }
+  const allWitnessesHeard = CASE_002_GAME.witnesses.every((witness) =>
+    witness.questions.some((question) =>
+      progress.askedQuestions.includes(`${witness.id}:${question.id}`),
+    ),
+  );
+  return allWitnessesHeard ? 'case002Timeline' : 'case002Interviews';
+}
+
 export function getCase002QuestionReply(
   witnessId: string,
   questionId: string,

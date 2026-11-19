@@ -179,6 +179,8 @@ import { getMissingDetectiveArcStatus, getMissingDetectiveConvergence, getMissin
 import {
   CASE_003_GAME,
   EMPTY_CASE003_PROGRESS,
+  getCase003ResumePhase,
+  sanitizeCase003SavedProgress,
   getCase003Carryover,
   getCase003QuestionReply,
   isCase003DeductionCorrect,
@@ -189,6 +191,8 @@ import {
 import {
   CASE_002_GAME,
   EMPTY_CASE002_PROGRESS,
+  getCase002ResumePhase,
+  sanitizeCase002SavedProgress,
   getCase002QuestionReply,
   isCase002DeductionCorrect,
   isCase002TimelineCorrect,
@@ -204,6 +208,14 @@ const STORAGE_KEYS = [SAVE_KEY, ARCHIVE_KEY, CASE002_SAVE_KEY, CASE003_SAVE_KEY,
 type AppPhase = 'menu' | 'campaign' | CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'case034' | 'case035' | 'case036' | 'case037' | 'case038' | 'case039' | 'case040' | 'case041' | 'case042' | 'case043' | 'case044' | 'case045' | 'case046' | 'case047' | 'case048' | 'case049' | 'case050' | 'case051' | 'case052' | 'case053' | 'case054' | 'case055' | 'case056' | 'case057' | 'case058' | 'case059' | 'case060' | 'case061' | 'case062' | 'case063' | 'case064' | 'case065' | 'case066' | 'daily' | 'team';
 
 const CASE001_PHASES = new Set(['hq', 'briefing', 'evidence', 'interviews', 'timeline', 'deduction', 'review']);
+const CASE002_PHASES = new Set<Case002Phase>([
+  'case002Briefing', 'case002Evidence', 'case002Interviews',
+  'case002Timeline', 'case002Deduction', 'case002Review',
+]);
+const CASE003_PHASES = new Set<Case003Phase>([
+  'case003Briefing', 'case003Evidence', 'case003Interviews',
+  'case003Timeline', 'case003Deduction', 'case003Review',
+]);
 const CASE002_PHASES = new Set(['case002Briefing', 'case002Evidence', 'case002Interviews', 'case002Timeline', 'case002Deduction', 'case002Review']);
 const CASE003_PHASES = new Set(['case003Briefing', 'case003Evidence', 'case003Interviews', 'case003Timeline', 'case003Deduction', 'case003Review']);
 
@@ -352,8 +364,8 @@ export default function HomeScreen() {
     readStorageItemsSafely(AsyncStorage, STORAGE_KEYS)
       .then((reads) => {
         const [raw, archiveRaw, case002Raw, case003Raw, teamRaw] = reads.map((read) => read.value);
-        setStorageReadFailures(reads.filter((read) => read.failed).map((read) => read.key));
         if (!active) return;
+        setStorageReadFailures(reads.filter((read) => read.failed).map((read) => read.key));
         let restoredArchive = EMPTY_INVESTIGATION_ARCHIVE;
         if (archiveRaw) {
           const parsedArchive = parseStoredJson(archiveRaw) as InvestigationArchive | null;
@@ -363,49 +375,14 @@ export default function HomeScreen() {
           }
         }
         setBureauTeamBoard(restoreBureauTeamBoard(teamRaw, restoredArchive));
-        if (case003Raw) {
-          const parsed = parseStoredJson(case003Raw) as Partial<Case003Progress> | null;
-          if (parsed && typeof parsed === 'object') {
-            setCase003Progress({
-              cluesFound: Array.isArray(parsed.cluesFound) ? parsed.cluesFound.filter((id): id is string => typeof id === 'string') : [],
-              askedQuestions: Array.isArray(parsed.askedQuestions) ? parsed.askedQuestions.filter((key): key is string => typeof key === 'string') : [],
-              timelineOrder: Array.isArray(parsed.timelineOrder) ? parsed.timelineOrder.filter((id): id is string => typeof id === 'string') : [],
-              timelineSolved: typeof parsed.timelineSolved === 'boolean' ? parsed.timelineSolved : false,
-              selectedSuspect: typeof parsed.selectedSuspect === 'string' ? parsed.selectedSuspect : null,
-              selectedMotive: typeof parsed.selectedMotive === 'string' ? parsed.selectedMotive : null,
-              completed: typeof parsed.completed === 'boolean' ? parsed.completed : false,
-            });
-          }
-        }
-        if (case002Raw) {
-          const parsedCase002 = parseStoredJson(case002Raw) as Partial<Case002Progress> | null;
-          if (parsedCase002 && typeof parsedCase002 === 'object') {
-            setCase002Progress({
-              cluesFound: Array.isArray(parsedCase002.cluesFound)
-                ? parsedCase002.cluesFound.filter((id): id is string => typeof id === 'string')
-                : [],
-              askedQuestions: Array.isArray(parsedCase002.askedQuestions)
-                ? parsedCase002.askedQuestions.filter((key): key is string => typeof key === 'string')
-                : [],
-              timelineOrder: Array.isArray(parsedCase002.timelineOrder)
-                ? parsedCase002.timelineOrder.filter((id): id is string => typeof id === 'string')
-                : [],
-              timelineSolved: typeof parsedCase002.timelineSolved === 'boolean'
-                ? parsedCase002.timelineSolved
-                : false,
-              selectedSuspect: typeof parsedCase002.selectedSuspect === 'string'
-                ? parsedCase002.selectedSuspect
-                : null,
-              selectedMotive: typeof parsedCase002.selectedMotive === 'string'
-                ? parsedCase002.selectedMotive
-                : null,
-              completed: typeof parsedCase002.completed === 'boolean'
-                ? parsedCase002.completed
-                : false,
-            });
-          }
-        }
-        if (!active) return;
+        const restoredCase003 = sanitizeCase003SavedProgress(
+          case003Raw ? parseStoredJson(case003Raw) : null,
+        );
+        setCase003Progress(restoredCase003);
+        const restoredCase002 = sanitizeCase002SavedProgress(
+          case002Raw ? parseStoredJson(case002Raw) : null,
+        );
+        setCase002Progress(restoredCase002);
         const saved = parseStoredJson(raw) as Partial<SavedState> | null;
         if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
           const restoredProgress = sanitizeCase001SavedProgress(saved);
@@ -432,6 +409,12 @@ export default function HomeScreen() {
                 ? (hasStartedInvestigation ? 'hq' : 'menu')
                 : getCase001ResumePhase(restoredProgress),
             );
+          } else if (typeof saved.phase === 'string' && CASE002_PHASES.has(saved.phase as Case002Phase)) {
+            // Never trust a stored Case 002 screen to skip evidence, witness or timeline gates.
+            setPhase(getCase002ResumePhase(restoredCase002));
+          } else if (typeof saved.phase === 'string' && CASE003_PHASES.has(saved.phase as Case003Phase)) {
+            // Re-derive Case 003's stage from the sanitized investigation, not the saved screen name.
+            setPhase(getCase003ResumePhase(restoredCase003));
           } else if (isKnownAppPhase(saved.phase)) {
             setPhase(saved.phase);
           } else {

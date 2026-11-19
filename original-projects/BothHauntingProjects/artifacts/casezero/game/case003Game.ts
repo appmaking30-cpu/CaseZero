@@ -65,6 +65,108 @@ export const EMPTY_CASE003_PROGRESS: Case003Progress = {
   selectedSuspect: null, selectedMotive: null, completed: false,
 };
 
+
+function uniqueKnownCase003Values(value: unknown, allowedValues: readonly string[]): string[] {
+  if (!Array.isArray(value)) return [];
+  const allowed = new Set(allowedValues);
+  const seen = new Set<string>();
+  const restored: string[] = [];
+  for (const item of value) {
+    if (typeof item === 'string' && allowed.has(item) && !seen.has(item)) {
+      seen.add(item);
+      restored.push(item);
+    }
+  }
+  return restored;
+}
+
+function restoreCase003TimelineOrder(value: unknown): string[] {
+  if (!Array.isArray(value) || value.length > CASE_003_GAME.timelineEvents.length) return [];
+  const allowed = new Set(CASE_003_GAME.timelineEvents.map((event) => event.id));
+  const seen = new Set<string>();
+  const restored: string[] = [];
+  for (const item of value) {
+    if (typeof item !== 'string' || !allowed.has(item) || seen.has(item)) return [];
+    seen.add(item);
+    restored.push(item);
+  }
+  return restored;
+}
+
+/** Restore only known evidence and conclusions supported by the full investigation gates. */
+export function sanitizeCase003SavedProgress(value: unknown): Case003Progress {
+  const saved = value && typeof value === 'object' && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+  const cluesFound = uniqueKnownCase003Values(
+    saved.cluesFound,
+    CASE_003_GAME.clues.map((clue) => clue.id),
+  );
+  const askedQuestions = uniqueKnownCase003Values(
+    saved.askedQuestions,
+    CASE_003_GAME.witnesses.flatMap((witness) =>
+      witness.questions.map((question) => `${witness.id}:${question.id}`),
+    ),
+  );
+  const timelineOrder = restoreCase003TimelineOrder(saved.timelineOrder);
+  const allCluesFound = cluesFound.length === CASE_003_GAME.clues.length;
+  const allWitnessesHeard = CASE_003_GAME.witnesses.every((witness) =>
+    witness.questions.some((question) => askedQuestions.includes(`${witness.id}:${question.id}`)),
+  );
+  const timelineSolved =
+    saved.timelineSolved === true &&
+    allCluesFound &&
+    allWitnessesHeard &&
+    isCase003TimelineCorrect(timelineOrder);
+  const suspectCandidate = saved.selectedSuspect;
+  const motiveCandidate = saved.selectedMotive;
+  const selectedSuspect =
+    timelineSolved &&
+    typeof suspectCandidate === 'string' &&
+    CASE_003_GAME.suspects.some((suspect) => suspect.id === suspectCandidate)
+      ? suspectCandidate
+      : null;
+  const selectedMotive =
+    timelineSolved &&
+    typeof motiveCandidate === 'string' &&
+    CASE_003_GAME.motives.some((motive) => motive.id === motiveCandidate)
+      ? motiveCandidate
+      : null;
+  const completed =
+    saved.completed === true &&
+    timelineSolved &&
+    isCase003DeductionCorrect(selectedSuspect, selectedMotive);
+
+  return {
+    cluesFound,
+    askedQuestions,
+    timelineOrder,
+    timelineSolved,
+    selectedSuspect,
+    selectedMotive,
+    completed,
+  };
+}
+
+export function getCase003ResumePhase(progress: Case003Progress): Case003Phase {
+  if (progress.completed) return 'case003Review';
+  if (progress.timelineSolved) return 'case003Deduction';
+  const allCluesFound = CASE_003_GAME.clues.every((clue) => progress.cluesFound.includes(clue.id));
+  if (!allCluesFound) {
+    const hasProgress =
+      progress.cluesFound.length > 0 ||
+      progress.askedQuestions.length > 0 ||
+      progress.timelineOrder.length > 0;
+    return hasProgress ? 'case003Evidence' : 'case003Briefing';
+  }
+  const allWitnessesHeard = CASE_003_GAME.witnesses.every((witness) =>
+    witness.questions.some((question) =>
+      progress.askedQuestions.includes(`${witness.id}:${question.id}`),
+    ),
+  );
+  return allWitnessesHeard ? 'case003Timeline' : 'case003Interviews';
+}
+
 export function getCase003Carryover(archive: InvestigationArchive) {
   const first = archive.completedCases.find((record) => record.caseId === 'case001');
   const second = archive.completedCases.find((record) => record.caseId === 'case002');
