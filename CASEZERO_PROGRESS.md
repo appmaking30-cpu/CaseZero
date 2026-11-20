@@ -1,3 +1,44 @@
+# Current development checkpoint — 20 November 2026
+
+## Local-save write-failure visibility
+
+The app previously swallowed every AsyncStorage write rejection with `.catch(() => undefined)`. A player could continue an investigation while believing it was saved even when the storage layer had rejected the write.
+
+The existing `game/storageRecovery.ts` helper now also exports `writeStorageItemSafely`. All five persisted records use it:
+
+- Case 001 investigation progress
+- Investigation archive
+- Bureau team board
+- Case 002 progress
+- Case 003 progress
+
+Failed writes are tracked by key and surfaced in an accessible **LOCAL SAVE STATUS** alert. The message distinguishes unreadable records (where writes remain paused to protect the prior save) from rejected writes (where the latest progress may exist only in memory and could be lost if the app closes). A later successful write for that key clears its warning. The app retries on the next state change for that record.
+
+Regression coverage adds two unit tests (rejected write and successful exact key/value write) and a browser smoke scenario that simulates a localStorage quota failure while Case 001 is active.
+
+Source commit: [0efad2aa16f02c260c61b10cbf0457e08ebc85e6](https://github.com/appmaking30-cpu/CaseZero/commit/0efad2aa16f02c260c61b10cbf0457e08ebc85e6)
+
+Rollback checkpoint before this change: [casezero-safety-checkpoint-2026-11-20-write-feedback](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-20-write-feedback), based on `757375d6bfe76097dae1b04eb27ebe0fd2718b88`.
+
+## Verification status at the latest inspection
+
+- [Workspace checks — run 44737365638](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44737365638): TypeScript, the full unit-test suite and Expo web export passed. Chromium installation passed; the extended browser smoke was still running.
+- [Android standalone APK — run 44737365704](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44737365704): TypeScript, unit tests and Android native generation passed; Gradle release APK assembly was still running. No artifact for this revision was available at that inspection.
+- The latest previously successful APK is [artifact 14533613987](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44530168428), 47,703,134 bytes, built from app revision `63a9688604bec264f1ca1a066911e28cfbdfa2e1`. It predates the write-failure warning and is not the latest app build.
+- No physical Android installation, full phone playthrough or TalkBack test has been performed.
+
+## Preservation and current scope
+
+- The original source ZIP remains present on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- The development branch retains the original backup history; latest comparison before this documentation commit was 795 commits ahead and zero behind.
+- The canonical app remains the imported Expo Router / React Native / TypeScript project. No restart or template replacement.
+- Current tree inventory: 67 case-related game-data modules, 63 dedicated case screen components (Cases 004–066), 63 case-specific test files, plus five system/regression test files. These are source-file counts, not completed individual playthroughs.
+- Browser walkthrough coverage remains full for Cases 001–006 and 041–066; Cases 007–040 receive navigation/save-restore smoke checks rather than complete individual playthroughs.
+- Local evidence archive/carryover, three Bureau specialists with assignments/progression, and seven date-rotating in-app bulletin cases are present in source. Automatic push notifications, cloud sync, production backend, physical-device verification, production signing, Play Store release and monetization remain incomplete.
+- No Replit Agent allowance, paid EAS build, paid API or paid hosting was used.
+
+---
+
 # Current development checkpoint — 17 November 2026
 
 ## Case 001 visible-timestamp chronology guard
