@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { readStorageItemsSafely } from '../../artifacts/casezero/game/storageRecovery';
+import { readStorageItemsSafely, writeStorageItemSafely } from '../../artifacts/casezero/game/storageRecovery';
 
 test('a failed local-save read does not discard other stored records', async () => {
   const values = new Map<string, string>([
@@ -42,4 +42,26 @@ test('an empty storage key list resolves without touching storage', async () => 
   );
 
   assert.deepEqual(results, []);
+});
+
+test('a failed local-save write is reported without throwing', async () => {
+  const saved = await writeStorageItemSafely(
+    { setItem: async () => { throw new Error('simulated storage write failure'); } },
+    'case001',
+    '{"phase":"deduction"}',
+  );
+
+  assert.equal(saved, false);
+});
+
+test('a successful local-save write confirms the exact key and value', async () => {
+  const values = new Map<string, string>();
+  const saved = await writeStorageItemSafely(
+    { setItem: async (key: string, value: string) => { values.set(key, value); } },
+    'case001',
+    '{"phase":"deduction"}',
+  );
+
+  assert.equal(saved, true);
+  assert.equal(values.get('case001'), '{"phase":"deduction"}');
 });

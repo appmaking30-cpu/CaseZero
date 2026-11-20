@@ -26,3 +26,24 @@ export async function readStorageItemsSafely(
     }),
   );
 }
+
+export type StorageWriter = {
+  setItem(key: string, value: string): Promise<void>;
+};
+
+/**
+ * Convert a rejected local-save write into an explicit result so the app can
+ * warn the player instead of silently pretending the progress was persisted.
+ */
+export async function writeStorageItemSafely(
+  storage: StorageWriter,
+  key: string,
+  value: string,
+): Promise<boolean> {
+  try {
+    await storage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}

@@ -17,7 +17,7 @@ import HotelNightScene from '@/components/HotelNightScene';
 import RecordsAnnexScene from '@/components/RecordsAnnexScene';
 import SuspectPortrait from '@/components/SuspectPortrait';
 import { useColors } from '@/hooks/useColors';
-import { readStorageItemsSafely } from '@/game/storageRecovery';
+import { readStorageItemsSafely, writeStorageItemSafely } from '@/game/storageRecovery';
 import Case004Screen from '@/components/Case004Screen';
 import Case005Screen from '@/components/Case005Screen';
 import Case006Screen from '@/components/Case006Screen';
@@ -323,6 +323,7 @@ export default function HomeScreen() {
   const [loaded, setLoaded] = useState(false);
   const [archiveLoaded, setArchiveLoaded] = useState(false);
   const [storageReadFailures, setStorageReadFailures] = useState<string[]>([]);
+  const [storageWriteFailures, setStorageWriteFailures] = useState<string[]>([]);
   const [investigationArchive, setInvestigationArchive] = useState<InvestigationArchive>(EMPTY_INVESTIGATION_ARCHIVE);
   const [bureauTeamBoard, setBureauTeamBoard] = useState<BureauTeamBoard>(EMPTY_BUREAU_TEAM_BOARD);
   const [phase, setPhase] = useState<AppPhase>('menu');
@@ -441,7 +442,11 @@ export default function HomeScreen() {
       selectedMotive,
       caseCompleted,
     };
-    AsyncStorage.setItem(SAVE_KEY, JSON.stringify(saved)).catch(() => undefined);
+    void writeStorageItemSafely(AsyncStorage, SAVE_KEY, JSON.stringify(saved)).then((savedSuccessfully) => {
+      setStorageWriteFailures((current) => savedSuccessfully
+        ? current.filter((failedKey) => failedKey !== SAVE_KEY)
+        : current.includes(SAVE_KEY) ? current : [...current, SAVE_KEY]);
+    });
   }, [
     loaded,
     storageReadFailures,
@@ -458,22 +463,38 @@ export default function HomeScreen() {
 
   useEffect(() => {
     if (!archiveLoaded || storageReadFailures.includes(ARCHIVE_KEY)) return;
-    AsyncStorage.setItem(ARCHIVE_KEY, JSON.stringify(investigationArchive)).catch(() => undefined);
+    void writeStorageItemSafely(AsyncStorage, ARCHIVE_KEY, JSON.stringify(investigationArchive)).then((savedSuccessfully) => {
+      setStorageWriteFailures((current) => savedSuccessfully
+        ? current.filter((failedKey) => failedKey !== ARCHIVE_KEY)
+        : current.includes(ARCHIVE_KEY) ? current : [...current, ARCHIVE_KEY]);
+    });
   }, [archiveLoaded, storageReadFailures, investigationArchive]);
 
   useEffect(() => {
     if (!archiveLoaded || storageReadFailures.includes(BUREAU_TEAM_SAVE_KEY)) return;
-    AsyncStorage.setItem(BUREAU_TEAM_SAVE_KEY, JSON.stringify(bureauTeamBoard)).catch(() => undefined);
+    void writeStorageItemSafely(AsyncStorage, BUREAU_TEAM_SAVE_KEY, JSON.stringify(bureauTeamBoard)).then((savedSuccessfully) => {
+      setStorageWriteFailures((current) => savedSuccessfully
+        ? current.filter((failedKey) => failedKey !== BUREAU_TEAM_SAVE_KEY)
+        : current.includes(BUREAU_TEAM_SAVE_KEY) ? current : [...current, BUREAU_TEAM_SAVE_KEY]);
+    });
   }, [archiveLoaded, storageReadFailures, bureauTeamBoard]);
 
   useEffect(() => {
     if (!loaded || storageReadFailures.includes(CASE002_SAVE_KEY)) return;
-    AsyncStorage.setItem(CASE002_SAVE_KEY, JSON.stringify(case002Progress)).catch(() => undefined);
+    void writeStorageItemSafely(AsyncStorage, CASE002_SAVE_KEY, JSON.stringify(case002Progress)).then((savedSuccessfully) => {
+      setStorageWriteFailures((current) => savedSuccessfully
+        ? current.filter((failedKey) => failedKey !== CASE002_SAVE_KEY)
+        : current.includes(CASE002_SAVE_KEY) ? current : [...current, CASE002_SAVE_KEY]);
+    });
   }, [loaded, storageReadFailures, case002Progress]);
 
   useEffect(() => {
     if (!loaded || storageReadFailures.includes(CASE003_SAVE_KEY)) return;
-    AsyncStorage.setItem(CASE003_SAVE_KEY, JSON.stringify(case003Progress)).catch(() => undefined);
+    void writeStorageItemSafely(AsyncStorage, CASE003_SAVE_KEY, JSON.stringify(case003Progress)).then((savedSuccessfully) => {
+      setStorageWriteFailures((current) => savedSuccessfully
+        ? current.filter((failedKey) => failedKey !== CASE003_SAVE_KEY)
+        : current.includes(CASE003_SAVE_KEY) ? current : [...current, CASE003_SAVE_KEY]);
+    });
   }, [loaded, storageReadFailures, case003Progress]);
 
   const allCluesFound = cluesFound.length === CASE_001.clues.length;
@@ -844,7 +865,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {storageReadFailures.length > 0 && (
+        {(storageReadFailures.length > 0 || storageWriteFailures.length > 0) && (
           <View
             accessibilityRole="alert"
             style={{
@@ -857,11 +878,18 @@ export default function HomeScreen() {
             }}
           >
             <Text style={{ color: '#F0C58A', fontSize: 10, fontWeight: '900', letterSpacing: 1.3 }}>
-              LOCAL SAVE RECOVERY
+              LOCAL SAVE STATUS
             </Text>
-            <Text style={{ color: '#E8DCCB', fontSize: 12, lineHeight: 19, marginTop: 6 }}>
-              Some saved records could not be read. CaseZero has paused writes to those records so it will not replace them with empty progress. Restart the app to retry. Do not clear app data while this warning is visible.
-            </Text>
+            {storageReadFailures.length > 0 && (
+              <Text style={{ color: '#E8DCCB', fontSize: 12, lineHeight: 19, marginTop: 6 }}>
+                Some saved records could not be read. CaseZero has paused writes to those records so it will not replace them with empty progress. Restart the app to retry. Do not clear app data while this warning is visible.
+              </Text>
+            )}
+            {storageWriteFailures.length > 0 && (
+              <Text style={{ color: '#E8DCCB', fontSize: 12, lineHeight: 19, marginTop: 6 }}>
+                CaseZero could not confirm saving {storageWriteFailures.length === 1 ? 'a local record' : 'local records'}. Your latest progress may only be in memory and could be lost if you close the app. Keep the app open; CaseZero will retry when that progress changes again.
+              </Text>
+            )}
           </View>
         )}
 

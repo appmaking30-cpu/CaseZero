@@ -1561,6 +1561,37 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
       }
     }
 
+
+    // A rejected browser storage write must be visible instead of silently losing progress.
+    const writeFailureContext = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+      colorScheme: 'dark',
+      deviceScaleFactor: 1,
+    });
+    const writeFailurePage = await writeFailureContext.newPage();
+    const writeFailureErrors = [];
+    writeFailurePage.on('pageerror', (error) => writeFailureErrors.push(error.message));
+    await writeFailurePage.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
+    await writeFailurePage.getByRole('button', { name: 'ENTER THE BUREAU' }).click();
+    await writeFailurePage.getByRole('button', { name: 'Open case file' }).click();
+    await writeFailurePage.getByRole('button', { name: 'Begin evidence review' }).click();
+    await writeFailurePage.evaluate(() => {
+      const originalSetItem = Storage.prototype.setItem;
+      Storage.prototype.setItem = function (key, value) {
+        if (key === 'casezero.case001.memory.v1') {
+          throw new DOMException('Simulated storage quota failure', 'QuotaExceededError');
+        }
+        return originalSetItem.call(this, key, value);
+      };
+    });
+    await writeFailurePage.getByText('The ceiling stain', { exact: true }).click();
+    await writeFailurePage.getByText('LOCAL SAVE STATUS', { exact: true }).waitFor();
+    await writeFailurePage.getByText(/could not confirm saving a local record/i).waitFor();
+    assert.deepEqual(writeFailureErrors, [], 'a failed save should be handled without a browser runtime error');
+    await writeFailureContext.close();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: dark mobile viewport; Case 001–006 and 041–066 investigations; Case 007–040 screen navigation and save/restore smoke; evidence memory, daily bulletin and Bureau assignment');
   } finally {
