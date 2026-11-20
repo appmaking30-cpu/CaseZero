@@ -22,8 +22,8 @@ Rollback checkpoint before this change: [casezero-safety-checkpoint-2026-11-20-w
 
 ## Verification status at the latest inspection
 
-- [Workspace checks — run 44737365638](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44737365638): TypeScript, the full unit-test suite and Expo web export passed. Chromium installation passed; the extended browser smoke was still running.
-- [Android standalone APK — run 44737365704](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44737365704): TypeScript, unit tests and Android native generation passed; Gradle release APK assembly was still running. No artifact for this revision was available at that inspection.
+- [Workspace checks — run 44737365638](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44737365638): **passed** on commit `0efad2aa16f02c260c61b10cbf0457e08ebc85e6`. TypeScript, the full unit-test suite, Expo web export and the complete dark mobile browser smoke passed. The browser smoke includes the simulated localStorage quota failure and confirms that the accessible save warning appears without a runtime error. Preview artifact: [14628638420](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44737365638/artifacts/14628638420), 3,200,371 bytes.
+- [Android standalone APK — run 44737365704](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44737365704): TypeScript, unit tests and Android native generation passed; Gradle release APK assembly was still running at the latest inspection. No artifact for this revision was available yet.
 - The latest previously successful APK is [artifact 14533613987](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44530168428), 47,703,134 bytes, built from app revision `63a9688604bec264f1ca1a066911e28cfbdfa2e1`. It predates the write-failure warning and is not the latest app build.
 - No physical Android installation, full phone playthrough or TalkBack test has been performed.
 
