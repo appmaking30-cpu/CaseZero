@@ -30,7 +30,7 @@ Rollback checkpoint before this change: [casezero-safety-checkpoint-2026-11-20-w
 ## Preservation and current scope
 
 - The original source ZIP remains present on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
-- The development branch retains the original backup history; latest comparison before this documentation commit was 795 commits ahead and zero behind.
+- The development branch retains the original backup history and is zero commits behind the original backup branch; see the live comparison for the current ahead count.
 - The canonical app remains the imported Expo Router / React Native / TypeScript project. No restart or template replacement.
 - Current tree inventory: 67 case-related game-data modules, 63 dedicated case screen components (Cases 004–066), 63 case-specific test files, plus five system/regression test files. These are source-file counts, not completed individual playthroughs.
 - Browser walkthrough coverage remains full for Cases 001–006 and 041–066; Cases 007–040 receive navigation/save-restore smoke checks rather than complete individual playthroughs.
