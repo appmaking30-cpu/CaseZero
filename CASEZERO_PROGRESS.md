@@ -1,3 +1,43 @@
+# Current development checkpoint — 21 November 2026
+
+## Manual recovery after a failed local save
+
+The local-save warning previously told players that CaseZero would retry only when investigation progress changed again. That was awkward if the underlying storage problem (for example, a temporary quota issue) had already been resolved but the player did not want to alter the investigation.
+
+The existing app now exposes **Retry saving now** whenever one or more writes have failed. Pressing it increments a retry revision consumed by each of the five existing persistence effects. Those effects re-attempt the current in-memory snapshots for all readable records; records whose initial read failed remain protected and are not overwritten. The warning clears only when the affected writes succeed.
+
+The browser regression scenario now:
+1. Opens Case 001 and inspects one evidence record.
+2. Replaces the browser storage writer with a simulated quota failure.
+3. Confirms the accessible **LOCAL SAVE STATUS** alert appears.
+4. Restores the real storage writer.
+5. Presses **Retry saving now**.
+6. Confirms the warning disappears and the inspected clue is present in the persisted Case 001 record.
+
+Source commits:
+- [Add the in-app retry control and retry trigger](https://github.com/appmaking30-cpu/CaseZero/commit/536552678f21b56241eaffe5e1de429982468299)
+- [Verify retry recovery and persisted progress in browser smoke](https://github.com/appmaking30-cpu/CaseZero/commit/c34de92ff425d051a0c7850b2b8186d722e52596)
+
+Rollback checkpoint before the change: [casezero-safety-checkpoint-2026-11-21-manual-save-retry](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-21-manual-save-retry), at the previous branch head.
+
+## Verification status for this revision
+
+- Latest source head: `c34de92ff425d051a0c7850b2b8186d722e52596`.
+- [Workspace checks — run 44906479870](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44906479870): TypeScript and unit tests were progressing; Expo web export and browser smoke had not completed at the latest inspection. No new preview artifact yet.
+- [Android standalone APK — run 44906479874](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44906479874): TypeScript was running; unit tests, Android prebuild and Gradle assembly had not completed at the latest inspection. No artifact for this revision yet.
+- The preceding app revision [0efad2aa16f02c260c61b10cbf0457e08ebc85e6](https://github.com/appmaking30-cpu/CaseZero/commit/0efad2aa16f02c260c61b10cbf0457e08ebc85e6) passed [workspace checks 44737365638](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44737365638) and produced a standalone APK in [Android run 44737365704](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44737365704), artifact [14631091130](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44737365704/artifacts/14631091130), 47,704,994 bytes, SHA-256 `30a15d672eaf356bf5bf475ef330f288469685a95169e8972ed5109fc71f2849`. This APK predates the manual retry control and is not the latest revision.
+- No physical Android installation, complete phone playthrough or TalkBack test has been performed.
+
+## Preservation and workflow
+
+- Original Replit workspace: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). The GitHub workflow has not written to that workspace; no live Replit edit was attempted.
+- Original source archive remains on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, previously recorded blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- The development branch remains based on the imported project and is zero commits behind the original backup branch; the current GitHub compare shows 800 commits ahead.
+- Canonical app remains the existing Expo Router / React Native / TypeScript application, Expo SDK 58, package ID `com.casezero.beyondevidence`; no restart or template replacement.
+- The existing low-cost workflow remains small commits on `casezero-development`, unit tests, Expo web export, Playwright browser checks and standard GitHub-hosted Android APK builds. No paid Replit Agent, EAS, API, hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 20 November 2026
 
 ## Local-save write-failure visibility
