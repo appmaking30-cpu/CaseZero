@@ -324,6 +324,7 @@ export default function HomeScreen() {
   const [archiveLoaded, setArchiveLoaded] = useState(false);
   const [storageReadFailures, setStorageReadFailures] = useState<string[]>([]);
   const [storageWriteFailures, setStorageWriteFailures] = useState<string[]>([]);
+  const [saveRetryNonce, setSaveRetryNonce] = useState(0);
   const [investigationArchive, setInvestigationArchive] = useState<InvestigationArchive>(EMPTY_INVESTIGATION_ARCHIVE);
   const [bureauTeamBoard, setBureauTeamBoard] = useState<BureauTeamBoard>(EMPTY_BUREAU_TEAM_BOARD);
   const [phase, setPhase] = useState<AppPhase>('menu');
@@ -450,6 +451,7 @@ export default function HomeScreen() {
   }, [
     loaded,
     storageReadFailures,
+    saveRetryNonce,
     phase,
     cluesFound,
     askedQuestions,
@@ -468,7 +470,7 @@ export default function HomeScreen() {
         ? current.filter((failedKey) => failedKey !== ARCHIVE_KEY)
         : current.includes(ARCHIVE_KEY) ? current : [...current, ARCHIVE_KEY]);
     });
-  }, [archiveLoaded, storageReadFailures, investigationArchive]);
+  }, [archiveLoaded, storageReadFailures, saveRetryNonce, investigationArchive]);
 
   useEffect(() => {
     if (!archiveLoaded || storageReadFailures.includes(BUREAU_TEAM_SAVE_KEY)) return;
@@ -477,7 +479,7 @@ export default function HomeScreen() {
         ? current.filter((failedKey) => failedKey !== BUREAU_TEAM_SAVE_KEY)
         : current.includes(BUREAU_TEAM_SAVE_KEY) ? current : [...current, BUREAU_TEAM_SAVE_KEY]);
     });
-  }, [archiveLoaded, storageReadFailures, bureauTeamBoard]);
+  }, [archiveLoaded, storageReadFailures, saveRetryNonce, bureauTeamBoard]);
 
   useEffect(() => {
     if (!loaded || storageReadFailures.includes(CASE002_SAVE_KEY)) return;
@@ -486,7 +488,7 @@ export default function HomeScreen() {
         ? current.filter((failedKey) => failedKey !== CASE002_SAVE_KEY)
         : current.includes(CASE002_SAVE_KEY) ? current : [...current, CASE002_SAVE_KEY]);
     });
-  }, [loaded, storageReadFailures, case002Progress]);
+  }, [loaded, storageReadFailures, saveRetryNonce, case002Progress]);
 
   useEffect(() => {
     if (!loaded || storageReadFailures.includes(CASE003_SAVE_KEY)) return;
@@ -495,7 +497,7 @@ export default function HomeScreen() {
         ? current.filter((failedKey) => failedKey !== CASE003_SAVE_KEY)
         : current.includes(CASE003_SAVE_KEY) ? current : [...current, CASE003_SAVE_KEY]);
     });
-  }, [loaded, storageReadFailures, case003Progress]);
+  }, [loaded, storageReadFailures, saveRetryNonce, case003Progress]);
 
   const allCluesFound = cluesFound.length === CASE_001.clues.length;
   const witnessCount = useMemo(
@@ -886,9 +888,17 @@ export default function HomeScreen() {
               </Text>
             )}
             {storageWriteFailures.length > 0 && (
-              <Text style={{ color: '#E8DCCB', fontSize: 12, lineHeight: 19, marginTop: 6 }}>
-                CaseZero could not confirm saving {storageWriteFailures.length === 1 ? 'a local record' : 'local records'}. Your latest progress may only be in memory and could be lost if you close the app. Keep the app open; CaseZero will retry when that progress changes again.
-              </Text>
+              <>
+                <Text style={{ color: '#E8DCCB', fontSize: 12, lineHeight: 19, marginTop: 6 }}>
+                  CaseZero could not confirm saving {storageWriteFailures.length === 1 ? 'a local record' : 'local records'}. Your latest progress may only be in memory and could be lost if you close the app. Resolve the storage issue, then tap Retry saving now. Keep the app open until this warning clears.
+                </Text>
+                <ActionButton
+                  title="Retry saving now"
+                  onPress={() => setSaveRetryNonce((current) => current + 1)}
+                  colors={colors}
+                  variant="secondary"
+                />
+              </>
             )}
           </View>
         )}
