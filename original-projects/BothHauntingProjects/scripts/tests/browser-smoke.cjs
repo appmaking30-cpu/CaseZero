@@ -1578,18 +1578,35 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await writeFailurePage.getByRole('button', { name: 'Open case file' }).click();
     await writeFailurePage.getByRole('button', { name: 'Begin evidence review' }).click();
     await writeFailurePage.evaluate(() => {
-      const originalSetItem = Storage.prototype.setItem;
+      window.__caseZeroOriginalSetItem = Storage.prototype.setItem;
       Storage.prototype.setItem = function (key, value) {
         if (key === 'casezero.case001.memory.v1') {
           throw new DOMException('Simulated storage quota failure', 'QuotaExceededError');
         }
-        return originalSetItem.call(this, key, value);
+        return window.__caseZeroOriginalSetItem.call(this, key, value);
       };
     });
     await writeFailurePage.getByText('The ceiling stain', { exact: true }).click();
     await writeFailurePage.getByText('LOCAL SAVE STATUS', { exact: true }).waitFor();
     await writeFailurePage.getByText(/could not confirm saving a local record/i).waitFor();
-    assert.deepEqual(writeFailureErrors, [], 'a failed save should be handled without a browser runtime error');
+    await writeFailurePage.evaluate(() => {
+      Storage.prototype.setItem = window.__caseZeroOriginalSetItem;
+      delete window.__caseZeroOriginalSetItem;
+    });
+    await writeFailurePage.getByRole('button', { name: 'Retry saving now' }).click();
+    await writeFailurePage.getByText('LOCAL SAVE STATUS', { exact: true }).waitFor({ state: 'hidden' });
+    const retriedClueCount = await writeFailurePage.evaluate(() => {
+      const raw = window.localStorage.getItem('casezero.case001.memory.v1');
+      if (!raw) return 0;
+      try {
+        const saved = JSON.parse(raw);
+        return Array.isArray(saved.cluesFound) ? saved.cluesFound.length : 0;
+      } catch {
+        return 0;
+      }
+    });
+    assert.equal(retriedClueCount, 1, 'manual retry should persist the inspected clue after storage becomes writable');
+    assert.deepEqual(writeFailureErrors, [], 'a failed save and manual retry should be handled without a browser runtime error');
     await writeFailureContext.close();
 
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
