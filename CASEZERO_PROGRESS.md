@@ -16,6 +16,13 @@ The warning now says records may be unreadable or invalid and tells the player t
 
 Regression coverage adds four unit tests for missing keys, valid object envelopes, malformed/non-object JSON, missing required arrays and unsupported versions. Browser scenarios seed a malformed Case 001 record and a malformed investigation archive paired with a populated Bureau board. They advance into evidence inspection or allow archive-dependent restoration to settle, then confirm the original stored bytes remain unchanged for both the affected save and its dependent team record.
 
+Source commits:
+- [Record validation helper](https://github.com/appmaking30-cpu/CaseZero/commit/959c6e3c265a2ce7b8f9a0fb12493cb181158f24)
+- [Unit regression tests](https://github.com/appmaking30-cpu/CaseZero/commit/daa0980c19bec499a5d984e274cbac9d85bd9348)
+- [App startup validation and write protection](https://github.com/appmaking30-cpu/CaseZero/commit/1ff38fa2cf78e0c3c5f955d49399769c78554f9f)
+- [Malformed Case 001 browser test](https://github.com/appmaking30-cpu/CaseZero/commit/4eede071433041a76c72c9010343674988277027)
+- [Archive/Bureau dependency browser test](https://github.com/appmaking30-cpu/CaseZero/commit/bb3579e4525078da62f0bad3da4132cb0917902a)
+
 Rollback checkpoint before this change: [casezero-safety-checkpoint-2026-11-22-malformed-save-protection](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-22-malformed-save-protection).
 
 ## Verification for this revision
