@@ -47,3 +47,26 @@ export async function writeStorageItemSafely(
     return false;
   }
 }
+
+
+/**
+ * Validate a persisted JSON record before restoring defaults can be written back.
+ * Missing keys are normal on a fresh install; present keys must contain an object
+ * with the arrays required by that record's current schema.
+ */
+export function isValidStoredJsonRecord(
+  raw: string | null,
+  requiredArrayFields: readonly string[] = [],
+  expectedVersion?: number,
+): boolean {
+  if (raw === null) return true;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) return false;
+    const record = parsed as Record<string, unknown>;
+    if (expectedVersion !== undefined && record.version !== expectedVersion) return false;
+    return requiredArrayFields.every((field) => Array.isArray(record[field]));
+  } catch {
+    return false;
+  }
+}
