@@ -14,7 +14,7 @@ The existing app now validates each present record before allowing its normal wr
 
 The warning now says records may be unreadable or invalid and tells the player to keep app data intact. This is local corruption protection, not a backup/repair system; a malformed record remains preserved but is not automatically reconstructed.
 
-Regression coverage adds four unit tests for missing keys, valid object envelopes, malformed/non-object JSON, missing required arrays and unsupported versions. A new browser scenario seeds a malformed Case 001 record, advances into evidence inspection, and confirms the original stored bytes remain unchanged.
+Regression coverage adds four unit tests for missing keys, valid object envelopes, malformed/non-object JSON, missing required arrays and unsupported versions. Browser scenarios seed a malformed Case 001 record and a malformed investigation archive paired with a populated Bureau board. They advance into evidence inspection or allow archive-dependent restoration to settle, then confirm the original stored bytes remain unchanged for both the affected save and its dependent team record.
 
 Rollback checkpoint before this change: [casezero-safety-checkpoint-2026-11-22-malformed-save-protection](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-22-malformed-save-protection).
 
