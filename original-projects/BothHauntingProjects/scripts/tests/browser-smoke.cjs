@@ -1609,6 +1609,34 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     assert.deepEqual(writeFailureErrors, [], 'a failed save and manual retry should be handled without a browser runtime error');
     await writeFailureContext.close();
 
+    // Malformed local-save JSON must be protected instead of being replaced by empty progress.
+    const corruptSaveContext = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+      colorScheme: 'dark',
+      deviceScaleFactor: 1,
+    });
+    const corruptSavePage = await corruptSaveContext.newPage();
+    const corruptSaveRaw = '{"cluesFound":';
+    await corruptSavePage.addInitScript((raw) => {
+      window.localStorage.setItem('casezero.case001.memory.v1', raw);
+    }, corruptSaveRaw);
+    await corruptSavePage.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
+    await corruptSavePage.getByText('LOCAL SAVE STATUS', { exact: true }).waitFor();
+    await corruptSavePage.getByText(/could not be read or validated/i).waitFor();
+    await corruptSavePage.getByRole('button', { name: 'ENTER THE BUREAU' }).click();
+    await corruptSavePage.getByRole('button', { name: 'Open case file' }).click();
+    await corruptSavePage.getByRole('button', { name: 'Begin evidence review' }).click();
+    await corruptSavePage.getByText('The ceiling stain', { exact: true }).click();
+    await corruptSavePage.waitForTimeout(150);
+    const preservedCorruptSave = await corruptSavePage.evaluate(() =>
+      window.localStorage.getItem('casezero.case001.memory.v1'),
+    );
+    assert.equal(preservedCorruptSave, corruptSaveRaw,
+      'an unparseable save must remain untouched instead of being overwritten with empty progress');
+    await corruptSaveContext.close();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: dark mobile viewport; Case 001–006 and 041–066 investigations; Case 007–040 screen navigation and save/restore smoke; evidence memory, daily bulletin and Bureau assignment');
   } finally {
