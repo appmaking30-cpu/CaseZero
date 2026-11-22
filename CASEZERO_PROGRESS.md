@@ -1,3 +1,34 @@
+# Current development checkpoint — 22 November 2026 (title-screen accuracy)
+
+## Remove an unfinished case-count claim from the live title screen
+
+The title screen previously said “ONE THOUSAND CASES” even though the current campaign source contains 66 cases and the long-term 1,000+ target is not complete. Replaced that claim with “ONE CASE AT A TIME” while retaining the “ONE HIDDEN TRUTH” line.
+
+The browser smoke now asserts that the new title copy is visible and that the unfinished “ONE THOUSAND CASES.” claim is absent. This is a small player-facing honesty fix; it does not alter campaign data or save formats.
+
+Source commits:
+- [Title-screen copy correction](https://github.com/appmaking30-cpu/CaseZero/commit/f942ee493feab140ea8749284d4cc45babbea167)
+- [Browser regression assertion](https://github.com/appmaking30-cpu/CaseZero/commit/ce1d751ba83afb30ff25ac78f6190206d67b5408)
+
+Rollback checkpoint before this change: [casezero-safety-checkpoint-2026-11-22-honest-title-copy](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-22-honest-title-copy).
+
+## Verification status
+
+- New source revision: `ce1d751ba83afb30ff25ac78f6190206d67b5408`; GitHub Actions runs triggered by the source and browser-test commits. Do not treat this change as verified until the latest workspace run is green.
+- The immediately preceding malformed-record protection revision was committed through [record validation helper](https://github.com/appmaking30-cpu/CaseZero/commit/959c6e3c265a2ce7b8f9a0fb12493cb181158f24), [unit tests](https://github.com/appmaking30-cpu/CaseZero/commit/daa0980c19bec499a5d984e274cbac9d85bd9348), [app integration](https://github.com/appmaking30-cpu/CaseZero/commit/1ff38fa2cf78e0c3c5f955d49399769c78554f9f), [Case 001 browser scenario](https://github.com/appmaking30-cpu/CaseZero/commit/4eede071433041a76c72c9010343674988277027) and [archive/Bureau protection scenario](https://github.com/appmaking30-cpu/CaseZero/commit/bb3579e4525078da62f0bad3da4132cb0917902a). Its verification was still pending in the prior checkpoint.
+- The previous manual-save-retry revision `c34de92ff425d051a0c7850b2b8186d722e52596` passed workspace checks and produced Android APK artifact [14708079760](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44906479874/artifacts/14708079760), 47,705,353 bytes. That APK predates malformed-record protection and the title-copy correction.
+- No physical Android installation, full phone playthrough or TalkBack test has been performed.
+
+## Preservation and workflow
+
+- Original Replit workspace remains the reference copy: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). No Replit write or Replit Agent usage.
+- Original ZIP remains recorded on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- The live GitHub branch comparison at the start of this pass showed `casezero-development` 809 commits ahead and zero behind the original backup branch.
+- Canonical app remains the existing Expo Router / React Native / TypeScript application, Expo SDK 58, package ID `com.casezero.beyondevidence`. No restart or template replacement.
+- Workflow remains small commits on `casezero-development`, unit tests, Expo web export, Playwright browser checks and standard GitHub-hosted Android APK builds. No paid Replit Agent, EAS build, API, hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 22 November 2026
 
 ## Protect malformed and incompatible local-save records
