@@ -1637,6 +1637,45 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
       'an unparseable save must remain untouched instead of being overwritten with empty progress');
     await corruptSaveContext.close();
 
+    // The Bureau board is normalized against archive completion/unlock state.
+    // If the archive is corrupt, the board's original assignments must also stay protected.
+    const corruptArchiveContext = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+      colorScheme: 'dark',
+      deviceScaleFactor: 1,
+    });
+    const corruptArchivePage = await corruptArchiveContext.newPage();
+    const corruptArchiveRaw = '{"version":';
+    const protectedTeamRaw = JSON.stringify({
+      version: 1,
+      assignments: [{
+        specialistId: 'tomas',
+        targetId: 'case004',
+        assignedAt: '2026-11-22T12:00:00.000Z',
+      }],
+      experienceBySpecialist: { tomas: 3 },
+      rewardedCaseIds: [],
+    });
+    await corruptArchivePage.addInitScript(({ archiveRaw, teamRaw }) => {
+      window.localStorage.setItem('casezero.investigation.archive.v1', archiveRaw);
+      window.localStorage.setItem('casezero.bureau-team.v1', teamRaw);
+    }, { archiveRaw: corruptArchiveRaw, teamRaw: protectedTeamRaw });
+    await corruptArchivePage.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
+    await corruptArchivePage.getByText('LOCAL SAVE STATUS', { exact: true }).waitFor();
+    await corruptArchivePage.getByText(/could not be read or validated/i).waitFor();
+    await corruptArchivePage.waitForTimeout(150);
+    const protectedRecords = await corruptArchivePage.evaluate(() => ({
+      archive: window.localStorage.getItem('casezero.investigation.archive.v1'),
+      team: window.localStorage.getItem('casezero.bureau-team.v1'),
+    }));
+    assert.equal(protectedRecords.archive, corruptArchiveRaw,
+      'an unparseable archive must remain untouched');
+    assert.equal(protectedRecords.team, protectedTeamRaw,
+      'the Bureau board must remain untouched when its archive dependency cannot be restored');
+    await corruptArchiveContext.close();
+
     assert.deepEqual(pageErrors, [], 'the mobile browser should not report runtime errors');
     console.log('PASS: dark mobile viewport; Case 001–006 and 041–066 investigations; Case 007–040 screen navigation and save/restore smoke; evidence memory, daily bulletin and Bureau assignment');
   } finally {
