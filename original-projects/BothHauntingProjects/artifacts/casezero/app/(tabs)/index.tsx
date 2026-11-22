@@ -17,7 +17,7 @@ import HotelNightScene from '@/components/HotelNightScene';
 import RecordsAnnexScene from '@/components/RecordsAnnexScene';
 import SuspectPortrait from '@/components/SuspectPortrait';
 import { useColors } from '@/hooks/useColors';
-import { readStorageItemsSafely, writeStorageItemSafely } from '@/game/storageRecovery';
+import { isValidStoredJsonRecord, readStorageItemsSafely, writeStorageItemSafely } from '@/game/storageRecovery';
 import Case004Screen from '@/components/Case004Screen';
 import Case005Screen from '@/components/Case005Screen';
 import Case006Screen from '@/components/Case006Screen';
@@ -205,6 +205,13 @@ const ARCHIVE_KEY = 'casezero.investigation.archive.v1';
 const CASE002_SAVE_KEY = 'casezero.case002.progress.v1';
 const CASE003_SAVE_KEY = 'casezero.case003.progress.v1';
 const STORAGE_KEYS = [SAVE_KEY, ARCHIVE_KEY, CASE002_SAVE_KEY, CASE003_SAVE_KEY, BUREAU_TEAM_SAVE_KEY] as const;
+const STORAGE_RECORD_REQUIREMENTS: Record<string, { arrays: readonly string[]; version?: number }> = {
+  [SAVE_KEY]: { arrays: ['cluesFound', 'askedQuestions', 'timelineOrder'] },
+  [ARCHIVE_KEY]: { arrays: ['completedCases'], version: 1 },
+  [CASE002_SAVE_KEY]: { arrays: ['cluesFound', 'askedQuestions', 'timelineOrder'] },
+  [CASE003_SAVE_KEY]: { arrays: ['cluesFound', 'askedQuestions', 'timelineOrder'] },
+  [BUREAU_TEAM_SAVE_KEY]: { arrays: ['assignments'], version: 1 },
+};
 type AppPhase = 'menu' | 'campaign' | CasePhase | Case002Phase | Case003Phase | 'case004' | 'case005' | 'case006' | 'case007' | 'case008' | 'case009' | 'case010' | 'case011' | 'case012' | 'case013' | 'case014' | 'case015' | 'case016' | 'case017' | 'case018' | 'case019' | 'case020' | 'case021' | 'case022' | 'case023' | 'case024' | 'case025' | 'case026' | 'case027' | 'case028' | 'case029' | 'case030' | 'case031' | 'case032' | 'case033' | 'case034' | 'case035' | 'case036' | 'case037' | 'case038' | 'case039' | 'case040' | 'case041' | 'case042' | 'case043' | 'case044' | 'case045' | 'case046' | 'case047' | 'case048' | 'case049' | 'case050' | 'case051' | 'case052' | 'case053' | 'case054' | 'case055' | 'case056' | 'case057' | 'case058' | 'case059' | 'case060' | 'case061' | 'case062' | 'case063' | 'case064' | 'case065' | 'case066' | 'daily' | 'team';
 
 const CASE001_PHASES = new Set(['hq', 'briefing', 'evidence', 'interviews', 'timeline', 'deduction', 'review']);
@@ -359,7 +366,17 @@ export default function HomeScreen() {
       .then((reads) => {
         const [raw, archiveRaw, case002Raw, case003Raw, teamRaw] = reads.map((read) => read.value);
         if (!active) return;
-        setStorageReadFailures(reads.filter((read) => read.failed).map((read) => read.key));
+        const failedReadKeys = reads.filter((read) => read.failed).map((read) => read.key);
+        const invalidRecordKeys = reads.filter((read) => {
+          if (read.failed) return false;
+          const requirement = STORAGE_RECORD_REQUIREMENTS[read.key];
+          return !requirement || !isValidStoredJsonRecord(read.value, requirement.arrays, requirement.version);
+        }).map((read) => read.key);
+        const protectedKeys = new Set([...failedReadKeys, ...invalidRecordKeys]);
+        // Bureau assignments are normalized against completed archive cases. If the archive
+        // cannot be restored, protect the team board too rather than pruning it against an empty archive.
+        if (protectedKeys.has(ARCHIVE_KEY)) protectedKeys.add(BUREAU_TEAM_SAVE_KEY);
+        setStorageReadFailures([...protectedKeys]);
         let restoredArchive = EMPTY_INVESTIGATION_ARCHIVE;
         if (archiveRaw) {
           const parsedArchive = parseStoredJson(archiveRaw) as InvestigationArchive | null;
@@ -884,7 +901,7 @@ export default function HomeScreen() {
             </Text>
             {storageReadFailures.length > 0 && (
               <Text style={{ color: '#E8DCCB', fontSize: 12, lineHeight: 19, marginTop: 6 }}>
-                Some saved records could not be read. CaseZero has paused writes to those records so it will not replace them with empty progress. Restart the app to retry. Do not clear app data while this warning is visible.
+                Some saved records could not be read or validated. CaseZero has paused writes to protect their stored contents and prevent replacement with empty progress. Keep app data intact and do not clear storage while this warning is visible. Restarting may retry a temporary read problem; malformed records remain protected.
               </Text>
             )}
             {storageWriteFailures.length > 0 && (
