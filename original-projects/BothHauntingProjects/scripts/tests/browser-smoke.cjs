@@ -18,6 +18,9 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
     // New installs open on the cinematic title screen. Verify the campaign archive
     // cannot bypass the first investigation, then enter the Bureau for the tutorial.
+    await page.getByText(/ONE CASE AT A TIME\.\s*ONE HIDDEN TRUTH\./).waitFor();
+    assert.equal(await page.getByText('ONE THOUSAND CASES.', { exact: true }).count(), 0,
+      'the title screen must not claim the unfinished 1,000-case target is already available');
     await page.getByRole('button', { name: 'ENTER THE BUREAU' }).waitFor();
     await page.screenshot({ path: '/tmp/casezero-menu.png', fullPage: true });
     const archivePage = await context.newPage();
