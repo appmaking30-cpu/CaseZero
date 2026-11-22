@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { readStorageItemsSafely, writeStorageItemSafely } from '../../artifacts/casezero/game/storageRecovery';
+import { isValidStoredJsonRecord, readStorageItemsSafely, writeStorageItemSafely } from '../../artifacts/casezero/game/storageRecovery';
 
 test('a failed local-save read does not discard other stored records', async () => {
   const values = new Map<string, string>([
@@ -64,4 +64,31 @@ test('a successful local-save write confirms the exact key and value', async () 
 
   assert.equal(saved, true);
   assert.equal(values.get('case001'), '{"phase":"deduction"}');
+});
+
+
+test('a missing save key is valid before the first save', () => {
+  assert.equal(isValidStoredJsonRecord(null, ['cluesFound', 'askedQuestions']), true);
+});
+
+test('a valid save record must contain the expected arrays and version', () => {
+  assert.equal(
+    isValidStoredJsonRecord(
+      '{"version":1,"assignments":[],"experienceBySpecialist":{}}',
+      ['assignments'],
+      1,
+    ),
+    true,
+  );
+});
+
+test('malformed JSON and non-object JSON records are rejected', () => {
+  for (const raw of ['{"cluesFound":', '', 'null', '[]', '"progress"', '4', 'false']) {
+    assert.equal(isValidStoredJsonRecord(raw), false, `expected invalid record: ${raw}`);
+  }
+});
+
+test('a record with missing required arrays or an unsupported version is rejected', () => {
+  assert.equal(isValidStoredJsonRecord('{"cluesFound":[]}', ['cluesFound', 'askedQuestions']), false);
+  assert.equal(isValidStoredJsonRecord('{"version":2,"assignments":[]}', ['assignments'], 1), false);
 });
