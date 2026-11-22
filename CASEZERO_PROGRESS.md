@@ -1,3 +1,41 @@
+# Current development checkpoint — 22 November 2026
+
+## Protect malformed and incompatible local-save records
+
+The previous recovery work protected records when AsyncStorage reads threw and when writes were rejected. This pass closes a separate data-loss path: a read can succeed while the stored string is malformed JSON, a non-object value, or an incompatible record envelope. Previously, restoration fell back to empty defaults and the normal persistence effect could then overwrite the original bytes.
+
+The existing app now validates each present record before allowing its normal write effect:
+- Case 001, Case 002 and Case 003 require their evidence, interview and timeline arrays.
+- The investigation archive requires version 1 and a `completedCases` array.
+- The Bureau board requires version 1 and an `assignments` array.
+- Missing keys remain valid on a fresh install.
+- A malformed or incompatible key is added to the existing protected-save warning and is not written over.
+- If the archive is protected, the Bureau board is protected too, because its restore logic filters assignments using archive completion/unlock state.
+
+The warning now says records may be unreadable or invalid and tells the player to keep app data intact. This is local corruption protection, not a backup/repair system; a malformed record remains preserved but is not automatically reconstructed.
+
+Regression coverage adds four unit tests for missing keys, valid object envelopes, malformed/non-object JSON, missing required arrays and unsupported versions. A new browser scenario seeds a malformed Case 001 record, advances into evidence inspection, and confirms the original stored bytes remain unchanged.
+
+Rollback checkpoint before this change: [casezero-safety-checkpoint-2026-11-22-malformed-save-protection](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-22-malformed-save-protection).
+
+## Verification for this revision
+
+- New source revision: pending GitHub Actions verification.
+- Previous manual-retry revision `c34de92ff425d051a0c7850b2b8186d722e52596` now has completed successful workflows:
+  - [Workspace checks — run 44906479870](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44906479870): TypeScript, unit tests, Expo web export, Chromium setup and full browser campaign passed. Preview artifact [14708350595](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44906479870/artifacts/14708350595), 3,200,358 bytes.
+  - [Android standalone APK — run 44906479874](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44906479874): TypeScript, unit tests, native generation, Gradle release assembly, APK payload verification and upload passed. APK artifact [14708079760](https://github.com/appmaking30-cpu/CaseZero/actions/runs/44906479874/artifacts/14708079760), 47,705,353 bytes, SHA-256 `57885d38696a256baa15544cca55803f809d93c371ba3ad66300c458af38930a`. It contains the manual retry control but not this malformed-record guard.
+- No physical Android installation, complete phone playthrough or TalkBack test has been performed.
+
+## Preservation and workflow
+
+- Original Replit workspace: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). No live Replit edit or Replit Agent usage.
+- Original source archive remains on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, previously recorded blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- Before this change, the live branch comparison showed `casezero-development` 801 commits ahead and zero behind the original backup branch.
+- The canonical app remains the imported Expo Router / React Native / TypeScript application, Expo SDK 58, package ID `com.casezero.beyondevidence`; no restart or template replacement.
+- Workflow remains small GitHub commits, unit tests, Expo web export, Playwright browser checks and standard GitHub-hosted Android APK builds. No paid Replit Agent, EAS build, API, hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 21 November 2026
 
 ## Manual recovery after a failed local save
