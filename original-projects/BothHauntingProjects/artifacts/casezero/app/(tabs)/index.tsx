@@ -936,7 +936,7 @@ export default function HomeScreen() {
                   <Text style={{ color: '#F2F0E9', fontSize: wideLayout ? 64 : 48, lineHeight: wideLayout ? 70 : 54, letterSpacing: 5, fontWeight: '900', marginTop: 10 }}>CASEZERO</Text>
                   <Text style={{ color: '#D8DCE2', fontSize: wideLayout ? 16 : 14, letterSpacing: 3.2, marginTop: 4 }}>BEYOND THE EVIDENCE</Text>
                   <View style={{ height: 1, width: 94, backgroundColor: '#B99A58', marginTop: 23, marginBottom: 18 }} />
-                  <Text style={{ color: '#E8E5DD', fontSize: wideLayout ? 22 : 19, lineHeight: wideLayout ? 31 : 27, fontWeight: '600' }}>ONE THOUSAND CASES.{ '\n' }ONE HIDDEN TRUTH.</Text>
+                  <Text style={{ color: '#E8E5DD', fontSize: wideLayout ? 22 : 19, lineHeight: wideLayout ? 31 : 27, fontWeight: '600' }}>ONE CASE AT A TIME.{ '\n' }ONE HIDDEN TRUTH.</Text>
                   <Text style={{ color: '#B9C0CA', fontSize: 13, lineHeight: 21, marginTop: 12, maxWidth: 510 }}>Some mysteries are solved. Others are only beginning. Every case leaves a trace. Every trace leads somewhere.</Text>
                 </View>
                 <View style={{ flexDirection: wideLayout ? 'row' : 'column', gap: 12, alignItems: 'stretch', justifyContent: 'space-between' }}>
