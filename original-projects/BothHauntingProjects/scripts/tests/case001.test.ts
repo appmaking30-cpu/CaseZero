@@ -47,7 +47,7 @@ test('Case 001 separates required witness responses from optional follow-ups', (
     witnessesHeard: 1,
     totalWitnesses: 3,
     requiredWitnessesRemaining: 2,
-    optionalQuestionsRemaining: 4,
+    optionalQuestionsRemaining: 3,
     unansweredQuestions: 5,
   });
 
