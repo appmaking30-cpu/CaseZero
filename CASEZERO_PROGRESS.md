@@ -1,3 +1,39 @@
+# Current development checkpoint — 23 November 2026 (tutorial interview clarity)
+
+## Case 001: distinguish required witness responses from optional follow-ups
+
+The interview screen previously described every unanswered question as optional. That was inaccurate: the tutorial requires at least one response from each of the three witnesses, while the second question for each witness is optional.
+
+The existing Case 001 flow now uses the pure helper `getCase001InterviewProgress` to report the two counts separately:
+- At the start: 0/3 witnesses heard, 3 required witness responses remaining, and 3 optional follow-ups left.
+- After one response from each witness: 3/3 witnesses heard and 3 optional follow-ups left.
+- Asking optional follow-ups never changes the required witness gate.
+
+Added unit coverage for initial, partially completed, minimum-complete, fully asked, and unknown-question-key states. The browser smoke now checks both the initial and minimum-complete progress labels.
+
+Source commits:
+- [Interview progress helper, screen integration and browser assertions](https://github.com/appmaking30-cpu/CaseZero/commit/24f0e4f1306e8f7175a8385ca63f57de18f276e2)
+- [Correct optional follow-up regression expectation](https://github.com/appmaking30-cpu/CaseZero/commit/282639d1bcad9a74649b4a822b16b20373d502c5)
+
+Rollback checkpoint before this work: [casezero-safety-checkpoint-2026-11-23-interview-requirements](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-23-interview-requirements).
+
+## Verification status at the latest inspection
+
+- [Workspace checks — run 45172009088](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45172009088), code commit `282639d1bcad9a74649b4a822b16b20373d502c5`: TypeScript passed, all 321 unit tests passed, and Expo web export passed. Chromium installation completed; the full browser smoke was still running.
+- [Android standalone APK — run 45172009075](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45172009075), same code commit: TypeScript and all 321 unit tests passed; Android native project generation passed; Gradle APK assembly was still running. No APK artifact for this revision was confirmed at that inspection.
+- The first CI attempt on commit `24f0e4f` exposed an incorrect expected value in the new partial-interview test. The implementation correctly counted three optional follow-ups; the test had expected four. The expectation was corrected in `282639d`, and the replacement run passed the complete unit suite. The failed first attempt is not counted as passing.
+- No physical Android installation, complete phone playthrough or TalkBack test has been performed.
+
+## Preservation and workflow
+
+- Original Replit workspace remains the reference copy: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). GitHub development does not automatically sync back to Replit.
+- Original source ZIP remains on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- The development branch includes the full original backup history and is 814 commits ahead, zero behind at code commit `282639d`.
+- Canonical app remains the existing Expo Router / React Native / TypeScript application, Expo SDK 58, Android package ID `com.casezero.beyondevidence`. No restart or template replacement.
+- Workflows use the standard `ubuntu-24.04` GitHub-hosted runner in the public repository. No Replit Agent allowance, paid EAS build, paid API, paid hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 22 November 2026 (title-screen accuracy)
 
 ## Remove an unfinished case-count claim from the live title screen
