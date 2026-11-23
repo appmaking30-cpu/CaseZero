@@ -239,6 +239,54 @@ export function getInvestigationMemory(
   };
 }
 
+
+export type Case001InterviewProgress = {
+  witnessesHeard: number;
+  totalWitnesses: number;
+  requiredWitnessesRemaining: number;
+  optionalQuestionsRemaining: number;
+  unansweredQuestions: number;
+};
+
+/**
+ * Distinguish the one required response per witness from optional follow-ups.
+ * Unknown or duplicate saved question keys cannot inflate the visible progress.
+ */
+export function getCase001InterviewProgress(
+  askedQuestionKeys: readonly string[],
+): Case001InterviewProgress {
+  let witnessesHeard = 0;
+  let requiredWitnessesRemaining = 0;
+  let optionalQuestionsRemaining = 0;
+  let unansweredQuestions = 0;
+
+  for (const witness of CASE_001.witnesses) {
+    const askedCount = witness.questions.filter((question) =>
+      askedQuestionKeys.includes(`${witness.id}:${question.id}`),
+    ).length;
+    const unansweredCount = witness.questions.length - askedCount;
+    unansweredQuestions += unansweredCount;
+
+    if (askedCount > 0) {
+      witnessesHeard += 1;
+    } else if (witness.questions.length > 0) {
+      requiredWitnessesRemaining += 1;
+    }
+
+    const oneRequiredResponseStillOwed =
+      askedCount === 0 && witness.questions.length > 0 ? 1 : 0;
+    optionalQuestionsRemaining += Math.max(0, unansweredCount - oneRequiredResponseStillOwed);
+  }
+
+  return {
+    witnessesHeard,
+    totalWitnesses: CASE_001.witnesses.length,
+    requiredWitnessesRemaining,
+    optionalQuestionsRemaining,
+    unansweredQuestions,
+  };
+}
+
 export function isTimelineCorrect(order: readonly string[]): boolean {
   return (
     order.length === CASE_001.correctTimelineOrder.length &&

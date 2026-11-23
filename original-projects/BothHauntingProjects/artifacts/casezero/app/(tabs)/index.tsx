@@ -149,6 +149,7 @@ import { CASE_066_GAME } from '@/game/case066Game';
 import {
   CASE_001,
   getInvestigationMemory,
+  getCase001InterviewProgress,
   getCase001ResumePhase,
   getCase001TimelineHint,
   sanitizeCase001SavedProgress,
@@ -517,29 +518,13 @@ export default function HomeScreen() {
   }, [loaded, storageReadFailures, saveRetryNonce, case003Progress]);
 
   const allCluesFound = cluesFound.length === CASE_001.clues.length;
-  const witnessCount = useMemo(
-    () =>
-      CASE_001.witnesses.filter((witness) =>
-        witness.questions.some((question) =>
-          askedQuestions.includes(`${witness.id}:${question.id}`),
-        ),
-      ).length,
+  const interviewProgress = useMemo(
+    () => getCase001InterviewProgress(askedQuestions),
     [askedQuestions],
   );
-  const allWitnessesHeard = witnessCount === CASE_001.witnesses.length;
-  const unansweredQuestions = useMemo(
-    () =>
-      CASE_001.witnesses.reduce(
-        (total, witness) =>
-          total +
-          witness.questions.filter(
-            (question) =>
-              !askedQuestions.includes(`${witness.id}:${question.id}`),
-          ).length,
-        0,
-      ),
-    [askedQuestions],
-  );
+  const witnessCount = interviewProgress.witnessesHeard;
+  const allWitnessesHeard = witnessCount === interviewProgress.totalWitnesses;
+  const unansweredQuestions = interviewProgress.unansweredQuestions;
 
   const investigationMemory = useMemo(
     () => getInvestigationMemory(cluesFound, askedQuestions),
@@ -2228,7 +2213,9 @@ export default function HomeScreen() {
             ))}
             </View>
             <Text style={[styles.progressText, mutedStyle]}>
-              {witnessCount}/3 witnesses heard · {unansweredQuestions} optional questions left unasked
+              {witnessCount}/{interviewProgress.totalWitnesses} witnesses heard · {allWitnessesHeard
+                ? `${interviewProgress.optionalQuestionsRemaining} optional follow-ups left`
+                : `${interviewProgress.requiredWitnessesRemaining} required witness responses remaining · ${interviewProgress.optionalQuestionsRemaining} optional follow-ups left`}
             </Text>
             <ActionButton
               title="Reconstruct the timeline"

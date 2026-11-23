@@ -8,6 +8,7 @@ import {
 import {
   CASE_001,
   getInvestigationMemory,
+  getCase001InterviewProgress,
   getCase001ResumePhase,
   getCase001TimelineHint,
   removeCase001TimelineEvent,
@@ -32,6 +33,51 @@ test('Case 001 has a complete, distinct evidence and witness set', () => {
   assert.equal(CASE_001.witnesses.length, 3);
   assert.ok(CASE_001.witnesses.every((witness) => witness.questions.length === 2));
 });
+
+test('Case 001 separates required witness responses from optional follow-ups', () => {
+  assert.deepEqual(getCase001InterviewProgress([]), {
+    witnessesHeard: 0,
+    totalWitnesses: 3,
+    requiredWitnessesRemaining: 3,
+    optionalQuestionsRemaining: 3,
+    unansweredQuestions: 6,
+  });
+
+  assert.deepEqual(getCase001InterviewProgress(['jo:sound']), {
+    witnessesHeard: 1,
+    totalWitnesses: 3,
+    requiredWitnessesRemaining: 2,
+    optionalQuestionsRemaining: 4,
+    unansweredQuestions: 5,
+  });
+
+  assert.deepEqual(getCase001InterviewProgress(['jo:sound', 'ada:desk', 'nia:route']), {
+    witnessesHeard: 3,
+    totalWitnesses: 3,
+    requiredWitnessesRemaining: 0,
+    optionalQuestionsRemaining: 3,
+    unansweredQuestions: 3,
+  });
+
+  assert.deepEqual(getCase001InterviewProgress([
+    'jo:sound', 'jo:person', 'ada:desk', 'ada:key', 'nia:route', 'nia:condition',
+  ]), {
+    witnessesHeard: 3,
+    totalWitnesses: 3,
+    requiredWitnessesRemaining: 0,
+    optionalQuestionsRemaining: 0,
+    unansweredQuestions: 0,
+  });
+
+  assert.deepEqual(getCase001InterviewProgress(['unknown:question', 'jo:unknown']), {
+    witnessesHeard: 0,
+    totalWitnesses: 3,
+    requiredWitnessesRemaining: 3,
+    optionalQuestionsRemaining: 3,
+    unansweredQuestions: 6,
+  });
+});
+
 
 test('timeline accepts the evidence-backed chronological order only', () => {
   assert.equal(

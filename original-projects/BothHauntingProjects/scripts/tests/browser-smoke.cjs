@@ -97,6 +97,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     }
     await page.getByRole('button', { name: 'Question the witnesses' }).click();
     await page.getByRole('button', { name: 'Jo Bell: What did you hear near the records room?' }).waitFor();
+    await page.getByText('0/3 witnesses heard · 3 required witness responses remaining · 3 optional follow-ups left', { exact: true }).waitFor();
 
     for (const question of [
       'What did you hear near the records room?',
@@ -105,6 +106,7 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     ]) {
       await page.getByText(question, { exact: true }).click();
     }
+    await page.getByText('3/3 witnesses heard · 3 optional follow-ups left', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Reconstruct the timeline' }).click();
     await page.getByRole('button', { name: 'Select timeline event at 21:09: Miles signs out the service key' }).waitFor();
 
