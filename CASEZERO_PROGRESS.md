@@ -1,3 +1,40 @@
+# Current development checkpoint — 24 November 2026 (deduction retry clarity)
+
+## Clear stale feedback when a player revises a Case 001 deduction
+
+After an incorrect suspect/motive submission, the tutorial displayed a useful evidence reminder. However, that error remained visible even after the player changed a selection, making the feedback look as though the new theory had already been rejected.
+
+The Case 001 suspect and motive choices now clear the previous deduction error as soon as either selection changes. The player can revise one part of the theory without carrying a stale rejection message.
+
+The browser regression walkthrough now checks both paths:
+- After an incorrect suspect submission, selecting a different suspect immediately hides the old error.
+- Submitting a still-incorrect motive shows the error again; selecting the evidence-supported motive hides it before the successful submission.
+
+Source commits:
+- [Clear stale feedback on Case 001 suspect/motive changes](https://github.com/appmaking30-cpu/CaseZero/commit/e96d5b643d20ca60fa3a986ca0d27f8a33ef5372)
+- [Browser regression for both correction paths](https://github.com/appmaking30-cpu/CaseZero/commit/035d4656163cc6d81b4778e4ca951794ff7a91d4)
+
+Rollback checkpoint before this change: [casezero-safety-checkpoint-2026-11-24-deduction-feedback](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-24-deduction-feedback). It points to the branch head before the two code/test commits.
+
+## Verification status for the new revision
+
+- New application commit: `e96d5b643d20ca60fa3a986ca0d27f8a33ef5372`.
+- Browser regression commit: `035d4656163cc6d81b4778e4ca951794ff7a91d4`.
+- Fresh workspace and Android Actions runs triggered by these commits are not yet confirmed. Do not treat this change as verified until both relevant workflows complete.
+- The immediately preceding code revision `282639d1bcad9a74649b4a822b16b20373d502c5` has now completed both workflows successfully:
+  - [Workspace checks — run 45172009088](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45172009088): TypeScript, all 321 unit tests, Expo web export, Chromium setup and full browser campaign passed. Preview artifact [14818211353](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45172009088/artifacts/14818211353), 3,199,525 bytes.
+  - [Android standalone APK — run 45172009075](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45172009075): TypeScript, all 321 unit tests, Android native generation, Gradle release assembly, embedded-bundle verification and artifact upload passed. APK artifact [14819535067](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45172009075/artifacts/14819535067), 47,705,671 bytes, artifact digest `sha256:42f2998bc6b621524f980133c2a1344c44fa91fb6f9a372bebccce218103973a`. This APK predates the deduction-feedback change.
+- No physical Android installation, full phone playthrough or TalkBack test has been performed.
+
+## Preservation and workflow
+
+- Original Replit workspace remains the reference copy: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). GitHub development does not automatically sync back to Replit; no Replit Agent usage or Replit workspace write was made in this pass.
+- Original source ZIP remains on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- Canonical app remains the existing Expo Router / React Native / TypeScript application, Expo SDK 58, Android package ID `com.casezero.beyondevidence`. No restart or template replacement.
+- Workflow remains small changes on `casezero-development`, GitHub Actions typecheck/unit/browser checks, and a standalone Android APK build on standard GitHub-hosted runners. No paid EAS build, API, hosting or monetization was used.
+
+---
+
 # Current development checkpoint — 23 November 2026 (tutorial interview clarity)
 
 ## Case 001: distinguish required witness responses from optional follow-ups
