@@ -2423,7 +2423,10 @@ export default function HomeScreen() {
                     accessibilityLabel={`Suspect ${suspect.name}, ${suspect.role}`}
                     accessibilityHint="Selects this person as your evidence-based theory."
                     accessibilityState={{ selected }}
-                    onPress={() => setSelectedSuspect(suspect.id)}
+                    onPress={() => {
+                      setSelectedSuspect(suspect.id);
+                      setDeductionMessage('');
+                    }}
                     style={[styles.choice, { borderColor: selected ? colors.primary : colors.border, backgroundColor: selected ? colors.secondary : 'transparent' }]}
                   >
                     <Text style={[styles.cardTitle, textStyle]}>{suspect.name}</Text>
@@ -2443,7 +2446,10 @@ export default function HomeScreen() {
                     accessibilityLabel={`Motive: ${motive.label}`}
                     accessibilityHint="Selects this explanation for the move."
                     accessibilityState={{ selected }}
-                    onPress={() => setSelectedMotive(motive.id)}
+                    onPress={() => {
+                      setSelectedMotive(motive.id);
+                      setDeductionMessage('');
+                    }}
                     style={[styles.choice, { borderColor: selected ? colors.primary : colors.border, backgroundColor: selected ? colors.secondary : 'transparent' }]}
                   >
                     <Text style={[styles.cardTitle, textStyle]}>{motive.label}</Text>
