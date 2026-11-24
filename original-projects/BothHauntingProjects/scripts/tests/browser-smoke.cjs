@@ -166,6 +166,12 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText(/That theory does not fit every record/).waitFor();
 
     await page.getByText('Miles Renn', { exact: true }).click();
+    await page.getByText(/That theory does not fit every record/).waitFor({ state: 'hidden' });
+    await page.getByText('To take the overnight roster', { exact: true }).click();
+    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByText(/That theory does not fit every record/).waitFor();
+    await page.getByText('To protect it from the leaking shelf', { exact: true }).click();
+    await page.getByText(/That theory does not fit every record/).waitFor({ state: 'hidden' });
     await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
     await page.getByText('The truth is in the details.', { exact: true }).waitFor();
     // The review counts one failed submission plus the successful repaired submission.
