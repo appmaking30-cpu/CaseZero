@@ -97,7 +97,10 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     }
     await page.getByRole('button', { name: 'Question the witnesses' }).click();
     await page.getByRole('button', { name: 'Jo Bell: What did you hear near the records room?' }).waitFor();
-    await page.getByText('0/3 witnesses heard · 3 required witness responses remaining · 3 optional follow-ups left', { exact: true }).waitFor();
+    const interviewProgress = page.getByText('0/3 witnesses heard · 3 required witness responses remaining · 3 optional follow-ups left', { exact: true });
+    await interviewProgress.waitFor();
+    assert.equal(await interviewProgress.getAttribute('aria-live'), 'polite',
+      'required witness progress should be announced to assistive technology');
 
     for (const question of [
       'What did you hear near the records room?',
@@ -108,6 +111,10 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     }
     await page.getByText('3/3 witnesses heard · 3 optional follow-ups left', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Reconstruct the timeline' }).click();
+    const timelineProgress = page.getByText('0 OF 4 EVENTS PLACED', { exact: true });
+    await timelineProgress.waitFor();
+    assert.equal(await timelineProgress.getAttribute('aria-live'), 'polite',
+      'timeline placement progress should be announced to assistive technology');
     await page.getByRole('button', { name: 'Select timeline event at 21:09: Miles signs out the service key' }).waitFor();
 
     // Deliberately try a wrong order first to verify the puzzle gives a fair retry.
@@ -119,7 +126,10 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     ]) {
       await page.getByText(event, { exact: true }).click();
     }
-    await page.getByText(/Not quite\. Recheck the timestamps/).waitFor();
+    const timelineFeedback = page.getByText(/Not quite\. Recheck the timestamps/);
+    await timelineFeedback.waitFor();
+    assert.equal(await timelineFeedback.getAttribute('aria-live'), 'polite',
+      'timeline retry feedback should be announced to assistive technology');
     await page.getByRole('button', { name: 'Show optional timeline hint' }).click();
     await page.getByText('Start with the earliest timestamp. Which record is stamped 21:09?', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Hide optional timeline hint' }).click();
@@ -163,7 +173,10 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('Ada Voss', { exact: true }).click();
     await page.getByText('To protect it from the leaking shelf', { exact: true }).click();
     await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
-    await page.getByText(/That theory does not fit every record/).waitFor();
+    const deductionFeedback = page.getByText(/That theory does not fit every record/);
+    await deductionFeedback.waitFor();
+    assert.equal(await deductionFeedback.getAttribute('aria-live'), 'polite',
+      'deduction feedback should be announced to assistive technology');
 
     await page.getByText('Miles Renn', { exact: true }).click();
     await page.getByText(/That theory does not fit every record/).waitFor({ state: 'hidden' });
