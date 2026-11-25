@@ -1,3 +1,41 @@
+# Current development checkpoint — 25 November 2026 (screen-reader progress announcements)
+
+## Announce changing investigation state to assistive technology
+
+The Case 001 tutorial changes its progress and feedback as players inspect clues, interview witnesses, arrange the timeline, and revise a deduction. Those updates were visible on screen but were not explicitly marked as polite live announcements.
+
+The existing React Native screen now adds `accessibilityLiveRegion="polite"` to:
+- The shared investigation-banner progress label, including the Case 001 timeline placement count.
+- Case 001's required-witness / optional-follow-up progress.
+- Case 001 timeline success or retry feedback.
+- Case 001 deduction rejection feedback.
+
+The browser smoke now checks that the corresponding React Native Web elements expose `aria-live="polite"`. The Android-specific behavior still requires a physical TalkBack check; a browser attribute assertion is not a TalkBack certification.
+
+Source commits:
+- [Add polite live announcements to investigation progress and feedback](https://github.com/appmaking30-cpu/CaseZero/commit/e7787cd3bd25a97a28ba6e4e4e948c4416df9377)
+- [Test Case 001 screen-reader announcements](https://github.com/appmaking30-cpu/CaseZero/commit/0c5263cb04c693e6c945bdd1b43bbfc1d9fba5ba)
+
+Rollback checkpoint before this work: [casezero-safety-checkpoint-2026-11-25-live-announcements](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-25-live-announcements).
+
+## Verification status
+
+- Source and browser assertions are committed.
+- Fresh workspace and Android workflow results for commit `0c5263c` have not yet been confirmed. Do not count this revision as passing until both workflows complete.
+- Previous revision `035d4656163cc6d81b4778e4ca951794ff7a91d4` passed the workspace workflow [45398160558](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45398160558): TypeScript, 321 unit tests, Expo web export, Chromium setup, and the complete browser smoke succeeded.
+- The same previous revision passed the Android standalone APK workflow [45398160562](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45398160562). APK artifact [14922279557](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45398160562/artifacts/14922279557), 47,705,676 bytes, was uploaded after manifest, embedded JavaScript bundle, arm64 library, and package-ID checks.
+- No physical Android installation, full phone playthrough, or TalkBack test has been performed.
+
+## Preservation and workflow
+
+- Original Replit workspace remains the reference copy: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). GitHub development does not automatically sync back to Replit; no Replit Agent usage or Replit workspace write was made.
+- Original source ZIP remains preserved on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- Canonical app remains the existing Expo Router / React Native / TypeScript application, Expo SDK 58, Android package ID `com.casezero.beyondevidence`. No restart or template replacement.
+- Active development remains on `casezero-development`; the branch is 822 commits ahead and zero behind the original backup branch after the two code/test commits in this checkpoint.
+- Standard GitHub Actions workflows run TypeScript, unit tests, Expo web export, Playwright browser checks, and a standalone Android APK build. No paid EAS build, paid API, paid hosting, or monetization was used.
+
+---
+
 # Current development checkpoint — 24 November 2026 (deduction retry clarity)
 
 ## Clear stale feedback when a player revises a Case 001 deduction
