@@ -316,7 +316,7 @@ function InvestigationBanner({ eyebrow, title, subtitle, step, progress, scene =
         <Text style={styles.bannerSubtitle}>{subtitle}</Text>
         <View style={styles.bannerBottomline}>
           <View style={styles.bannerRule} />
-          <Text style={styles.bannerProgress}>{progress}</Text>
+          <Text accessibilityLiveRegion="polite" style={styles.bannerProgress}>{progress}</Text>
         </View>
         <View style={styles.bannerAccent} />
       </LinearGradient>
@@ -2212,7 +2212,7 @@ export default function HomeScreen() {
               </View>
             ))}
             </View>
-            <Text style={[styles.progressText, mutedStyle]}>
+            <Text accessibilityLiveRegion="polite" style={[styles.progressText, mutedStyle]}>
               {witnessCount}/{interviewProgress.totalWitnesses} witnesses heard · {allWitnessesHeard
                 ? `${interviewProgress.optionalQuestionsRemaining} optional follow-ups left`
                 : `${interviewProgress.requiredWitnessesRemaining} required witness responses remaining · ${interviewProgress.optionalQuestionsRemaining} optional follow-ups left`}
@@ -2296,7 +2296,7 @@ export default function HomeScreen() {
             })}
             </View>
             {!!timelineMessage && (
-              <Text style={[styles.notice, { color: timelineSolved ? colors.primary : colors.destructive }]}>
+              <Text accessibilityLiveRegion="polite" style={[styles.notice, { color: timelineSolved ? colors.primary : colors.destructive }]}>
                 {timelineMessage}
               </Text>
             )}
@@ -2459,7 +2459,7 @@ export default function HomeScreen() {
               })}
             </View>
             </View>
-            {!!deductionMessage && <Text style={[styles.notice, { color: colors.destructive }]}>{deductionMessage}</Text>}
+            {!!deductionMessage && <Text accessibilityLiveRegion="polite" style={[styles.notice, { color: colors.destructive }]}>{deductionMessage}</Text>}
             <ActionButton
               title="Submit evidence-based conclusion"
               onPress={submitDeduction}
