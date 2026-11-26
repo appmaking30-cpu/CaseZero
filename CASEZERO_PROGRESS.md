@@ -1,3 +1,39 @@
+# Current development checkpoint — 26 November 2026 (Case 001 Android touch targets)
+
+## Meet the Android touch-target minimum in compact tutorial controls
+
+A focused review of the existing Case 001 screen found three small controls below the 48 dp Android touch-target guideline:
+- Timeline event removal was 40 dp high.
+- Optional timeline hint toggle was 44 dp high.
+- Field notebook toggle was 44 dp high.
+
+All three now use a 48 dp minimum height. Their labels, actions, and investigation rules are unchanged.
+
+The browser smoke adds a reusable bounding-box assertion for these controls. Because the mobile browser context uses device scale factor 1, it checks a minimum 48×48 CSS-pixel target for the timeline removal control, hint toggle, and notebook toggle. This is a browser-layout regression check, not proof of physical Android hit-area behavior.
+
+Source commits:
+- [Raise the three Case 001 touch targets to 48 dp](https://github.com/appmaking30-cpu/CaseZero/commit/714714d5be81b53bc51e07a3513988a53b98531a)
+- [Assert 48×48 mobile browser touch targets](https://github.com/appmaking30-cpu/CaseZero/commit/497f25f09a9afd7232960f8b533ab5d9d36ea818)
+
+Rollback checkpoint before the change: [casezero-safety-checkpoint-2026-11-26-touch-targets](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-26-touch-targets), created from prior branch head `72b3f927b5d7af432937c2ab2a248661275dabe0`.
+
+## Verification status at the latest inspection
+
+- New workspace run [45826198759](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45826198759) was in progress. Dependency installation completed and the job had reached Expo web export; the final browser touch-target assertions had not yet been reported as passing.
+- New Android build run [45826198734](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45826198734) was in progress at Gradle release APK assembly after TypeScript, the unit suite, and Android native generation had completed. No artifact for this revision was available at that inspection.
+- The immediately preceding accessible-control test commit `4988a10302a090097e60a54487fe0a131cab647d` had a successful workspace run [45824667353](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45824667353) (the full browser campaign passed). Its Android run [45824667288](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45824667288) was cancelled by the newer push while Gradle was assembling; it produced no APK.
+- The last fully verified APK remains artifact [15021749723](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45613855216/artifacts/15021749723), 47,705,635 bytes, SHA-256 `ad04a0d51063bdb435dfd7965644b22858288d34fc3081c6425f03b7e70c6956`. It contains the screen-reader live announcements but not the newer accessible-control test assertions or 48 dp touch-target change.
+- No physical Android installation, complete phone playthrough, or TalkBack verification has been performed.
+
+## Preservation and source of truth
+
+- Original Replit workspace remains the reference copy: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). No Replit Agent use or Replit workspace write was made. GitHub changes do not automatically sync to Replit.
+- The original ZIP was independently found in the backup branch tree: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- The current development branch is 827 commits ahead and zero behind the original backup branch at this checkpoint.
+- Canonical app remains the existing Expo Router / React Native / TypeScript project. No restart, template replacement, paid EAS build, paid API, paid hosting, or monetization was used.
+
+---
+
 # Current development checkpoint — 26 November 2026 (Case 001 accessibility regression coverage)
 
 ## Exercise the tutorial through its accessible control names
