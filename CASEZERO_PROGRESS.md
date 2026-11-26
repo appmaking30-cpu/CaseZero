@@ -1,3 +1,47 @@
+# Current development checkpoint — 26 November 2026 (Case 001 accessibility regression coverage)
+
+## Exercise the tutorial through its accessible control names
+
+The existing Case 001 screen already exposes descriptive accessibility names for its evidence cards, witness questions, timeline choices, remove controls, suspect choices, motive choices and conclusion action. The browser smoke previously located several of these by visible text, which could let an accessibility-label regression go unnoticed.
+
+The test now drives the tutorial using the accessible role/name for:
+- All five evidence cards, including the restored Logged state on the first clue.
+- The three required witness questions.
+- All four timestamped timeline choices.
+- Suspect and motive selections.
+- The final conclusion action.
+
+It also checks that:
+- Each timeline choice becomes disabled after placement, preventing duplicate selection.
+- The solved timeline disables its remove control.
+- Deduction cannot be submitted before both suspect and motive are selected, and becomes available once both are chosen.
+
+This is test coverage only; no game runtime code changed in this pass.
+
+Source commit: [Strengthen Case 001 accessible-control browser checks](https://github.com/appmaking30-cpu/CaseZero/commit/4988a10302a090097e60a54487fe0a131cab647d).
+
+Rollback checkpoint before the test change: [casezero-safety-checkpoint-2026-11-26-tutorial-accessibility-regression](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-26-tutorial-accessibility-regression).
+
+## Verification status
+
+- The latest application revision, `0c5263cb04c693e6c945bdd1b43bbfc1d9fba5ba`, passed workspace run [45613855157](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45613855157): TypeScript, 321/321 unit tests, Expo web export, Chromium setup, and the full browser smoke all passed.
+- The same application revision passed standalone Android build run [45613855216](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45613855216). APK artifact [15021749723](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45613855216/artifacts/15021749723) is 47,705,635 bytes; digest `sha256:ad04a0d51063bdb435dfd7965644b22858288d34fc3081c6425f03b7e70c6956`. It includes the screen-reader live-announcement app changes.
+- The newer test-only commit `4988a10302a090097e60a54487fe0a131cab647d` was committed after those runs. No workflow run for that commit has been observed yet, so the expanded accessible-control assertions remain pending CI. It does not change the APK application code.
+- The app manifest specifies landscape orientation and Android package ID `com.casezero.beyondevidence`.
+- No physical Android installation, full phone playthrough, or TalkBack verification has been performed.
+
+## Preservation and current source inventory
+
+- Original Replit workspace remains the reference copy: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). GitHub development does not automatically sync back to Replit; no Replit Agent usage or Replit workspace write was made.
+- Original source ZIP remains preserved on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- The development branch is 825 commits ahead and zero behind the original backup branch after this documentation update.
+- Current tree inventory: 67 case-related game-data modules, 63 dedicated case screens, 64 case-specific test files, and 68 total unit-test files. These are source counts, not full-playthrough counts.
+- Browser coverage remains: Cases 001–006 and 041–066 full walkthroughs; Cases 007–040 navigation/save smoke only.
+- The existing Expo Router / React Native / TypeScript app remains canonical. No restart, template replacement, paid EAS build, paid API, paid hosting, or monetization was used.
+- Cloud synchronization, automatic push notifications, production backend, production signing, Play Store release, and the 1,000+ finished-case target remain unfinished. Daily Bulletin rotation is in-app and date-based.
+- Next release gate: run the new browser assertions, then install the latest standalone APK on a real Android phone and complete Case 001 from briefing through review, including save/resume and TalkBack checks.
+
+---
 # Current development checkpoint — 25 November 2026 (screen-reader progress announcements)
 
 ## Announce changing investigation state to assistive technology
@@ -21,7 +65,7 @@ Rollback checkpoint before this work: [casezero-safety-checkpoint-2026-11-25-liv
 ## Verification status
 
 - Source and browser assertions are committed.
-- Fresh workspace and Android workflow results for commit `0c5263c` have not yet been confirmed. Do not count this revision as passing until both workflows complete.
+- **Verified after this checkpoint was first written:** workspace run [45613855157](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45613855157) and Android run [45613855216](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45613855216) both completed successfully for commit `0c5263cb04c693e6c945bdd1b43bbfc1d9fba5ba`. The workspace log confirms 321 tests passed, zero failed, and the full browser smoke passed. The Android job completed Gradle assembly, embedded-bundle / manifest / arm64 checks, and uploaded APK artifact [15021749723](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45613855216/artifacts/15021749723), 47,705,635 bytes; ZIP digest `sha256:ad04a0d51063bdb435dfd7965644b22858288d34fc3081c6425f03b7e70c6956`. This supersedes the earlier pending status in this section.
 - Previous revision `035d4656163cc6d81b4778e4ca951794ff7a91d4` passed the workspace workflow [45398160558](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45398160558): TypeScript, 321 unit tests, Expo web export, Chromium setup, and the complete browser smoke succeeded.
 - The same previous revision passed the Android standalone APK workflow [45398160562](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45398160562). APK artifact [14922279557](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45398160562/artifacts/14922279557), 47,705,676 bytes, was uploaded after manifest, embedded JavaScript bundle, arm64 library, and package-ID checks.
 - No physical Android installation, full phone playthrough, or TalkBack test has been performed.
@@ -31,7 +75,7 @@ Rollback checkpoint before this work: [casezero-safety-checkpoint-2026-11-25-liv
 - Original Replit workspace remains the reference copy: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). GitHub development does not automatically sync back to Replit; no Replit Agent usage or Replit workspace write was made.
 - Original source ZIP remains preserved on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
 - Canonical app remains the existing Expo Router / React Native / TypeScript application, Expo SDK 58, Android package ID `com.casezero.beyondevidence`. No restart or template replacement.
-- Active development remains on `casezero-development`; the branch is 822 commits ahead and zero behind the original backup branch after the two code/test commits in this checkpoint.
+- Active development remains on `casezero-development`; at the time of this 25 November checkpoint it was 823 commits ahead and zero behind the original backup branch.
 - Standard GitHub Actions workflows run TypeScript, unit tests, Expo web export, Playwright browser checks, and a standalone Android APK build. No paid EAS build, paid API, paid hosting, or monetization was used.
 
 ---
