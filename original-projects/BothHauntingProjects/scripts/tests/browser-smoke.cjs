@@ -12,6 +12,15 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
   });
   const page = await context.newPage();
   const pageErrors = [];
+
+  async function assertMinimumTouchTarget(locator, controlName) {
+    const bounds = await locator.boundingBox();
+    assert.ok(bounds, `${controlName} must be visible before its touch target is measured`);
+    assert.ok(
+      bounds.width >= 48 && bounds.height >= 48,
+      `${controlName} must be at least 48×48 CSS px in the DPR-1 mobile viewport (received ${Math.round(bounds.width)}×${Math.round(bounds.height)})`,
+    );
+  }
   page.on('pageerror', (error) => pageErrors.push(error.message));
 
   try {
@@ -138,13 +147,17 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await timelineFeedback.waitFor();
     assert.equal(await timelineFeedback.getAttribute('aria-live'), 'polite',
       'timeline retry feedback should be announced to assistive technology');
-    await page.getByRole('button', { name: 'Show optional timeline hint' }).click();
+    const showTimelineHint = page.getByRole('button', { name: 'Show optional timeline hint' });
+    await assertMinimumTouchTarget(showTimelineHint, 'Optional timeline hint control');
+    await showTimelineHint.click();
     await page.getByText('Start with the earliest timestamp. Which record is stamped 21:09?', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Hide optional timeline hint' }).click();
     await page.getByText('Start with the earliest timestamp. Which record is stamped 21:09?', { exact: true }).waitFor({ state: 'hidden' });
 
     // Correct one misplaced choice in place; the remaining three selections should survive.
-    await page.getByRole('button', { name: 'Remove Envelope logged in the luggage office from sequence' }).click();
+    const removeEnvelopeControl = page.getByRole('button', { name: 'Remove Envelope logged in the luggage office from sequence' });
+    await assertMinimumTouchTarget(removeEnvelopeControl, 'Timeline event removal control');
+    await removeEnvelopeControl.click();
     await page.getByText('3/4 events selected', { exact: true }).waitFor();
     // The first three events are now in the correct order; restoring the removed
     // envelope at the end should solve the timeline without resetting the sequence.
@@ -170,7 +183,9 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('WITNESS STATEMENTS', { exact: true }).waitFor();
     await page.getByText('A cart stopped outside the records room at 21:12. The wheels squeaked twice, then rolled toward the luggage office.', { exact: true }).waitFor();
     await page.getByText('A porter addendum at 21:13 reads', { exact: false }).waitFor();
-    await page.getByRole('button', { name: 'Hide field notebook' }).click();
+    const hideFieldNotebook = page.getByRole('button', { name: 'Hide field notebook' });
+    await assertMinimumTouchTarget(hideFieldNotebook, 'Field notebook toggle');
+    await hideFieldNotebook.click();
     await page.getByRole('button', { name: 'Review field notebook' }).waitFor();
     await page.getByText('A cart stopped outside the records room at 21:12. The wheels squeaked twice, then rolled toward the luggage office.', { exact: true }).waitFor({ state: 'hidden' });
     await page.getByRole('button', { name: 'Review field notebook' }).click();
