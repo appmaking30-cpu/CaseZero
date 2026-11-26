@@ -2253,7 +2253,7 @@ export default function HomeScreen() {
                         disabled={timelineSolved}
                         onPress={() => removeTimelineSelection(id)}
                         style={({ pressed }) => ({
-                          minHeight: 40,
+                          minHeight: 48,
                           minWidth: 76,
                           paddingHorizontal: 9,
                           alignItems: 'center',
@@ -2314,7 +2314,7 @@ export default function HomeScreen() {
                     accessibilityState={{ expanded: timelineHintVisible }}
                     onPress={() => setTimelineHintVisible((current) => !current)}
                     style={({ pressed }) => ({
-                      minHeight: 44,
+                      minHeight: 48,
                       minWidth: 92,
                       paddingHorizontal: 10,
                       alignItems: 'center',
@@ -2363,7 +2363,7 @@ export default function HomeScreen() {
                   accessibilityState={{ expanded: notebookExpanded }}
                   onPress={() => setNotebookExpanded((current) => !current)}
                   style={({ pressed }) => ({
-                    minHeight: 44,
+                    minHeight: 48,
                     minWidth: 92,
                     paddingHorizontal: 10,
                     alignItems: 'center',
