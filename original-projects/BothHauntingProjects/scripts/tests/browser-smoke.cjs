@@ -86,14 +86,16 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText('The ceiling stain', { exact: true }).click();
     await page.getByText(/maintenance ticket at 21:05.*porter addendum at 21:13/).waitFor();
 
-    for (const clue of [
-      'The ceiling stain',
-      'The chipped cart wheel',
-      'The service-key register',
-      'The refund receipt',
-      'The luggage-office slip',
+    for (const accessibleName of [
+      'The ceiling stain. Physical evidence. Logged',
+      'The chipped cart wheel. Trace evidence. Inspect record',
+      'The service-key register. Access record. Inspect record',
+      'The refund receipt. Time-stamped record. Inspect record',
+      'The luggage-office slip. Inventory record. Inspect record',
     ]) {
-      await page.getByText(clue, { exact: true }).click();
+      const clueButton = page.getByRole('button', { name: accessibleName });
+      await clueButton.waitFor();
+      await clueButton.click();
     }
     await page.getByRole('button', { name: 'Question the witnesses' }).click();
     await page.getByRole('button', { name: 'Jo Bell: What did you hear near the records room?' }).waitFor();
@@ -102,12 +104,14 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     assert.equal(await interviewProgress.getAttribute('aria-live'), 'polite',
       'required witness progress should be announced to assistive technology');
 
-    for (const question of [
-      'What did you hear near the records room?',
-      'Where were you at 21:16?',
-      'What did you see after the departure announcement?',
+    for (const accessibleName of [
+      'Jo Bell: What did you hear near the records room?',
+      'Ada Voss: Where were you at 21:16?',
+      'Nia Vale: What did you see after the departure announcement?',
     ]) {
-      await page.getByText(question, { exact: true }).click();
+      const questionButton = page.getByRole('button', { name: accessibleName });
+      await questionButton.waitFor();
+      await questionButton.click();
     }
     await page.getByText('3/3 witnesses heard · 3 optional follow-ups left', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Reconstruct the timeline' }).click();
@@ -118,13 +122,17 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Select timeline event at 21:09: Miles signs out the service key' }).waitFor();
 
     // Deliberately try a wrong order first to verify the puzzle gives a fair retry.
-    for (const event of [
-      'Miles signs out the service key',
-      'Jo hears a cart at the records-room door',
-      'Envelope logged in the luggage office',
-      'Ada prints a ticket refund',
+    for (const accessibleName of [
+      'Select timeline event at 21:09: Miles signs out the service key',
+      'Select timeline event at 21:12: Jo hears a cart at the records-room door',
+      'Select timeline event at 21:18: Envelope logged in the luggage office',
+      'Select timeline event at 21:16: Ada prints a ticket refund',
     ]) {
-      await page.getByText(event, { exact: true }).click();
+      const eventButton = page.getByRole('button', { name: accessibleName });
+      await eventButton.waitFor();
+      assert.equal(await eventButton.isDisabled(), false, 'an unplaced timeline event must be selectable');
+      await eventButton.click();
+      assert.equal(await eventButton.isDisabled(), true, 'a placed timeline event must become disabled to prevent duplicate selection');
     }
     const timelineFeedback = page.getByText(/Not quite\. Recheck the timestamps/);
     await timelineFeedback.waitFor();
@@ -142,6 +150,9 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     // envelope at the end should solve the timeline without resetting the sequence.
     await page.getByText('Envelope logged in the luggage office', { exact: true }).click();
     await page.getByText('Timeline confirmed. The records now agree.', { exact: true }).waitFor();
+    const lockedRemoveControl = page.getByRole('button', { name: 'Remove Envelope logged in the luggage office from sequence' });
+    await lockedRemoveControl.waitFor();
+    assert.equal(await lockedRemoveControl.isDisabled(), true, 'a solved timeline must lock its remove controls');
     await page.getByRole('button', { name: 'Make your deduction' }).click();
 
     // The solved timeline and deduction stage must survive a second full reload.
@@ -169,21 +180,26 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByRole('button', { name: 'Suspect Ada Voss, Night station clerk' }).waitFor();
     await page.getByRole('button', { name: 'Motive: To protect it from the leaking shelf' }).waitFor();
 
+    // The conclusion stays locked until both parts of the theory are selected.
+    const submitConclusion = page.getByRole('button', { name: 'Submit evidence-based conclusion' });
+    assert.equal(await submitConclusion.isDisabled(), true, 'deduction cannot be submitted before suspect and motive are chosen');
+
     // A wrong suspect must not lock the player out; the evidence supports a retry.
-    await page.getByText('Ada Voss', { exact: true }).click();
-    await page.getByText('To protect it from the leaking shelf', { exact: true }).click();
-    await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
+    await page.getByRole('button', { name: 'Suspect Ada Voss, Night station clerk' }).click();
+    await page.getByRole('button', { name: 'Motive: To protect it from the leaking shelf' }).click();
+    assert.equal(await submitConclusion.isDisabled(), false, 'deduction becomes available after both choices are made');
+    await submitConclusion.click();
     const deductionFeedback = page.getByText(/That theory does not fit every record/);
     await deductionFeedback.waitFor();
     assert.equal(await deductionFeedback.getAttribute('aria-live'), 'polite',
       'deduction feedback should be announced to assistive technology');
 
-    await page.getByText('Miles Renn', { exact: true }).click();
+    await page.getByRole('button', { name: 'Suspect Miles Renn, Station porter' }).click();
     await page.getByText(/That theory does not fit every record/).waitFor({ state: 'hidden' });
-    await page.getByText('To take the overnight roster', { exact: true }).click();
+    await page.getByRole('button', { name: 'Motive: To take the overnight roster' }).click();
     await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
     await page.getByText(/That theory does not fit every record/).waitFor();
-    await page.getByText('To protect it from the leaking shelf', { exact: true }).click();
+    await page.getByRole('button', { name: 'Motive: To protect it from the leaking shelf' }).click();
     await page.getByText(/That theory does not fit every record/).waitFor({ state: 'hidden' });
     await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
     await page.getByText('The truth is in the details.', { exact: true }).waitFor();
