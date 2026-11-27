@@ -1,3 +1,42 @@
+# Current development checkpoint — 27 November 2026 (Case 001 content-integrity regression tests)
+
+## Protect the tutorial's selectable answers and witness records
+
+A focused test-only pass added two Case 001 integrity checks:
+- The correct suspect and motive answer keys must point to real selectable records, and the suspect/motive IDs must remain unique.
+- Witness IDs and composite witness-question keys must remain unique; every witness and question must retain non-empty player-facing names, roles, prompts and replies.
+
+This guards against a content edit that leaves the correct deduction pointing at an option the player cannot select, or creates ambiguous/blank interview records. It does not prove narrative fairness by itself; the evidence-to-conclusion review and complete player walkthrough remain separate quality gates.
+
+Source commit: [54849669 — Add Case 001 answer-key and witness-content integrity tests](https://github.com/appmaking30-cpu/CaseZero/commit/54849669a7166e01215ab57359bbc951dd143f6c). Two new tests were added; no runtime game behavior changed.
+
+Rollback checkpoint before this pass: [casezero-safety-checkpoint-2026-11-27-case001-content-integrity](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-27-case001-content-integrity), created from development head `90f69a0362bc58d56216c93a709934ddf0b1c820`.
+
+## Verified previous revision and current CI
+
+The 26 November touch-target revision is now fully verified (the earlier progress note below was written while its jobs were still running):
+- [Workspace checks — run 45826198759](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45826198759): completed successfully. TypeScript, all 321 unit tests, Expo web export, Chromium setup, the complete scripted browser walkthrough and screenshot upload passed.
+- [Android standalone APK — run 45826198734](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45826198734): completed successfully. Android native generation, Gradle release assembly, manifest/embedded-bundle/ARM64 payload checks and artifact upload passed. Artifact [15122535417](https://github.com/appmaking30-cpu/CaseZero/actions/runs/45826198734/artifacts/15122535417), 47,705,677 bytes, expires 26 December 2026.
+- The APK package identity check requires `com.casezero.beyondevidence`. This is a build verification, not a physical-device installation or Play Store signing test.
+- The successful APK contains the 48 dp Case 001 touch-target change. The only commits after its application-code revision were a progress-document update and the new test-only commit, so no runtime source change is missing from that APK.
+
+The new test commit `54849669a7166e01215ab57359bbc951dd143f6c` triggered:
+- [Workspace checks — run 46001342099](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342099).
+- [Android standalone APK — run 46001342201](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342201).
+
+Both were in progress when this checkpoint was written. Their results must be recorded only after GitHub Actions completes.
+
+## Preservation and device-test limits
+
+- Original Replit workspace remains the reference copy: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). No Replit Agent usage or writes to the original workspace.
+- Original source ZIP remains in the backup branch: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- The active app remains the existing Expo Router / React Native / TypeScript project under `original-projects/BothHauntingProjects/artifacts/casezero`; no restart or template replacement.
+- The branch comparison before this test-only commit was 828 commits ahead and zero behind `replit-original-backup-2026-10-31`.
+- The browser test uses a 390×844 mobile viewport and a separate 1280×720 landscape layout check. These are browser checks, not physical Android touch testing.
+- No physical Android installation, complete phone playthrough or TalkBack verification has been performed.
+
+---
+
 # Current development checkpoint — 26 November 2026 (Case 001 Android touch targets)
 
 ## Meet the Android touch-target minimum in compact tutorial controls
