@@ -814,3 +814,41 @@ test('specialist insights require the player to inspect their supporting records
 
   assert.equal(getBureauSpecialistInsight('inez', 'case004', ['seal', 'relay', 'docket']), null);
 });
+
+test('Case 001 deduction answer keys reference selectable suspect and motive records', () => {
+  const suspectIds = CASE_001.suspects.map((suspect) => suspect.id);
+  const motiveIds = CASE_001.motives.map((motive) => motive.id);
+
+  assert.equal(new Set(suspectIds).size, suspectIds.length, 'Suspect IDs must be unique');
+  assert.equal(new Set(motiveIds).size, motiveIds.length, 'Motive IDs must be unique');
+  assert.ok(
+    suspectIds.includes(CASE_001.correctSuspect),
+    'The correct suspect must exist among the choices shown to the player',
+  );
+  assert.ok(
+    motiveIds.includes(CASE_001.correctMotive),
+    'The correct motive must exist among the choices shown to the player',
+  );
+});
+
+test('Case 001 witness questions have unique keys and complete player-facing text', () => {
+  const witnessIds = CASE_001.witnesses.map((witness) => witness.id);
+  const questionKeys = CASE_001.witnesses.flatMap((witness) =>
+    witness.questions.map((question) => `${witness.id}:${question.id}`),
+  );
+
+  assert.equal(new Set(witnessIds).size, witnessIds.length, 'Witness IDs must be unique');
+  assert.equal(new Set(questionKeys).size, questionKeys.length, 'Witness question keys must be unique');
+
+  for (const witness of CASE_001.witnesses) {
+    assert.ok(witness.name.trim(), `Witness ${witness.id} needs a display name`);
+    assert.ok(witness.role.trim(), `Witness ${witness.id} needs a role`);
+
+    for (const question of witness.questions) {
+      assert.ok(question.id.trim(), `Witness ${witness.id} has a question without an ID`);
+      assert.ok(question.prompt.trim(), `Question ${witness.id}:${question.id} needs a prompt`);
+      assert.ok(question.reply.trim(), `Question ${witness.id}:${question.id} needs a reply`);
+    }
+  }
+});
+
