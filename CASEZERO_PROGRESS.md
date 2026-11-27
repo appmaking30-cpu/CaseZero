@@ -24,7 +24,7 @@ The new test commit `54849669a7166e01215ab57359bbc951dd143f6c` triggered:
 - [Workspace checks — run 46001342099](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342099).
 - [Android standalone APK — run 46001342201](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342201).
 
-Both were in progress when this checkpoint was written. Their results must be recorded only after GitHub Actions completes.
+Latest poll: both workflows remain in progress. In workspace run [46001342099](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342099), dependency installation, TypeScript, the full unit-test suite, Expo web export and Chromium installation have passed; the full browser smoke is running. In Android run [46001342201](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342201), dependency installation, TypeScript, the full unit-test suite and Android native generation have passed; Gradle APK assembly is running. No new APK artifact is available yet. These are partial results, not full workflow success.
 
 ## Preservation and device-test limits
 
