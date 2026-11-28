@@ -20,8 +20,9 @@ Rollback checkpoint before this change: [casezero-safety-checkpoint-2026-11-28-s
 ## Verification status for this revision
 
 - The change triggered [workspace run 46145829089](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46145829089) and [Android APK run 46145829032](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46145829032).
-- At the time of this checkpoint update, both workflows had started and were still in progress. Do not treat the new cold-reload assertions or a new APK as verified until the corresponding run concludes successfully.
-- The immediately preceding content-integrity test revision `54849669a7166e01215ab57359bbc951dd143f6c` is now fully verified by workspace run 46001342099 and Android run 46001342201. The latter uploaded APK artifact [15200615855](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342201/artifacts/15200615855), 47,705,674 bytes.
+- Workspace run [46145829089](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46145829089) has completed successfully for commit `12294622b5865c8c14fedc46ab6cbb5e82bdec0a`: TypeScript, 323 unit tests (323 pass, zero fail), Expo web export, Chromium setup, the complete mobile browser smoke, and screenshot upload all passed. Preview artifact [15263572891](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46145829089/artifacts/15263572891), 3,199,394 bytes, SHA-256 `67a5a1183fd33cca34ab2f2358cc47d66ec0d9125b2c53c2277b6c6ec3563874`.
+- Android run [46145829032](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46145829032) has passed dependency installation, TypeScript, all 323 unit tests, and Android native generation; Gradle release APK assembly is still running. No APK artifact for this revision is confirmed yet.
+- The immediately preceding content-integrity revision `54849669a7166e01215ab57359bbc951dd143f6c` is also fully verified by workspace run 46001342099 and Android run 46001342201. The latter uploaded APK artifact [15200615855](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342201/artifacts/15200615855), 47,705,674 bytes.
 
 ## Preservation
 
