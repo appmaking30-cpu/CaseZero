@@ -78,6 +78,14 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
 
     await page.getByRole('button', { name: 'Open case file' }).click();
     await page.getByText('PRIORITY FILE · 001', { exact: true }).waitFor();
+
+    // The briefing itself is a resumable checkpoint, even before the first clue is opened.
+    await page.waitForFunction(() => {
+      const raw = localStorage.getItem('casezero.case001.memory.v1');
+      return raw ? JSON.parse(raw).phase === 'briefing' : false;
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.getByText('PRIORITY FILE · 001', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Begin evidence review' }).click();
 
     await page.getByRole('button', { name: 'The ceiling stain. Physical evidence. Inspect record' }).waitFor();
@@ -106,6 +114,26 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
       await clueButton.waitFor();
       await clueButton.click();
     }
+
+    // All five inspected records must survive a cold reload before interviews unlock.
+    await page.waitForFunction(() => {
+      const raw = localStorage.getItem('casezero.case001.memory.v1');
+      if (!raw) return false;
+      const saved = JSON.parse(raw);
+      return saved.phase === 'evidence' &&
+        ['leak', 'wheel', 'key', 'receipt', 'inventory'].every((id) => saved.cluesFound?.includes(id));
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    for (const title of [
+      'The ceiling stain. Physical evidence. Logged',
+      'The chipped cart wheel. Trace evidence. Logged',
+      'The service-key register. Access record. Logged',
+      'The refund receipt. Time-stamped record. Logged',
+      'The luggage-office slip. Inventory record. Logged',
+    ]) {
+      await page.getByRole('button', { name: title }).waitFor();
+    }
+    await page.getByRole('button', { name: 'Question the witnesses' }).waitFor();
     await page.getByRole('button', { name: 'Question the witnesses' }).click();
     await page.getByRole('button', { name: 'Jo Bell: What did you hear near the records room?' }).waitFor();
     const interviewProgress = page.getByText('0/3 witnesses heard · 3 required witness responses remaining · 3 optional follow-ups left', { exact: true });
@@ -123,7 +151,17 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
       await questionButton.click();
     }
     await page.getByText('3/3 witnesses heard · 3 optional follow-ups left', { exact: true }).waitFor();
-    await page.getByRole('button', { name: 'Reconstruct the timeline' }).click();
+
+    // One required response from each witness is enough; that complete interview
+    // checkpoint must restore directly to the timeline without demanding optional questions.
+    await page.waitForFunction(() => {
+      const raw = localStorage.getItem('casezero.case001.memory.v1');
+      if (!raw) return false;
+      const saved = JSON.parse(raw);
+      return saved.phase === 'interviews' &&
+        ['jo:sound', 'ada:desk', 'nia:route'].every((key) => saved.askedQuestions?.includes(key));
+    });
+    await page.reload({ waitUntil: 'networkidle' });
     const timelineProgress = page.getByText('0 OF 4 EVENTS PLACED', { exact: true });
     await timelineProgress.waitFor();
     assert.equal(await timelineProgress.getAttribute('aria-live'), 'polite',
@@ -216,6 +254,33 @@ const { chromium } = require('/tmp/casezero-browser/node_modules/playwright');
     await page.getByText(/That theory does not fit every record/).waitFor();
     await page.getByRole('button', { name: 'Motive: To protect it from the leaking shelf' }).click();
     await page.getByText(/That theory does not fit every record/).waitFor({ state: 'hidden' });
+
+    // The selected theory is a separate save checkpoint. Verify both the stored
+    // values and the selected visual state after a full app reload before submission.
+    await page.waitForFunction(() => {
+      const raw = localStorage.getItem('casezero.case001.memory.v1');
+      if (!raw) return false;
+      const saved = JSON.parse(raw);
+      return saved.phase === 'deduction' &&
+        saved.timelineSolved === true &&
+        saved.selectedSuspect === 'miles' &&
+        saved.selectedMotive === 'protect';
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    const restoredMiles = page.getByRole('button', { name: 'Suspect Miles Renn, Station porter' });
+    const unselectedAda = page.getByRole('button', { name: 'Suspect Ada Voss, Night station clerk' });
+    const restoredProtectMotive = page.getByRole('button', { name: 'Motive: To protect it from the leaking shelf' });
+    const unselectedStealMotive = page.getByRole('button', { name: 'Motive: To take the overnight roster' });
+    await restoredMiles.waitFor();
+    await restoredProtectMotive.waitFor();
+    const restoredMilesBorder = await restoredMiles.evaluate((element) => getComputedStyle(element).borderColor);
+    const unselectedAdaBorder = await unselectedAda.evaluate((element) => getComputedStyle(element).borderColor);
+    const restoredProtectBorder = await restoredProtectMotive.evaluate((element) => getComputedStyle(element).borderColor);
+    const unselectedStealBorder = await unselectedStealMotive.evaluate((element) => getComputedStyle(element).borderColor);
+    assert.notEqual(restoredMilesBorder, unselectedAdaBorder,
+      'the selected suspect must retain its selected styling after reload');
+    assert.notEqual(restoredProtectBorder, unselectedStealBorder,
+      'the selected motive must retain its selected styling after reload');
     await page.getByRole('button', { name: 'Submit evidence-based conclusion' }).click();
     await page.getByText('The truth is in the details.', { exact: true }).waitFor();
     // The review counts one failed submission plus the successful repaired submission.
