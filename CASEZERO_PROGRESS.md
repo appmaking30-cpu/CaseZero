@@ -1,3 +1,38 @@
+# Current development checkpoint — 28 November 2026 (Case 001 cold-start save/resume coverage)
+
+## Exercise every major tutorial checkpoint across a full app reload
+
+The existing browser walkthrough already checked partial evidence restoration and a solved-timeline reload. This focused test-only pass extends that coverage to the remaining tutorial checkpoints:
+
+- The briefing screen is restored after opening the case file but before inspecting clues.
+- All five inspected evidence records survive a cold reload, and the player remains at the evidence gate before interviews.
+- One required answer from each of the three witnesses survives a reload; the app resumes directly at the timeline, without requiring the three optional follow-ups.
+- After the timeline is solved and the player selects Miles Renn plus the protective motive, both selections and their selected visual styling survive another reload before the conclusion is submitted.
+
+The browser test waits for the persisted AsyncStorage-backed web record to reach each expected state before reloading. It then checks the resumed screen and relevant restored controls. This is a browser cold-reload regression test; native Android process-death behavior still needs physical-device verification.
+
+No game runtime code or mystery rules changed in this pass.
+
+Source commit: [12294622 — Test Case 001 cold-start resume at every tutorial checkpoint](https://github.com/appmaking30-cpu/CaseZero/commit/12294622b5865c8c14fedc46ab6cbb5e82bdec0a).
+
+Rollback checkpoint before this change: [casezero-safety-checkpoint-2026-11-28-save-resume-smoke](https://github.com/appmaking30-cpu/CaseZero/tree/casezero-safety-checkpoint-2026-11-28-save-resume-smoke), created from development head `8666d14bcc3e9fb696982f57442b81762db0e3e2`.
+
+## Verification status for this revision
+
+- The change triggered [workspace run 46145829089](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46145829089) and [Android APK run 46145829032](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46145829032).
+- At the time of this checkpoint update, both workflows had started and were still in progress. Do not treat the new cold-reload assertions or a new APK as verified until the corresponding run concludes successfully.
+- The immediately preceding content-integrity test revision `54849669a7166e01215ab57359bbc951dd143f6c` is now fully verified by workspace run 46001342099 and Android run 46001342201. The latter uploaded APK artifact [15200615855](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342201/artifacts/15200615855), 47,705,674 bytes.
+
+## Preservation
+
+- Original Replit workspace remains the untouched reference: [BothHauntingProjects](https://replit.com/@appmaking30/BothHauntingProjects). No Replit Agent usage or workspace writes.
+- Original ZIP remains preserved on `replit-original-backup-2026-10-31`: `BothHauntingProjects.zip`, 7,167,701 bytes, blob SHA `9cb98e778d2a3e3dde6b3d0fbb4d2c6381591bd7`.
+- Canonical app remains the existing Expo Router / React Native / TypeScript project at `original-projects/BothHauntingProjects/artifacts/casezero`; development remains on `casezero-development`. No restart or template replacement.
+- Standard GitHub-hosted `ubuntu-24.04` workflows remain the typecheck, unit-test, browser-smoke and standalone APK route. No paid Replit Agent, EAS build, API, or hosting was used.
+- Physical Android installation, full phone playthrough and TalkBack verification remain outstanding.
+
+---
+
 # Current development checkpoint — 27 November 2026 (Case 001 content-integrity regression tests)
 
 ## Protect the tutorial's selectable answers and witness records
@@ -24,7 +59,10 @@ The new test commit `54849669a7166e01215ab57359bbc951dd143f6c` triggered:
 - [Workspace checks — run 46001342099](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342099).
 - [Android standalone APK — run 46001342201](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342201).
 
-Latest poll: both workflows remain in progress. In workspace run [46001342099](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342099), dependency installation, TypeScript, the full unit-test suite, Expo web export and Chromium installation have passed; the full browser smoke is running. In Android run [46001342201](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342201), dependency installation, TypeScript, the full unit-test suite and Android native generation have passed; Gradle APK assembly is running. No new APK artifact is available yet. These are partial results, not full workflow success.
+Both workflows subsequently completed successfully:
+- Workspace run [46001342099](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342099): the complete CaseZero workspace checks, including the full browser smoke and preview screenshot upload, passed.
+- Android run [46001342201](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342201): Gradle release assembly, standalone APK payload checks and artifact upload passed. Artifact [15200615855](https://github.com/appmaking30-cpu/CaseZero/actions/runs/46001342201/artifacts/15200615855), 47,705,674 bytes, SHA-256 `18777160810abd719ea228f79bc88f6cc995927d39dab1823a1f530943bfc73f`, expires 27 December 2026.
+- This verifies commit `54849669a7166e01215ab57359bbc951dd143f6c`; it remains a browser/CI and APK-build result, not physical Android or TalkBack verification.
 
 ## Preservation and device-test limits
 
